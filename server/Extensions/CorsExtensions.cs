@@ -15,9 +15,8 @@
                     }
                     else
                     {
-                        // Add prod domain later
                         Console.WriteLine("Cors set to prod URL");
-                        policy.WithOrigins("production URL");
+                        policy.WithOrigins("https://threatlocker-asset-management.vercel.app/");
                               
                     }
 

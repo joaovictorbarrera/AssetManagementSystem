@@ -1,6 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'PROD URL'
+    apiUrl: 'https://tlassetapi.up.railway.app/api'
 }
-
-//TODO: Fill in prod url
