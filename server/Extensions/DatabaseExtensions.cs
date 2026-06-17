@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Server.Data;
 using ThreatlockerAssetManagementSystem.Data;
 
 public static class DatabaseExtensions
