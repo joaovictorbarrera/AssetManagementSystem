@@ -40,13 +40,17 @@ namespace ThreatlockerAssetManagementSystem.Controllers
         }
 
         [HttpGet("Me")]
-        public async Task<ActionResult> Me()
+        public async Task<ActionResult<User>> Me()
         {
             var emailAddress = Request.Cookies["emailAddress"];
 
-            if (String.IsNullOrEmpty(emailAddress) || await _userRepository.GetByEmailAsync(emailAddress) == null) return Unauthorized();
+            if (String.IsNullOrEmpty(emailAddress)) return Unauthorized();
 
-            return Ok(new { emailAddress });
+            User? user = await _userRepository.GetByEmailAsync(emailAddress);
+
+            if (user == null) return Unauthorized();
+
+            return Ok(user);
         }
     }
 }
