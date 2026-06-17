@@ -1,0 +1,24 @@
+.vs
+bin
+obj
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Secrets
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+*.env
+.env
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Logs
+*.log

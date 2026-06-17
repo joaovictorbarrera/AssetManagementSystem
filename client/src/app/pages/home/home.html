@@ -1,0 +1,15 @@
+<div class="flex justify-center items-center h-full">
+  <div class="flex gap-5 flex-col items-center">
+    <a routerLink="/login">
+        <button>
+        Login
+        </button>
+    </a>
+    @if (this.loggedInEmailAddress()) {
+        <div class="bg-white text-black flex items-center gap-2 p-2">
+            <span>Currently logged in as:</span>
+            <span><strong>{{ this.loggedInEmailAddress() ?? ""}}</strong></span>
+        </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,17 @@
+@use "tailwindcss";
+
+body {
+    color: white;
+}
+
+button {
+    padding: 0.5rem;
+    background-color: white;
+    color: black;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: brightness(90%)
+}
