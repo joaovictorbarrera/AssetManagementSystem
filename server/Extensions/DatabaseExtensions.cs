@@ -22,7 +22,7 @@ public static class DatabaseExtensions
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseSqlServer(connectionString);
+            options.UseSqlServer(connectionString, sqlOptions => sqlOptions.EnableRetryOnFailure());
         });
 
         return services;
