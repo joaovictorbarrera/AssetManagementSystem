@@ -17,7 +17,6 @@ namespace ThreatlockerAssetManagementSystem.Extensions
             {
                 logger.LogInformation("Applying pending migrations...");
                 db.Database.Migrate();
-                logger.LogInformation("Database is up to date.");
             }
             catch (Exception ex)
             {
