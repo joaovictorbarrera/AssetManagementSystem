@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ThreatlockerAssetManagementSystem.DTOs.Auth;
+using ThreatlockerAssetManagementSystem.Extensions;
 using ThreatlockerAssetManagementSystem.Models.Entities;
+using ThreatlockerAssetManagementSystem.Models.Services;
 using ThreatlockerAssetManagementSystem.Repositories;
 
 namespace ThreatlockerAssetManagementSystem.Controllers
@@ -10,47 +14,64 @@ namespace ThreatlockerAssetManagementSystem.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserRepository _userRepository;
+        private readonly TokenService _tokenService;
 
-        public AuthController(UserRepository userRepository)
+        public AuthController(UserRepository userRepository, TokenService tokenService)
         {
             _userRepository = userRepository;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login([FromForm] LoginDto loginData)
+        public async Task<ActionResult> Login([FromBody] LoginRequestDto loginData)
         {
+            // There is intentionally no check for password.
+            // Managing passwords is outside the scope of this project.
             if (String.IsNullOrEmpty(loginData.EmailAddress)) return BadRequest("Email cannot be null or empty.");
 
-            User? user = await _userRepository.GetByEmailAsync(loginData.EmailAddress);
+            User? user = await _userRepository.GetByEmail(loginData.EmailAddress);
 
-            if (user == null) return BadRequest("User does not exist.");
+            if (user == null || !user.IsActive) return Unauthorized();
 
-            Response.Cookies.Append(
-                "emailAddress",
-                user.EmailAddress,
-                new CookieOptions
-                {
-                    Expires = DateTimeOffset.UtcNow.AddDays(30),
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.None
-                });
+            string token = _tokenService.CreateToken(user);
 
+            await _userRepository.UpdateLastLoginAsync(user.Id);
+
+            return Ok(new { AuthorizationToken = token });
+        }
+
+        [Authorize]
+        [HttpGet("Me")]
+        public ActionResult<User> Me()
+        {
+            User user = HttpContext.GetCurrentUser();
+
+            return Ok(user);
+        }
+
+        [Authorize(Policy = "AssetManagerOrHigher")]
+        [HttpGet("AssetManager")]
+        public ActionResult<User> Manager()
+        {
             return Ok();
         }
 
-        [HttpGet("Me")]
-        public async Task<ActionResult<User>> Me()
+        [Authorize(Roles = "Admin")]
+        [HttpGet("Admin")]
+        public ActionResult<User> Admin()
         {
-            var emailAddress = Request.Cookies["emailAddress"];
+            return Ok();
+        }
 
-            if (String.IsNullOrEmpty(emailAddress)) return Unauthorized();
-
-            User? user = await _userRepository.GetByEmailAsync(emailAddress);
-
-            if (user == null) return Unauthorized();
-
-            return Ok(user);
+        [Authorize]
+        [HttpGet("Debug")]
+        public IActionResult Debug()
+        {
+            return Ok(User.Claims.Select(c => new
+            {
+                c.Type,
+                c.Value
+            }));
         }
     }
 }

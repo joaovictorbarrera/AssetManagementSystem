@@ -16,27 +16,33 @@ namespace ThreatlockerAssetManagementSystem.Data
                 Id = AdminUserId,
                 EmailAddress = "admin@test.com",
                 Role = Role.Admin,
-                Active = true,
+                IsActive = true,
                 LastLoginAt = null,
-                CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                FirstName = "Admin",
+                LastName = "User"
             },
             new User
             {
                 Id = ManagerUserId,
                 EmailAddress = "manager@test.com",
                 Role = Role.AssetManager,
-                Active = true,
+                IsActive = true,
                 LastLoginAt = null,
-                CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                FirstName = "Manager",
+                LastName = "User"
             },
             new User
             {
                 Id = EmployeeUserId,
                 EmailAddress = "employee@test.com",
                 Role = Role.Employee,
-                Active = true,
+                IsActive = true,
                 LastLoginAt = null,
-                CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                FirstName = "Employee",
+                LastName = "User"
             }
         };
 

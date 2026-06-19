@@ -13,10 +13,24 @@ namespace ThreatlockerAssetManagementSystem.Repositories
             _context = context;
         }
 
-        public async Task<User?> GetByEmailAsync(string email)
+        public Task<User?> GetByEmail(string email)
         {
-            return await _context.Users
+            return _context.Users
                 .FirstOrDefaultAsync(u => u.EmailAddress == email);
+        }
+
+        public Task<User?> GetById(Guid id)
+        {
+            return _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task UpdateLastLoginAsync(Guid id)
+        {
+            await _context.Users
+                .Where(u => u.Id == id)
+                .ExecuteUpdateAsync(u =>
+                    u.SetProperty(x => x.LastLoginAt, DateTime.UtcNow)
+                );
         }
     }
 }

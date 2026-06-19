@@ -1,43 +1,36 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using ThreatlockerAssetManagementSystem.Data;
 using ThreatlockerAssetManagementSystem.Extensions;
+using ThreatlockerAssetManagementSystem.Models.Services;
 using ThreatlockerAssetManagementSystem.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+        );
+    });
 
-builder.Services.AddDatabase(builder.Configuration)
-                .AddCustomCors(builder.Environment);
+builder.Services.AddScoped<UserRepository>()
+                .AddScoped<TokenService>();
 
-builder.Services.AddScoped<UserRepository>();
+builder.Services.AddDatabase(builder.Configuration, builder.Environment)
+                .AddCustomCors(builder.Environment)
+                .AddJwtAuthentication(builder.Configuration)
+                .AddRoleAuthorization();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.UseCors();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-    try
-    {
-        logger.LogInformation("Applying pending migrations...");
-        db.Database.Migrate();
-        logger.LogInformation("Database is up to date.");
-    }
-    catch (Exception ex)
-    {
-        logger.LogCritical(ex, "Migration failed. Application will not start.");
-        throw;
-    }
-}
+app.ApplyMigrations();
 
 app.Run();

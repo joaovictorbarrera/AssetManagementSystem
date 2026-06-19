@@ -1,15 +1,28 @@
 <div class="flex justify-center items-center h-full">
   <div class="flex gap-5 flex-col items-center">
-    <a routerLink="/login">
-        <button>
-        Login
-        </button>
-    </a>
-    @if (this.loggedInEmailAddress()) {
+    @if (this.loggedInUser()) {
         <div class="bg-white text-black flex items-center gap-2 p-2">
             <span>Currently logged in as:</span>
-            <span><strong>{{ this.loggedInEmailAddress() ?? ""}}</strong></span>
+            <span>
+              <strong>
+                {{ this.loggedInUser()?.firstName}} {{ this.loggedInUser()?.lastName }} ({{ this.loggedInUser()?.emailAddress }})
+              </strong>
+            </span>
         </div>
+        <div class="bg-white text-black flex items-center gap-2 p-2">
+            <span>Your role is:</span>
+            <span>
+              <strong>
+                {{ this.loggedInUser()?.role }}
+              </strong>
+            </span>
+        </div>
+        <button (click)="logout()">Logout</button>
+    }
+    @else {
+      <a routerLink="/login">
+        <button>Login</button>
+      </a>
     }
   </div>
 </div>

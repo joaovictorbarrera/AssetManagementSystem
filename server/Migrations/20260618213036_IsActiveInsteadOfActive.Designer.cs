@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ThreatlockerAssetManagementSystem.Data;
 
@@ -11,9 +12,11 @@ using ThreatlockerAssetManagementSystem.Data;
 namespace ThreatlockerAssetManagementSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260618213036_IsActiveInsteadOfActive")]
+    partial class IsActiveInsteadOfActive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -457,19 +460,11 @@ namespace ThreatlockerAssetManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -488,9 +483,7 @@ namespace ThreatlockerAssetManagementSystem.Migrations
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EmailAddress = "admin@test.com",
-                            FirstName = "Admin",
                             IsActive = true,
-                            LastName = "User",
                             Role = "Admin"
                         },
                         new
@@ -498,9 +491,7 @@ namespace ThreatlockerAssetManagementSystem.Migrations
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EmailAddress = "manager@test.com",
-                            FirstName = "Manager",
                             IsActive = true,
-                            LastName = "User",
                             Role = "AssetManager"
                         },
                         new
@@ -508,9 +499,7 @@ namespace ThreatlockerAssetManagementSystem.Migrations
                             Id = new Guid("33333333-3333-3333-3333-333333333333"),
                             CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             EmailAddress = "employee@test.com",
-                            FirstName = "Employee",
                             IsActive = true,
-                            LastName = "User",
                             Role = "Employee"
                         });
                 });

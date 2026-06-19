@@ -1,30 +1,58 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ThreatlockerAssetManagementSystem.Data;
 
-public static class DatabaseExtensions
+namespace ThreatlockerAssetManagementSystem.Extensions
 {
-    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration config)
+    public static class DatabaseExtensions
     {
-        string? host = Environment.GetEnvironmentVariable("DB_HOST");
-        string? port = Environment.GetEnvironmentVariable("DB_PORT");
-        string? database = Environment.GetEnvironmentVariable("DB_NAME");
-        string? username = Environment.GetEnvironmentVariable("DB_USER");
-        string? password = Environment.GetEnvironmentVariable("DB_PASSWORD");
-
-        string connectionString = (!string.IsNullOrEmpty(host) &&
-                                   !string.IsNullOrEmpty(port) &&
-                                   !string.IsNullOrEmpty(database) &&
-                                   !string.IsNullOrEmpty(username) &&
-                                   !string.IsNullOrEmpty(password))
-            ? $"Server=tcp:{host},{port};Initial Catalog={database};Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-            : config.GetConnectionString("DefaultConnection")
-              ?? throw new InvalidOperationException("No database connection string configured.");
-
-        services.AddDbContext<AppDbContext>(options =>
+        public static IServiceCollection AddDatabase(
+            this IServiceCollection services,
+            IConfiguration config,
+            IWebHostEnvironment env)
         {
-            options.UseSqlServer(connectionString);
-        });
+            string? host = config["DB_HOST"];
+            string? port = config["DB_PORT"];
+            string? database = config["DB_NAME"];
+            string? username = config["DB_USER"];
+            string? password = config["DB_PASSWORD"];
 
-        return services;
+            string connectionString;
+
+            bool hasEnvVars =
+                !string.IsNullOrWhiteSpace(host) &&
+                !string.IsNullOrWhiteSpace(port) &&
+                !string.IsNullOrWhiteSpace(database) &&
+                !string.IsNullOrWhiteSpace(username) &&
+                !string.IsNullOrWhiteSpace(password);
+
+            if (hasEnvVars)
+            {
+                connectionString =
+                    $"Server=tcp:{host},{port};" +
+                    $"Initial Catalog={database};" +
+                    $"Persist Security Info=False;" +
+                    $"User ID={username};Password={password};" +
+                    $"MultipleActiveResultSets=False;" +
+                    $"Encrypt=True;TrustServerCertificate=False;" +
+                    $"Connection Timeout=30;";
+            }
+            else if (env.IsDevelopment())
+            {
+                connectionString = config.GetConnectionString("DefaultConnection")
+                    ?? throw new InvalidOperationException("Missing DefaultConnection in appsettings.Development.json");
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "Production environment requires DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD environment variables");
+            }
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+
+            return services;
+        }
     }
 }

@@ -1,6 +1,9 @@
 <div class="flex justify-center text-lg h-full items-center">
     <div class="bg-white text-black rounded p-7 flex flex-col gap-3">
         <h1 class="text-xl font-bold">Login</h1>
+        @if (this.failMessage()) {
+            <p class="text-red-500">{{this.failMessage()}}</p>
+        }
         <form class="flex flex-col gap-2 items-start" (submit)="login($event)">
             <label for="emailAddressInput">Email Address:</label>
             <input class="bg-gray-200 p-1" [formControl]="emailAddress" type="email" name="emailAddress" id="emailAddressInput" placeholder="john@test.com">

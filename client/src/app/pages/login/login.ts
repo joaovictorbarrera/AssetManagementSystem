@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
+import LoginRequestDto from '../../DTOs/login-request.dto';
 
 @Component({
   selector: 'app-login',
@@ -11,22 +12,26 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class Login {
   emailAddress = new FormControl("")
+  failMessage: WritableSignal<string | null> = signal(null)
 
   constructor(public authService: AuthService, public router: Router) {}
 
   login(event: any) {
     event.preventDefault()
 
-    let body = new FormData()
-    body.set("emailAddress", this.emailAddress.value ?? "")
+    let body: LoginRequestDto = { emailAddress: this.emailAddress.value ?? "" }
 
     this.authService.login(body)
     .subscribe({
-      next: async () => {
+      next: (response: any) => {
+        localStorage.setItem(
+        "authorizationToken",
+        response.authorizationToken);
+
         this.router.navigate(["/"])
       },
-      error(err) {
-        console.log(err)
+      error: err => {
+        this.failMessage.set("Unable to login with this email.")
       }
     })
   }

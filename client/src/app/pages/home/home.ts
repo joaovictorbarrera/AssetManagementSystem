@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import User from '../../DTOs/user.dto';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
-  loggedInEmailAddress: WritableSignal<string | null> = signal(null)
+  loggedInUser: WritableSignal<User | null> = signal(null)
 
   constructor(public authService: AuthService) {}
 
@@ -17,13 +18,17 @@ export class Home implements OnInit {
     this.authService.me()
     .subscribe({
       next: (res: any) => {
-        if (res && res.emailAddress) {
-          this.loggedInEmailAddress.set(res.emailAddress)
-        }
+        this.loggedInUser.set(res as User)
       },
       error: () => {
-        this.loggedInEmailAddress.set(null)
+        this.loggedInUser.set(null)
       }
     })
+  }
+
+  logout() {
+    localStorage.removeItem("authorizationToken");
+
+    this.loggedInUser.set(null)
   }
 }
