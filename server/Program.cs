@@ -19,7 +19,7 @@ builder.Services.AddScoped<UserRepository>()
                 .AddScoped<TokenService>();
 
 builder.Services.AddDatabase(builder.Configuration, builder.Environment)
-                .AddCustomCors(builder.Environment)
+                .AddCustomCors(builder.Configuration, builder.Environment)
                 .AddJwtAuthentication(builder.Configuration)
                 .AddRoleAuthorization();
 

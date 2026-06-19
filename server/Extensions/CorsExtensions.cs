@@ -2,27 +2,29 @@
 {
     public static class CorsExtensions
     {
-        public static IServiceCollection AddCustomCors(this IServiceCollection services, IWebHostEnvironment env)
+        public static IServiceCollection AddCustomCors(
+            this IServiceCollection services,
+            IConfiguration config,
+            IWebHostEnvironment env)
         {
+            var logger = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            }).CreateLogger("Cors");
+
+            string FrontendURL = config["FrontendURL"] ?? throw new Exception("FrontendURL missing from configuration.");
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    if (env.IsDevelopment())
-                    {
-                        Console.WriteLine("Cors set to localhost:4200");
-                        policy.WithOrigins("http://localhost:4200");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Cors set to prod URL");
-                        policy.WithOrigins("https://threatlocker-asset-management.vercel.app");
-                              
-                    }
+                    policy.WithOrigins(FrontendURL);
 
                     policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
+
+            logger.LogInformation($"Cors Enabled for {FrontendURL}");
 
             return services;
         }

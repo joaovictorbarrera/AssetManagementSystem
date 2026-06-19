@@ -20,15 +20,7 @@ namespace ThreatlockerAssetManagementSystem.Models.Services
             string jwtKey = _configuration["JwtKey"]
                 ?? throw new Exception("JwtKey missing from configuration.");
 
-            IConfigurationSection expirationSection = _configuration.GetSection("TokenExpirationDays");
-
             int expirationDays =_configuration.GetValue<int>("TokenExpirationDays", 7);
-
-            if (!expirationSection.Exists())
-            {
-                Console.WriteLine(
-                    "WARNING: TokenExpirationDays not configured. Defaulting to 7 days.");
-            }
 
             var claims = new[]
             {

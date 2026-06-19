@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using ThreatlockerAssetManagementSystem.Data;
 using ThreatlockerAssetManagementSystem.Models.Entities;
 using ThreatlockerAssetManagementSystem.Repositories;
 
@@ -11,8 +12,16 @@ namespace ThreatlockerAssetManagementSystem.Extensions
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
         {
+            var logger = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            }).CreateLogger("Authentication");
+
             string jwtKey = config["JwtKey"] 
                                 ?? throw new Exception("JwtKey missing from configuration.");
+
+            if (config["TokenExpirationDays"] == null) 
+                logger.LogWarning("TokenExpirationDays not configured. Defaulting to 7 days.");
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
