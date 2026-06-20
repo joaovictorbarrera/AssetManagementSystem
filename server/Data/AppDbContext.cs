@@ -41,8 +41,8 @@ namespace ThreatlockerAssetManagementSystem.Data
                 entity.Property(a => a.Condition)
                     .HasConversion<string>();
 
-                entity.HasOne<User>()
-                    .WithMany()
+                entity.HasOne(a => a.AssignedToUser)
+                    .WithMany(u => u.AssignedAssets)
                     .HasForeignKey(a => a.AssignedToUserId);
 
                 entity.HasData(SeedData.Assets);
@@ -77,15 +77,15 @@ namespace ThreatlockerAssetManagementSystem.Data
                 entity.Property(c => c.Status)
                     .HasConversion<string>();
 
-                entity.HasOne<User>()
-                    .WithMany()
+                entity.HasOne(u => u.RequestedByUser)
+                    .WithMany(u => u.RequestedCheckoutRequests)
                     .HasForeignKey(c => c.RequestedByUserId);
 
-                entity.HasOne<User>()
+                entity.HasOne(u => u.ReviewedByUser)
                     .WithMany()
                     .HasForeignKey(c => c.ReviewedByUserId);
 
-                entity.HasOne<Asset>()
+                entity.HasOne(c => c.AssignedAsset)
                     .WithMany()
                     .HasForeignKey(c => c.AssignedAssetId);
 
@@ -99,11 +99,11 @@ namespace ThreatlockerAssetManagementSystem.Data
             {
                 entity.HasKey(h => h.Id);
 
-                entity.HasOne<Asset>()
-                    .WithMany()
+                entity.HasOne(h => h.Asset)
+                    .WithMany(a => a.HistoryEntries)
                     .HasForeignKey(h => h.AssetId);
 
-                entity.HasOne<User>()
+                entity.HasOne(h => h.User)
                     .WithMany()
                     .HasForeignKey(h => h.UserId);
             });

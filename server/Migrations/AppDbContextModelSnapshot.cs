@@ -70,7 +70,7 @@ namespace ThreatlockerAssetManagementSystem.Migrations
 
                     b.HasIndex("AssignedToUserId");
 
-                    b.ToTable("Assets");
+                    b.ToTable("Assets", (string)null);
 
                     b.HasData(
                         new
@@ -227,7 +227,7 @@ namespace ThreatlockerAssetManagementSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AssetHistories");
+                    b.ToTable("AssetHistories", (string)null);
                 });
 
             modelBuilder.Entity("ThreatlockerAssetManagementSystem.Models.Entities.CheckoutRequest", b =>
@@ -289,7 +289,7 @@ namespace ThreatlockerAssetManagementSystem.Migrations
 
                     b.HasIndex("ReviewedByUserId");
 
-                    b.ToTable("CheckoutRequests");
+                    b.ToTable("CheckoutRequests", (string)null);
 
                     b.HasData(
                         new
@@ -480,7 +480,7 @@ namespace ThreatlockerAssetManagementSystem.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
