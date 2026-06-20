@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ThreatlockerAssetManagementSystem.DTOs.Pagination;
 using ThreatlockerAssetManagementSystem.DTOs.Users;
+using ThreatlockerAssetManagementSystem.Models.Entities;
 using ThreatlockerAssetManagementSystem.Repositories;
 
 namespace ThreatlockerAssetManagementSystem.Controllers
@@ -17,9 +19,9 @@ namespace ThreatlockerAssetManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequest request)
+        public async Task<ActionResult<PagedResponse<User>>> GetUsers([FromQuery] GetUsersRequest request)
         {
-            var users = await _userRepository.GetUsersAsync(request);
+            PagedResponse<User> users = await _userRepository.GetUsersAsync(request);
 
             return Ok(users);
         }
