@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37301.10 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreatlockerAssetManagementSystem", "ThreatlockerAssetManagementSystem.csproj", "{0C0CFEF5-F7E6-47ED-A1D0-C9081B2FDCA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetManagementSystem", "AssetManagementSystem.csproj", "{0C0CFEF5-F7E6-47ED-A1D0-C9081B2FDCA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
