@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ThreatlockerAssetManagementSystem.DTOs.Users;
+using ThreatlockerAssetManagementSystem.Repositories;
 
 namespace ThreatlockerAssetManagementSystem.Controllers
 {
@@ -8,14 +10,22 @@ namespace ThreatlockerAssetManagementSystem.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        private readonly UserRepository _userRepository;
+        public UsersController(UserRepository userRepository)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            _userRepository = userRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequest request)
+        {
+            var users = await _userRepository.GetUsersAsync(request);
+
+            return Ok(users);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser()
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
             return StatusCode(StatusCodes.Status501NotImplemented);
         }

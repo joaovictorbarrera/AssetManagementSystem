@@ -1,6 +1,6 @@
 ﻿namespace ThreatlockerAssetManagementSystem.DTOs.Auth
 {
-    public class LoginRequestDto
+    public class LoginRequest
     {
         public required string EmailAddress { get; set; }
     }

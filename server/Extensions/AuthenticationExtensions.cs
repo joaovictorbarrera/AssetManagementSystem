@@ -47,7 +47,7 @@ namespace ThreatlockerAssetManagementSystem.Extensions
 
                             Guid userId = context.Principal!.GetUserId();
 
-                            User? user = await userRepository.GetById(userId);
+                            User? user = await userRepository.GetUserByIdAsync(userId);
 
                             if (user == null || !user.IsActive)
                             {

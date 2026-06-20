@@ -23,13 +23,13 @@ namespace ThreatlockerAssetManagementSystem.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginRequestDto loginData)
+        public async Task<ActionResult> Login([FromBody] LoginRequest loginData)
         {
             // There is intentionally no check for password.
             // Managing passwords is outside the scope of this project.
             if (String.IsNullOrEmpty(loginData.EmailAddress)) return BadRequest("Email cannot be null or empty.");
 
-            User? user = await _userRepository.GetByEmail(loginData.EmailAddress);
+            User? user = await _userRepository.GetUserByEmailAsync(loginData.EmailAddress);
 
             if (user == null || !user.IsActive) return Unauthorized();
 
