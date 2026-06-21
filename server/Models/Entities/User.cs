@@ -10,10 +10,8 @@ namespace AssetManagementSystem.Models.Entities
         public DateTime? LastLoginAt { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
-
-        public ICollection<Asset> AssignedAssets { get; set; } = [];
-        public ICollection<CheckoutRequest> RequestedCheckoutRequests { get; set; } = [];
     }
 }

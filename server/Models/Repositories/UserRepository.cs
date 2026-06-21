@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using AssetManagementSystem.Data;
+﻿using AssetManagementSystem.Data;
 using AssetManagementSystem.DTOs.Pagination;
 using AssetManagementSystem.DTOs.Users;
 using AssetManagementSystem.Enums;
+using AssetManagementSystem.Helpers;
 using AssetManagementSystem.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace AssetManagementSystem.Repositories
 {
@@ -34,7 +36,7 @@ namespace AssetManagementSystem.Repositories
                 .Take(request.PageSize)
                 .ToListAsync();
 
-            int totalPages = (int) Math.Ceiling((double) totalCount / request.PageSize);
+            int totalPages = PaginationHelper.GetTotalPageCount(totalCount, request.PageSize);
 
             return new PagedResponse<User>
             {
@@ -87,30 +89,24 @@ namespace AssetManagementSystem.Repositories
                 );
         }
 
-        public async Task<User?> UpdateUserRole(Guid id, Role role)
+        public async Task<bool> UpdateUserRole(Guid id, Role role)
         {
-            User? user = await GetUserByIdAsync(id);
-
-            if (user == null) return null;
-
-            user.Role = role;
-
-            await _context.SaveChangesAsync();
-
-            return user;
+            return await _context.Users
+                .Where(u => u.Id == id)
+                .ExecuteUpdateAsync(u => 
+                    u.SetProperty(u => u.Role, role)
+                    .SetProperty(x => x.UpdatedAt, DateTime.UtcNow)
+                ) > 0;
         }
 
-        public async Task<User?> UpdateUserActive(Guid id, bool isActive)
+        public async Task<bool> UpdateUserActive(Guid id, bool isActive)
         {
-            User? user = await GetUserByIdAsync(id);
-
-            if (user == null) return null;
-
-            user.IsActive = isActive;
-
-            await _context.SaveChangesAsync();
-
-            return user;
+            return await _context.Users
+                .Where(u => u.Id == id)
+                .ExecuteUpdateAsync(u =>
+                    u.SetProperty(u => u.IsActive, isActive)
+                    .SetProperty(x => x.UpdatedAt, DateTime.UtcNow)
+                ) > 0;
         }
 
         

@@ -14,7 +14,7 @@ namespace AssetManagementSystem.Models.Entities
         public Guid? AssignedToUserId { get; set; }
         public User? AssignedToUser { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public required bool IsArchived { get; set; }
+        public bool IsArchived { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<AssetHistory> HistoryEntries { get; set; } = [];
     }

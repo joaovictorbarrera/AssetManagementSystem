@@ -42,7 +42,7 @@ namespace AssetManagementSystem.Data
                     .HasConversion<string>();
 
                 entity.HasOne(a => a.AssignedToUser)
-                    .WithMany(u => u.AssignedAssets)
+                    .WithMany()
                     .HasForeignKey(a => a.AssignedToUserId);
 
                 entity.HasData(SeedData.Assets);
@@ -78,7 +78,7 @@ namespace AssetManagementSystem.Data
                     .HasConversion<string>();
 
                 entity.HasOne(u => u.RequestedByUser)
-                    .WithMany(u => u.RequestedCheckoutRequests)
+                    .WithMany()
                     .HasForeignKey(c => c.RequestedByUserId);
 
                 entity.HasOne(u => u.ReviewedByUser)

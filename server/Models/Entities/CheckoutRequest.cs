@@ -10,7 +10,7 @@ namespace AssetManagementSystem.Models.Entities
         public required Guid RequestedByUserId { get; set; }
         public User RequestedByUser { get; set; } = null!;
 
-        public required AssetCategory AssetCategory { get; set; }
+        public AssetCategory? AssetCategory { get; set; }
         public required string Reason { get; set; }
         public required CheckoutRequestStatus Status { get; set; }
 

@@ -1,4 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AssetManagementSystem.DTOs.Assets.Requests;
+using AssetManagementSystem.DTOs.Assets.Responses;
+using AssetManagementSystem.DTOs.Pagination;
+using AssetManagementSystem.Enums;
+using AssetManagementSystem.Extensions;
+using AssetManagementSystem.Models.Entities;
+using AssetManagementSystem.Models.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManagementSystem.Controllers
@@ -8,65 +15,151 @@ namespace AssetManagementSystem.Controllers
     [ApiController]
     public class AssetsController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetAssets()
+        private readonly AssetRepository _assetRepository;
+
+        public AssetsController(AssetRepository assetRepository)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            _assetRepository = assetRepository;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PagedResponse<AssetDto>>> GetAssets([FromQuery] GetAssetsRequest request)
+        {
+            bool usingManagerFeatures = request.Inventory || request.ViewArchived;
+
+            // TODO: Can I use policy instead?
+            bool isManager = User.IsInRole("AssetManager") || User.IsInRole("Admin");
+
+            if (usingManagerFeatures && !isManager)
+            {
+                return Forbid();
+            }
+
+            Guid requestorId = User.GetUserId();
+
+            return Ok(await _assetRepository.GetAssets(request, requestorId));
         }
 
         [HttpPost]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<IActionResult> CreateAsset()
+        public async Task<ActionResult<AssetDto>> CreateAsset(CreateAssetRequest request)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            bool assetTagExists = await _assetRepository.GetByAssetTag(request.AssetTag) != null;
+            if (assetTagExists)
+            {
+                return BadRequest("Asset Tag is taken");
+            }
+
+            if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
+                return BadRequest("Invalid Status");
+
+            if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
+                return BadRequest("Invalid Condition");
+
+            if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
+                return BadRequest("Invalid Category");
+
+            AssetDto asset = await _assetRepository.CreateAsset(request);
+
+            return Ok(asset);
+        }
+
+        [HttpGet("available")]
+        [Authorize(Policy = "AssetManager+")]
+        public async Task<ActionResult<List<AvailableAsset>>> GetAvailableAssetsByCategory(
+            [FromQuery] GetAvailableAssetsByCategoryRequest request
+        ){
+            Console.WriteLine(request.Category);
+            if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
+                return BadRequest("Invalid Category");
+
+            List<AvailableAsset> availableAssets = await _assetRepository.GetAvailableAssetsByCategory(request);
+            return Ok(availableAssets);
+        }
+
+        [HttpGet("fields")]
+        [Authorize]
+        public ActionResult<AssetFields> GetAssetFields()
+        {
+            return Ok(new AssetFields());
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetAsset(Guid id)
+        public async Task<ActionResult<Asset>> GetAssetDetail(Guid id)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            Asset? asset = await _assetRepository.GetById(id);
+            if (asset == null) return NotFound();
+
+            return Ok(asset);
         }
 
         [HttpPut("{id:guid}")]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<IActionResult> UpdateAsset(Guid id)
+        public async Task<IActionResult> UpdateAsset(Guid id, [FromBody] UpdateAssetRequest request)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            Asset? existingAsset = await _assetRepository.GetByAssetTag(request.AssetTag);
+            if (existingAsset != null && request.AssetTag != request.AssetTag)
+            {
+                return BadRequest("Asset Tag is taken");
+            }
+
+            Asset? asset = await _assetRepository.UpdateById(id, request);
+            if (asset == null) return NotFound();
+
+            return Ok(asset);
         }
 
         [HttpDelete("{id:guid}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ArchiveAsset(Guid id)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            bool success = await _assetRepository.ArchiveById(id);
+            if (!success) return NotFound();
+
+            return NoContent();
         }
 
         [HttpPatch("{id:guid}/status")]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<IActionResult> UpdateAssetStatus(Guid id)
+        public async Task<IActionResult> UpdateAssetStatus(
+            Guid id,
+            [FromBody] UpdateAssetStatusRequest request)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
+                return BadRequest("Invalid status");
+
+            bool success = await _assetRepository.UpdateAssetStatus(id, request.Status);
+
+            if (!success)
+                return NotFound();
+
+            return NoContent();
         }
 
         [HttpPatch("{id:guid}/condition")]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<IActionResult> UpdateAssetCondition(Guid id)
+        public async Task<IActionResult> UpdateAssetCondition(
+            Guid id,
+            [FromBody] UpdateAssetConditionRequest request)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
+            if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
+                return BadRequest("Invalid condition");
 
-        [HttpGet("fields")]
-        [Authorize(Policy = "AssetManager+")]
-        public async Task<IActionResult> GetAssetFields()
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            bool success = await _assetRepository.UpdateAssetCondition(id, request.Condition);
+
+            if (!success)
+                return NotFound();
+
+            return NoContent();
         }
 
         [HttpGet("{id:guid}/history")]
         [Authorize(Policy = "AssetManager+")]
         public async Task<IActionResult> GetAssetHistory(Guid id)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            List<AssetHistory> history = await _assetRepository.GetAssetHistory(id);
+
+            return Ok(history);
         }
     }
 }

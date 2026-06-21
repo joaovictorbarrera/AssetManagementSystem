@@ -5,6 +5,7 @@
         Available,
         Assigned,
         Maintenance,
-        Retired
+        Retired,
+        Requested
     }
 }

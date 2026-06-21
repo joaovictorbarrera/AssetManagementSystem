@@ -47,21 +47,21 @@ namespace AssetManagementSystem.Controllers
             if (!Enum.IsDefined(typeof(Role), request.Role))
                 return BadRequest("Invalid role");
 
-            User? user = await _userRepository.UpdateUserRole(id, request.Role);
+            bool success = await _userRepository.UpdateUserRole(id, request.Role);
 
-            if (user == null) return BadRequest("Invalid user id");
+            if (!success) return NotFound();
 
-            return Ok(user);
+            return NoContent();
         }
 
         [HttpPatch("{id:guid}/active")]
         public async Task<IActionResult> UpdateUserActiveStatus(Guid id, UpdateUserActiveRequest request)
         {
-            User? user = await _userRepository.UpdateUserActive(id, request.IsActive);
+            bool success = await _userRepository.UpdateUserActive(id, request.IsActive);
 
-            if (user == null) return BadRequest("Invalid user id");
+            if (!success) return NotFound();
 
-            return Ok(user);
+            return NoContent();
         }
     }
 }
