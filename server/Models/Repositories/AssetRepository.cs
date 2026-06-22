@@ -171,7 +171,7 @@ namespace AssetManagementSystem.Models.Repositories
             asset.Status = status;
             asset.UpdatedAt = DateTime.UtcNow;
 
-            // If an asset is assigned, and is being marked as available, then it should be unassigned
+            // If an asset is assigned to a user, and is being marked as available, then it should be unassigned
             if (status == AssetStatus.Available && asset.AssignedToUserId != null)
             {
                 string userEmail = asset.AssignedToUser?.EmailAddress ?? "Unknown";
