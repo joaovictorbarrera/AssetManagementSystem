@@ -1,7 +1,7 @@
 using AssetManagementSystem.Extensions;
 using AssetManagementSystem.Models.Repositories;
-using AssetManagementSystem.Models.Services;
 using AssetManagementSystem.Repositories;
+using AssetManagementSystem.Services;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
@@ -18,7 +18,9 @@ builder.Services.AddControllers()
 builder.Services.AddScoped<UserRepository>()
                 .AddScoped<AssetRepository>()
                 .AddScoped<CheckoutRequestRepository>()
-                .AddScoped<TokenService>();
+                .AddScoped<TokenService>()
+                .AddScoped<CheckoutRequestService>()
+                .AddScoped<AssetService>();
 
 builder.Services.AddDatabase(builder.Configuration, builder.Environment)
                 .AddCustomCors(builder.Configuration, builder.Environment)

@@ -1,0 +1,157 @@
+﻿using AssetManagementSystem.DTOs.Assets.Requests;
+using AssetManagementSystem.DTOs.Assets.Responses;
+using AssetManagementSystem.DTOs.Pagination;
+using AssetManagementSystem.Enums;
+using AssetManagementSystem.Models.Entities;
+using AssetManagementSystem.Models.Repositories;
+
+namespace AssetManagementSystem.Services
+{
+    public class AssetService
+    {
+        private readonly AssetRepository _assetRepository;
+
+        public AssetService(AssetRepository assetRepository)
+        {
+            _assetRepository = assetRepository;
+        }
+
+        public async Task<ServiceResult<PagedResponse<AssetDto>>> GetAssets(
+            GetAssetsRequest request,
+            Guid requestorId,
+            bool isManager)
+        {
+            bool managerFeatures = request.Inventory || request.ViewArchived;
+            if (managerFeatures && !isManager)
+                return ServiceResult<PagedResponse<AssetDto>>.Forbidden("No permission to view all assets");
+
+            var result = await _assetRepository.GetAssets(request, requestorId);
+
+            return ServiceResult<PagedResponse<AssetDto>>.Success(result);
+        }
+
+        public async Task<ServiceResult<AssetDto>> Create(
+            CreateAssetRequest request,
+            Guid createdByUserId)
+        {
+            if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, Guid.Empty))
+                return ServiceResult<AssetDto>.BadRequest("Asset Tag is taken");
+
+            if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
+                return ServiceResult<AssetDto>.BadRequest("Invalid Status");
+
+            if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
+                return ServiceResult<AssetDto>.BadRequest("Invalid Condition");
+
+            if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
+                return ServiceResult<AssetDto>.BadRequest("Invalid Category");
+
+            AssetDto asset = await _assetRepository.CreateAsset(request, createdByUserId);
+            return ServiceResult<AssetDto>.Success(asset);
+        }
+
+        public async Task<ServiceResult<List<AvailableAsset>>> GetAvailableByCategory(
+            GetAvailableAssetsRequest request)
+        {
+            if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
+                return ServiceResult<List<AvailableAsset>>.BadRequest("Invalid Category");
+
+            List<AvailableAsset> assets = await _assetRepository.GetAvailableByCategory(request.Category);
+            return ServiceResult<List<AvailableAsset>>.Success(assets);
+        }
+
+        public async Task<ServiceResult<Asset>> GetDetail(Guid id)
+        {
+            Asset? asset = await _assetRepository.GetById(id);
+
+            if (asset == null)
+                return ServiceResult<Asset>.NotFound();
+
+            return ServiceResult<Asset>.Success(asset);
+        }
+
+        public async Task<ServiceResult<Asset>> Update(
+            Guid id,
+            UpdateAssetRequest request,
+            Guid updatedByUserId)
+        {
+            if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, id))
+                return ServiceResult<Asset>.BadRequest("Asset Tag is taken");
+
+            Asset? existing = await _assetRepository.GetById(id);
+
+            if (existing == null)
+                return ServiceResult<Asset>.NotFound();
+
+            if (existing.IsArchived)
+                return ServiceResult<Asset>.BadRequest("Cannot update archived assets");
+
+            Asset? updated = await _assetRepository.UpdateById(id, request, updatedByUserId);
+
+            if (updated == null)
+                return ServiceResult<Asset>.NotFound();
+
+            return ServiceResult<Asset>.Success(updated);
+        }
+
+        public async Task<ServiceResult> Archive(Guid id, Guid archivedByUserId)
+        {
+            bool success = await _assetRepository.ArchiveById(id, archivedByUserId);
+
+            return success
+                ? ServiceResult.Success()
+                : ServiceResult.NotFound();
+        }
+
+        public async Task<ServiceResult> UpdateStatus(
+            Guid id,
+            UpdateAssetStatusRequest request,
+            Guid updatedByUserId)
+        {
+            if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
+                return ServiceResult.BadRequest("Invalid status");
+
+            Asset? existing = await _assetRepository.GetById(id);
+
+            if (existing == null)
+                return ServiceResult.NotFound();
+
+            if (existing.IsArchived)
+                return ServiceResult.BadRequest("Cannot update archived assets");
+
+            bool success = await _assetRepository.UpdateAssetStatus(id, request.Status, updatedByUserId);
+
+            return success
+                ? ServiceResult.Success()
+                : ServiceResult.NotFound();
+        }
+
+        public async Task<ServiceResult> UpdateCondition(
+            Guid id,
+            UpdateAssetConditionRequest request,
+            Guid updatedByUserId)
+        {
+            if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
+                return ServiceResult.BadRequest("Invalid condition");
+
+            Asset? existing = await _assetRepository.GetById(id);
+
+            if (existing == null)
+                return ServiceResult.NotFound();
+
+            if (existing.IsArchived)
+                return ServiceResult.BadRequest("Cannot update archived assets");
+
+            bool success = await _assetRepository.UpdateAssetCondition(id, request.Condition, updatedByUserId);
+
+            return success
+                ? ServiceResult.Success()
+                : ServiceResult.NotFound();
+        }
+
+        public async Task<List<AssetHistory>> GetHistory(Guid id)
+        {
+            return await _assetRepository.GetAssetHistory(id);
+        }
+    }
+}

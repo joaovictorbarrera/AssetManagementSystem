@@ -1,4 +1,5 @@
 ﻿using AssetManagementSystem.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace AssetManagementSystem.DTOs.CheckoutRequests
 {
@@ -10,6 +11,7 @@ namespace AssetManagementSystem.DTOs.CheckoutRequests
 
         public Guid? AssetId { get; set; }
 
+        [MaxLength(500)]
         public required string Reason { get; set; }
     }
 }

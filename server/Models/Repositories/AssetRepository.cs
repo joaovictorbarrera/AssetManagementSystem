@@ -31,7 +31,7 @@ namespace AssetManagementSystem.Models.Repositories
 
             if (!request.ViewArchived)
             {
-                query = query.Where(a => !a.IsArchived);
+                query = query.Where(a => !a.IsArchived && a.Status != AssetStatus.Retired);
             }
 
             if (!request.Inventory)
@@ -170,6 +170,14 @@ namespace AssetManagementSystem.Models.Repositories
 
             asset.Status = status;
             asset.UpdatedAt = DateTime.UtcNow;
+
+            // If an asset is assigned, and is being marked as available, then it should be unassigned
+            if (status == AssetStatus.Available && asset.AssignedToUserId != null)
+            {
+                string userEmail = asset.AssignedToUser?.EmailAddress ?? "Unknown";
+                _context.AddAssetHistory(id, updatedByUserId, $"Unassigned Asset from {userEmail}");
+                asset.AssignedToUserId = null;
+            }
 
             await _context.SaveChangesAsync();
             return true;

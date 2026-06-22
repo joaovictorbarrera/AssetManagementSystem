@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using AssetManagementSystem.Models.Entities;
 
-namespace AssetManagementSystem.Models.Services
+namespace AssetManagementSystem.Services
 {
     public class TokenService
     {
@@ -20,7 +20,7 @@ namespace AssetManagementSystem.Models.Services
             string jwtKey = _configuration["JwtKey"]
                 ?? throw new Exception("JwtKey missing from configuration.");
 
-            int expirationDays =_configuration.GetValue<int>("TokenExpirationDays", 7);
+            int expirationDays =_configuration.GetValue("TokenExpirationDays", 7);
 
             var claims = new[]
             {

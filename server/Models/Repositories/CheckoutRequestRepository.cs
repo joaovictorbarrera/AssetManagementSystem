@@ -157,6 +157,7 @@ namespace AssetManagementSystem.Models.Repositories
             request.AssignedAssetId = assetId;
             request.Status = CheckoutRequestStatus.Fulfilled;
             request.FulfilledAt = DateTime.UtcNow;
+            request.UpdatedAt = DateTime.UtcNow;
 
             _context.AddAssetHistory(
                 assetId,
@@ -170,9 +171,10 @@ namespace AssetManagementSystem.Models.Repositories
             _context.AddAssetHistory(
                 assetId,
                 reviewedByUserId,
-                $"Assigned Asset to {request.RequestedByUser!.EmailAddress}");
+                $"Assigned Asset to {request?.RequestedByUser?.EmailAddress ?? "Employee"}");
 
-            asset.AssignedToUserId = request.RequestedByUserId;
+            asset.AssignedToUserId = request!.RequestedByUserId;
+            asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
@@ -192,31 +194,35 @@ namespace AssetManagementSystem.Models.Repositories
                     r.RequestType == CheckoutRequestType.Return);
 
             Asset? asset = await _context.Assets
-                .FirstOrDefaultAsync(a =>
-                    a.Id == assetId &&
-                    a.Status == AssetStatus.Assigned);
+                .FirstOrDefaultAsync(a => a.Id == assetId);
 
             if (request == null || asset == null)
                 return false;
 
             request.Status = CheckoutRequestStatus.Returned;
             request.ReturnedAt = DateTime.UtcNow;
+            request.UpdatedAt = DateTime.UtcNow;
 
-            _context.AddAssetHistory(
+            // Do not make available if Asset is damaged or under maintenance.
+            if (asset.Condition != AssetCondition.Damaged && asset.Status != AssetStatus.Maintenance)
+            {
+                _context.AddAssetHistory(
                 assetId,
                 reviewedByUserId,
                 "Updated Asset Status",
                 asset.Status.ToString(),
                 AssetStatus.Available.ToString());
 
-            asset.Status = AssetStatus.Available;
+                asset.Status = AssetStatus.Available;
+            }
 
             _context.AddAssetHistory(
                 assetId,
                 reviewedByUserId,
-                $"Unassigned Asset from {request.RequestedByUser!.EmailAddress}");
+                $"Unassigned Asset from {request.RequestedByUser.EmailAddress}");
 
             asset.AssignedToUserId = null;
+            asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

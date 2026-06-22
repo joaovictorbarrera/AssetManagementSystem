@@ -4,8 +4,8 @@ using System.Security.Claims;
 using AssetManagementSystem.DTOs.Auth;
 using AssetManagementSystem.Extensions;
 using AssetManagementSystem.Models.Entities;
-using AssetManagementSystem.Models.Services;
 using AssetManagementSystem.Repositories;
+using AssetManagementSystem.Services;
 
 namespace AssetManagementSystem.Controllers
 {

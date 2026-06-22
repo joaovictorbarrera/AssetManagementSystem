@@ -1,10 +1,9 @@
 ﻿using AssetManagementSystem.DTOs.Assets.Requests;
 using AssetManagementSystem.DTOs.Assets.Responses;
 using AssetManagementSystem.DTOs.Pagination;
-using AssetManagementSystem.Enums;
 using AssetManagementSystem.Extensions;
 using AssetManagementSystem.Models.Entities;
-using AssetManagementSystem.Models.Repositories;
+using AssetManagementSystem.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,68 +12,46 @@ namespace AssetManagementSystem.Controllers
     [Authorize]
     [Route("api/assets")]
     [ApiController]
-    public class AssetsController : ControllerBase
+    public class AssetsController : ApiControllerBase
     {
-        private readonly AssetRepository _assetRepository;
+        private readonly AssetService _service;
 
-        public AssetsController(AssetRepository assetRepository)
+        public AssetsController(AssetService service)
         {
-            _assetRepository = assetRepository;
+            _service = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<AssetDto>>> Get([FromQuery] GetAssetsRequest request)
+        public async Task<ActionResult<PagedResponse<AssetDto>>> Get(
+            [FromQuery] GetAssetsRequest request)
         {
-            bool usingManagerFeatures = request.Inventory || request.ViewArchived;
+            bool isManager =
+                User.IsInRole("AssetManager") ||
+                User.IsInRole("Admin");
 
-            // TODO: Can I use policy instead?
-            bool isManager = User.IsInRole("AssetManager") || User.IsInRole("Admin");
+            var result = await _service.GetAssets(request, User.GetUserId(), isManager);
 
-            if (usingManagerFeatures && !isManager)
-            {
-                return Forbid();
-            }
-
-            Guid requestorId = User.GetUserId();
-
-            return Ok(await _assetRepository.GetAssets(request, requestorId));
+            return Ok(result);
         }
 
         [HttpPost]
         [Authorize(Policy = "AssetManager+")]
         public async Task<ActionResult<AssetDto>> Create(CreateAssetRequest request)
         {
-            if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, Guid.Empty))
-                return BadRequest("Asset Tag is taken");
-
-            if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
-                return BadRequest("Invalid Status");
-
-            if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
-                return BadRequest("Invalid Condition");
-
-            if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
-                return BadRequest("Invalid Category");
-
-            AssetDto asset = await _assetRepository.CreateAsset(request, User.GetUserId());
-
-            return Ok(asset);
+            var result = await _service.Create(request, User.GetUserId());
+            return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
         [HttpGet("available")]
         [Authorize(Policy = "AssetManager+")]
         public async Task<ActionResult<List<AvailableAsset>>> GetAvailable(
-            [FromQuery] GetAvailableAssetsRequest request
-        ){
-            if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
-                return BadRequest("Invalid Category");
-
-            List<AvailableAsset> availableAssets = await _assetRepository.GetAvailableByCategory(request.Category);
-            return Ok(availableAssets);
+            [FromQuery] GetAvailableAssetsRequest request)
+        {
+            var result = await _service.GetAvailableByCategory(request);
+            return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
         [HttpGet("fields")]
-        [Authorize]
         public ActionResult<AssetFields> GetFields()
         {
             return Ok(new AssetFields());
@@ -83,41 +60,26 @@ namespace AssetManagementSystem.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<Asset>> GetDetail(Guid id)
         {
-            Asset? asset = await _assetRepository.GetById(id);
-            if (asset == null) return NotFound();
-
-            return Ok(asset);
+            var result = await _service.GetDetail(id);
+            return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
         [HttpPut("{id:guid}")]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<ActionResult<Asset>> Update(Guid id, [FromBody] UpdateAssetRequest request)
+        public async Task<ActionResult<Asset>> Update(
+            Guid id,
+            [FromBody] UpdateAssetRequest request)
         {
-            if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, id))
-            {
-                return BadRequest("Asset Tag is taken");
-            }
-
-            Asset? existingAsset = await _assetRepository.GetById(id);
-            if (existingAsset == null) return NotFound();
-
-            if (existingAsset.IsArchived)
-                return BadRequest("Cannot update archived assets");
-
-            Asset? asset = await _assetRepository.UpdateById(id, request, User.GetUserId());
-            if (asset == null) return NotFound();
-
-            return Ok(asset);
+            var result = await _service.Update(id, request, User.GetUserId());
+            return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
         [HttpDelete("{id:guid}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Archive(Guid id)
         {
-            bool success = await _assetRepository.ArchiveById(id, User.GetUserId());
-            if (!success) return NotFound();
-
-            return NoContent();
+            var result = await _service.Archive(id, User.GetUserId());
+            return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
         [HttpPatch("{id:guid}/status")]
@@ -126,56 +88,25 @@ namespace AssetManagementSystem.Controllers
             Guid id,
             [FromBody] UpdateAssetStatusRequest request)
         {
-            if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
-                return BadRequest("Invalid status");
-
-            Asset? existingAsset = await _assetRepository.GetById(id);
-            if (existingAsset == null) return NotFound();
-
-            if (existingAsset.IsArchived)
-                return BadRequest("Cannot update archived assets");
-
-            if (existingAsset.AssignedToUserId != null)
-                return BadRequest("Cannot update status of an assigned asset");
-
-            bool success = await _assetRepository.UpdateAssetStatus(id, request.Status, User.GetUserId());
-
-            if (!success)
-                return NotFound();
-
-            return NoContent();
+            var result = await _service.UpdateStatus(id, request, User.GetUserId());
+            return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
         [HttpPatch("{id:guid}/condition")]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<IActionResult> UpdateCondition (
+        public async Task<IActionResult> UpdateCondition(
             Guid id,
             [FromBody] UpdateAssetConditionRequest request)
         {
-            if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
-                return BadRequest("Invalid condition");
-
-            Asset? existingAsset = await _assetRepository.GetById(id);
-            if (existingAsset == null) return NotFound();
-
-            if (existingAsset.IsArchived)
-                return BadRequest("Cannot update archived assets");
-
-            bool success = await _assetRepository.UpdateAssetCondition(id, request.Condition, User.GetUserId());
-
-            if (!success)
-                return NotFound();
-
-            return NoContent();
+            var result = await _service.UpdateCondition(id, request, User.GetUserId());
+            return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
         [HttpGet("{id:guid}/history")]
         [Authorize(Policy = "AssetManager+")]
         public async Task<ActionResult<List<AssetHistory>>> GetHistory(Guid id)
         {
-            List<AssetHistory> history = await _assetRepository.GetAssetHistory(id);
-
-            return Ok(history);
+            return Ok(await _service.GetHistory(id));
         }
     }
 }
