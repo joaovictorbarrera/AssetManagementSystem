@@ -77,9 +77,9 @@ namespace AssetManagementSystem.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<CheckoutRequest>> GetDetail(Guid id)
         {
-            CheckoutRequest? request = await _repository.GetById(id);
+            CheckoutRequest? checkoutRequest = await _repository.GetById(id);
 
-            if (request == null)
+            if (checkoutRequest == null)
                 return NotFound();
 
             bool isManager =
@@ -87,12 +87,12 @@ namespace AssetManagementSystem.Controllers
                 User.IsInRole("Admin");
 
             if (!isManager &&
-                request.RequestedByUserId != User.GetUserId())
+                checkoutRequest.RequestedByUserId != User.GetUserId())
             {
                 return Forbid("Request does not belong to you");
             }
 
-            return Ok(request);
+            return Ok(checkoutRequest);
         }
 
         [HttpDelete("{id:guid}")]
@@ -110,16 +110,19 @@ namespace AssetManagementSystem.Controllers
         [HttpPatch("{id:guid}/cancel")]
         public async Task<IActionResult> Cancel(Guid id)
         {
-            CheckoutRequest? request = await _repository.GetById(id);
+            CheckoutRequest? checkoutRequest = await _repository.GetById(id);
 
-            if (request == null)
+            if (checkoutRequest == null)
                 return NotFound();
 
-            if (request.RequestedByUserId != User.GetUserId())
+            if (checkoutRequest.RequestedByUserId != User.GetUserId())
                 return Forbid("Request does not belong to you");
 
-            if (request.Status != CheckoutRequestStatus.Pending)
+            if (checkoutRequest.Status != CheckoutRequestStatus.Pending)
                 return BadRequest("Only pending requests can be cancelled");
+
+            if (checkoutRequest.IsArchived)
+                return BadRequest("Cannot update archived requests");
 
             bool success = await _repository.CancelById(id);
 
@@ -133,17 +136,20 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<IActionResult> Approve(Guid id)
         {
-            CheckoutRequest? request = await _repository.GetById(id);
+            CheckoutRequest? checkoutRequest = await _repository.GetById(id);
             Guid reviewedByUserId = User.GetUserId();
 
-            if (request == null)
+            if (checkoutRequest == null)
                 return NotFound();
 
-            if (request.Status != CheckoutRequestStatus.Pending)
+            if (checkoutRequest.Status != CheckoutRequestStatus.Pending)
                 return BadRequest("Only pending requests can be approved");
 
-            if (request.RequestType != CheckoutRequestType.Checkout)
+            if (checkoutRequest.RequestType != CheckoutRequestType.Checkout)
                 return BadRequest("Only checkout requests can be approved");
+
+            if (checkoutRequest.IsArchived)
+                return BadRequest("Cannot update archived requests");
 
             bool success = await _repository.ApproveById(id, reviewedByUserId);
 
@@ -157,14 +163,17 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<IActionResult> Reject(Guid id)
         {
-            CheckoutRequest? request = await _repository.GetById(id);
+            CheckoutRequest? checkoutRequest = await _repository.GetById(id);
             Guid reviewedByUserId = User.GetUserId();
 
-            if (request == null)
+            if (checkoutRequest == null)
                 return NotFound();
 
-            if (request.Status != CheckoutRequestStatus.Pending)
+            if (checkoutRequest.Status != CheckoutRequestStatus.Pending)
                 return BadRequest("Only pending requests can be rejected");
+
+            if (checkoutRequest.IsArchived)
+                return BadRequest("Cannot update archived requests");
 
             bool success = await _repository.RejectById(id, reviewedByUserId);
 
@@ -187,6 +196,9 @@ namespace AssetManagementSystem.Controllers
 
             if (checkoutRequest.Status != CheckoutRequestStatus.Approved)
                 return BadRequest("Request must be approved");
+
+            if (checkoutRequest.IsArchived)
+                return BadRequest("Cannot update archived requests");
 
             Asset? asset = await _assetRepository.GetById(request.AssetId);
 
@@ -227,6 +239,9 @@ namespace AssetManagementSystem.Controllers
 
             if (request.AssignedAssetId == null)
                 return BadRequest("No asset assigned");
+
+            if (request.IsArchived)
+                return BadRequest("Cannot update archived requests");
 
             bool success = await _repository.ReturnById(
                 id,

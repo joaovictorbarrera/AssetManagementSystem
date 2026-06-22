@@ -44,11 +44,8 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<ActionResult<AssetDto>> Create(CreateAssetRequest request)
         {
-            bool assetTagExists = await _assetRepository.GetByAssetTag(request.AssetTag) != null;
-            if (assetTagExists)
-            {
+            if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, Guid.Empty))
                 return BadRequest("Asset Tag is taken");
-            }
 
             if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
                 return BadRequest("Invalid Status");
@@ -66,14 +63,13 @@ namespace AssetManagementSystem.Controllers
 
         [HttpGet("available")]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<ActionResult<List<AvailableAsset>>> GetAvailable (
-            [FromQuery] GetAvailableAssets request
+        public async Task<ActionResult<List<AvailableAsset>>> GetAvailable(
+            [FromQuery] GetAvailableAssetsRequest request
         ){
-            Console.WriteLine(request.Category);
             if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
                 return BadRequest("Invalid Category");
 
-            List<AvailableAsset> availableAssets = await _assetRepository.GetAvailableByCategory(request);
+            List<AvailableAsset> availableAssets = await _assetRepository.GetAvailableByCategory(request.Category);
             return Ok(availableAssets);
         }
 
@@ -97,11 +93,16 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<ActionResult<Asset>> Update(Guid id, [FromBody] UpdateAssetRequest request)
         {
-            Asset? existingAsset = await _assetRepository.GetByAssetTag(request.AssetTag);
-            if (existingAsset != null && request.AssetTag != request.AssetTag)
+            if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, id))
             {
                 return BadRequest("Asset Tag is taken");
             }
+
+            Asset? existingAsset = await _assetRepository.GetById(id);
+            if (existingAsset == null) return NotFound();
+
+            if (existingAsset.IsArchived)
+                return BadRequest("Cannot update archived assets");
 
             Asset? asset = await _assetRepository.UpdateById(id, request, User.GetUserId());
             if (asset == null) return NotFound();
@@ -128,6 +129,15 @@ namespace AssetManagementSystem.Controllers
             if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
                 return BadRequest("Invalid status");
 
+            Asset? existingAsset = await _assetRepository.GetById(id);
+            if (existingAsset == null) return NotFound();
+
+            if (existingAsset.IsArchived)
+                return BadRequest("Cannot update archived assets");
+
+            if (existingAsset.AssignedToUserId != null)
+                return BadRequest("Cannot update status of an assigned asset");
+
             bool success = await _assetRepository.UpdateAssetStatus(id, request.Status, User.GetUserId());
 
             if (!success)
@@ -144,6 +154,12 @@ namespace AssetManagementSystem.Controllers
         {
             if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
                 return BadRequest("Invalid condition");
+
+            Asset? existingAsset = await _assetRepository.GetById(id);
+            if (existingAsset == null) return NotFound();
+
+            if (existingAsset.IsArchived)
+                return BadRequest("Cannot update archived assets");
 
             bool success = await _assetRepository.UpdateAssetCondition(id, request.Condition, User.GetUserId());
 

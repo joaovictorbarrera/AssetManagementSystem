@@ -20,9 +20,9 @@ namespace AssetManagementSystem.Models.Repositories
             _context = context;
         }
 
-        public async Task<Asset?> GetByAssetTag(string assetTag)
+        public async Task<bool> IsTagTakenAndNotId(string assetTag, Guid id)
         {
-            return await _context.Assets.FirstOrDefaultAsync(a => a.AssetTag == assetTag);
+            return await _context.Assets.FirstOrDefaultAsync(a => a.AssetTag == assetTag && a.Id != id) != null;
         }
 
         public async Task<PagedResponse<AssetDto>> GetAssets(GetAssetsRequest request, Guid requestorId)
@@ -109,10 +109,10 @@ namespace AssetManagementSystem.Models.Repositories
             };
         }
 
-        public async Task<List<AvailableAsset>> GetAvailableAssetsByCategory(GetAvailableAssets request)
+        public async Task<List<AvailableAsset>> GetAvailableByCategory(AssetCategory category)
         {
            return await _context.Assets
-                    .Where(a => a.Status == AssetStatus.Available && a.Category == request.Category)
+                    .Where(a => a.Status == AssetStatus.Available && a.Category == category && !a.IsArchived)
                     .Select(a => new AvailableAsset{Id = a.Id, Name = a.Name})
                     .ToListAsync();
         }

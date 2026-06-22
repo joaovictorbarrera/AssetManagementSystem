@@ -6,8 +6,6 @@ namespace AssetManagementSystem.DTOs.Assets.Requests
 {
     public class UpdateAssetRequest
     {
-        public Guid? Id { get; set; }
-
         [MaxLength(50)]
         [MinLength(1)]
         public required string AssetTag { get; set; }
