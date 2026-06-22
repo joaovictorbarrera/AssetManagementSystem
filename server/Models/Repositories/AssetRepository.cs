@@ -8,6 +8,7 @@ using AssetManagementSystem.Helpers;
 using AssetManagementSystem.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Linq;
 
 namespace AssetManagementSystem.Models.Repositories
 {
@@ -42,6 +43,11 @@ namespace AssetManagementSystem.Models.Repositories
             if (!String.IsNullOrEmpty(request.SearchText))
             {
                 query = query.Where(a => a.Name.Contains(request.SearchText) || a.AssetTag.Contains(request.SearchText));
+            }
+
+            if (request.Status != null)
+            {
+                query = query.Where(a => a.Status == request.Status);
             }
 
             int totalCount = await query.CountAsync();
