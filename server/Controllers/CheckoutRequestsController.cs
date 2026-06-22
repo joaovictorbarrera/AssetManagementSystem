@@ -1,6 +1,7 @@
 ﻿using AssetManagementSystem.DTOs.CheckoutRequests;
 using AssetManagementSystem.DTOs.Pagination;
 using AssetManagementSystem.Extensions;
+using AssetManagementSystem.Helpers;
 using AssetManagementSystem.Models.Entities;
 using AssetManagementSystem.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -24,11 +25,7 @@ namespace AssetManagementSystem.Controllers
         public async Task<ActionResult<PagedResponse<CheckoutRequest>>> Get(
             [FromQuery] GetCheckoutRequestsRequest request)
         {
-            bool isManager =
-                User.IsInRole("AssetManager") ||
-                User.IsInRole("Admin");
-
-            var result = await _service.GetRequests(request, User.GetUserId(), isManager);
+            var result = await _service.GetRequests(request, User.GetUserId(), RolesHelper.IsAssetManager(User));
 
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
@@ -44,11 +41,7 @@ namespace AssetManagementSystem.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<CheckoutRequest>> GetDetail(Guid id)
         {
-            bool isManager =
-                User.IsInRole("AssetManager") ||
-                User.IsInRole("Admin");
-
-            var result = await _service.GetDetail(id, User.GetUserId(), isManager);
+            var result = await _service.GetDetail(id, User.GetUserId(), RolesHelper.IsAssetManager(User));
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 

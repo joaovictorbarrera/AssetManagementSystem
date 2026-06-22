@@ -16,38 +16,38 @@ namespace AssetManagementSystem.Services
             _assetRepository = assetRepository;
         }
 
-        public async Task<ServiceResult<PagedResponse<AssetDto>>> GetAssets(
+        public async Task<ServiceResult<PagedResponse<Asset>>> GetAssets(
             GetAssetsRequest request,
             Guid requestorId,
             bool isManager)
         {
             bool managerFeatures = request.Inventory || request.ViewArchived;
             if (managerFeatures && !isManager)
-                return ServiceResult<PagedResponse<AssetDto>>.Forbidden("No permission to view all assets");
+                return ServiceResult<PagedResponse<Asset>>.Forbidden("No permission to view all assets");
 
             var result = await _assetRepository.GetAssets(request, requestorId);
 
-            return ServiceResult<PagedResponse<AssetDto>>.Success(result);
+            return ServiceResult<PagedResponse<Asset>>.Success(result);
         }
 
-        public async Task<ServiceResult<AssetDto>> Create(
+        public async Task<ServiceResult<Asset>> Create(
             CreateAssetRequest request,
             Guid createdByUserId)
         {
             if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, Guid.Empty))
-                return ServiceResult<AssetDto>.BadRequest("Asset Tag is taken");
+                return ServiceResult<Asset>.BadRequest("Asset Tag is taken");
 
             if (!Enum.IsDefined(typeof(AssetStatus), request.Status))
-                return ServiceResult<AssetDto>.BadRequest("Invalid Status");
+                return ServiceResult<Asset>.BadRequest("Invalid Status");
 
             if (!Enum.IsDefined(typeof(AssetCondition), request.Condition))
-                return ServiceResult<AssetDto>.BadRequest("Invalid Condition");
+                return ServiceResult<Asset>.BadRequest("Invalid Condition");
 
             if (!Enum.IsDefined(typeof(AssetCategory), request.Category))
-                return ServiceResult<AssetDto>.BadRequest("Invalid Category");
+                return ServiceResult<Asset>.BadRequest("Invalid Category");
 
-            AssetDto asset = await _assetRepository.CreateAsset(request, createdByUserId);
-            return ServiceResult<AssetDto>.Success(asset);
+            Asset asset = await _assetRepository.CreateAsset(request, createdByUserId);
+            return ServiceResult<Asset>.Success(asset);
         }
 
         public async Task<ServiceResult<List<AvailableAsset>>> GetAvailableByCategory(

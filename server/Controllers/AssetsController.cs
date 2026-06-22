@@ -2,6 +2,7 @@
 using AssetManagementSystem.DTOs.Assets.Responses;
 using AssetManagementSystem.DTOs.Pagination;
 using AssetManagementSystem.Extensions;
+using AssetManagementSystem.Helpers;
 using AssetManagementSystem.Models.Entities;
 using AssetManagementSystem.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -22,21 +23,17 @@ namespace AssetManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<AssetDto>>> Get(
+        public async Task<ActionResult<PagedResponse<Asset>>> Get(
             [FromQuery] GetAssetsRequest request)
         {
-            bool isManager =
-                User.IsInRole("AssetManager") ||
-                User.IsInRole("Admin");
-
-            var result = await _service.GetAssets(request, User.GetUserId(), isManager);
+            var result = await _service.GetAssets(request, User.GetUserId(), RolesHelper.IsAssetManager(User));
 
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
         [HttpPost]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<ActionResult<AssetDto>> Create(CreateAssetRequest request)
+        public async Task<ActionResult<Asset>> Create(CreateAssetRequest request)
         {
             var result = await _service.Create(request, User.GetUserId());
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
@@ -60,11 +57,7 @@ namespace AssetManagementSystem.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<Asset>> GetDetail(Guid id)
         {
-            bool isManager =
-                User.IsInRole("AssetManager") ||
-                User.IsInRole("Admin");
-
-            var result = await _service.GetDetail(id, User.GetUserId(), isManager);
+            var result = await _service.GetDetail(id, User.GetUserId(), RolesHelper.IsAssetManager(User));
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 

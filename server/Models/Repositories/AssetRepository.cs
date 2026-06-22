@@ -26,7 +26,7 @@ namespace AssetManagementSystem.Models.Repositories
             return await _context.Assets.FirstOrDefaultAsync(a => a.AssetTag == assetTag && a.Id != id) != null;
         }
 
-        public async Task<PagedResponse<AssetDto>> GetAssets(GetAssetsRequest request, Guid requestorId)
+        public async Task<PagedResponse<Asset>> GetAssets(GetAssetsRequest request, Guid requestorId)
         {
             IQueryable<Asset> query = _context.Assets;
 
@@ -52,25 +52,15 @@ namespace AssetManagementSystem.Models.Repositories
 
             int totalCount = await query.CountAsync();
 
-            List<AssetDto> assets = await query
+            List<Asset> assets = await query
                 .OrderBy(a => a.AssetTag)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(a => new AssetDto
-                {
-                    Id = a.Id,
-                    AssetTag = a.AssetTag,
-                    Name = a.Name,
-                    Category = a.Category,
-                    Status = a.Status,
-                    Condition = a.Condition,
-                    IsArchived = a.IsArchived
-                })
                 .ToListAsync();
 
             int totalPages = PaginationHelper.GetTotalPageCount(totalCount, request.PageSize);
 
-            return new PagedResponse<AssetDto>
+            return new PagedResponse<Asset>
             {
                 Items = assets,
                 Pagination = new PaginationMetadata
@@ -85,7 +75,7 @@ namespace AssetManagementSystem.Models.Repositories
             };
         }
 
-        public async Task<AssetDto> CreateAsset(CreateAssetRequest request, Guid createdByUserId)
+        public async Task<Asset> CreateAsset(CreateAssetRequest request, Guid createdByUserId)
         {
             Asset asset = new()
             {
@@ -103,7 +93,7 @@ namespace AssetManagementSystem.Models.Repositories
 
             await _context.SaveChangesAsync();
 
-            return new AssetDto
+            return new Asset
             {
                 Id = asset.Id,
                 AssetTag = asset.AssetTag,
