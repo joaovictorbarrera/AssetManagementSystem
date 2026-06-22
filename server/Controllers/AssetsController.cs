@@ -27,13 +27,12 @@ namespace AssetManagementSystem.Controllers
             [FromQuery] GetAssetsRequest request)
         {
             var result = await _service.GetAssets(request, User.GetUserId(), RolesHelper.IsAssetManager(User));
-
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
         [HttpPost]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<ActionResult<Asset>> Create(CreateAssetRequest request)
+        public async Task<ActionResult<Asset>> Create([FromBody] CreateAssetRequest request)
         {
             var result = await _service.Create(request, User.GetUserId());
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
@@ -103,7 +102,8 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<ActionResult<List<AssetHistory>>> GetHistory(Guid id)
         {
-            return Ok(await _service.GetHistory(id));
+            var result = await _service.GetHistory(id);
+            return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
     }
 }

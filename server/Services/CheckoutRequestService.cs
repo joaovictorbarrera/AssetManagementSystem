@@ -177,14 +177,12 @@ namespace AssetManagementSystem.Services
                 return ServiceResult.BadRequest(
                     "Asset Category is incompatible with Request Category");
 
-            bool success = await _requestRepository.AssignAssetById(
-                id,
-                request.AssetId,
+            await _requestRepository.AssignAssetById(
+                checkoutRequest,
+                asset,
                 reviewedByUserId);
 
-            return success
-                ? ServiceResult.Success()
-                : ServiceResult.NotFound();
+            return ServiceResult.Success();
         }
 
         public async Task<ServiceResult> Return(Guid id, Guid reviewedByUserId)
@@ -215,14 +213,15 @@ namespace AssetManagementSystem.Services
             if (asset.IsArchived)
                 return ServiceResult.BadRequest("Cannot update archived assets");
 
-            bool success = await _requestRepository.ReturnById(
-                id,
-                request.AssignedAssetId.Value,
-                reviewedByUserId);
+            bool shouldBeAvailable = asset.Condition != AssetCondition.Damaged && asset.Status != AssetStatus.Maintenance;
 
-            return success
-                ? ServiceResult.Success()
-                : ServiceResult.NotFound();
+            await _requestRepository.ReturnById(
+                request,
+                asset,
+                reviewedByUserId,
+                shouldBeAvailable);
+
+            return ServiceResult.Success();
         }
     }
 }

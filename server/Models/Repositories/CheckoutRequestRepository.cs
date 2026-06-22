@@ -80,7 +80,7 @@ namespace AssetManagementSystem.Models.Repositories
                 RequestedByUserId = userId,
                 AssetCategory = request.AssetCategory,
                 Reason = request.Reason,
-                AssignedAssetId = request.RequestType == CheckoutRequestType.Checkout ? request.AssetId : null,
+                AssignedAssetId = request.RequestType == CheckoutRequestType.Checkout ? null : request.AssetId,
                 Status = CheckoutRequestStatus.Pending
             };
 
@@ -135,32 +135,18 @@ namespace AssetManagementSystem.Models.Repositories
                 ) > 0;
         }
 
-        public async Task<bool> AssignAssetById(
-            Guid requestId,
-            Guid assetId,
+        public async Task AssignAssetById(
+            CheckoutRequest request,
+            Asset asset,
             Guid reviewedByUserId)
         {
-            CheckoutRequest? request = await _context.CheckoutRequests
-                .Include(r => r.RequestedByUser)
-                .FirstOrDefaultAsync(r =>
-                    r.Id == requestId &&
-                    r.Status == CheckoutRequestStatus.Approved);
-
-            Asset? asset = await _context.Assets
-                .FirstOrDefaultAsync(a =>
-                    a.Id == assetId &&
-                    a.Status == AssetStatus.Available);
-
-            if (request == null || asset == null)
-                return false;
-
-            request.AssignedAssetId = assetId;
+            request.AssignedAssetId = asset.Id;
             request.Status = CheckoutRequestStatus.Fulfilled;
             request.FulfilledAt = DateTime.UtcNow;
             request.UpdatedAt = DateTime.UtcNow;
 
             _context.AddAssetHistory(
-                assetId,
+                asset.Id,
                 reviewedByUserId,
                 "Updated Asset Status",
                 asset.Status.ToString(),
@@ -169,7 +155,7 @@ namespace AssetManagementSystem.Models.Repositories
             asset.Status = AssetStatus.Assigned;
 
             _context.AddAssetHistory(
-                assetId,
+                asset.Id,
                 reviewedByUserId,
                 $"Assigned Asset to {request?.RequestedByUser?.EmailAddress ?? "Unknown"}");
 
@@ -177,37 +163,22 @@ namespace AssetManagementSystem.Models.Repositories
             asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-
-            return true;
         }
 
-        public async Task<bool> ReturnById(
-            Guid requestId,
-            Guid assetId,
-            Guid reviewedByUserId)
+        public async Task ReturnById(
+            CheckoutRequest request,
+            Asset asset,
+            Guid reviewedByUserId,
+            bool shouldBeAvailable)
         {
-            CheckoutRequest? request = await _context.CheckoutRequests
-                .Include(r => r.RequestedByUser)
-                .FirstOrDefaultAsync(r =>
-                    r.Id == requestId &&
-                    r.Status == CheckoutRequestStatus.Pending &&
-                    r.RequestType == CheckoutRequestType.Return);
-
-            Asset? asset = await _context.Assets
-                .FirstOrDefaultAsync(a => a.Id == assetId);
-
-            if (request == null || asset == null)
-                return false;
-
             request.Status = CheckoutRequestStatus.Returned;
             request.ReturnedAt = DateTime.UtcNow;
             request.UpdatedAt = DateTime.UtcNow;
 
-            // Do not make available if Asset is damaged or under maintenance.
-            if (asset.Condition != AssetCondition.Damaged && asset.Status != AssetStatus.Maintenance)
+            if (shouldBeAvailable)
             {
                 _context.AddAssetHistory(
-                assetId,
+                asset.Id,
                 reviewedByUserId,
                 "Updated Asset Status",
                 asset.Status.ToString(),
@@ -217,7 +188,7 @@ namespace AssetManagementSystem.Models.Repositories
             }
 
             _context.AddAssetHistory(
-                assetId,
+                asset.Id,
                 reviewedByUserId,
                 $"Unassigned Asset from {request?.RequestedByUser?.EmailAddress ?? "Unknown"}");
 
@@ -225,8 +196,6 @@ namespace AssetManagementSystem.Models.Repositories
             asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-
-            return true;
         }
     }
 }

@@ -7,8 +7,6 @@ using AssetManagementSystem.Extensions;
 using AssetManagementSystem.Helpers;
 using AssetManagementSystem.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Linq;
 
 namespace AssetManagementSystem.Models.Repositories
 {
@@ -23,7 +21,7 @@ namespace AssetManagementSystem.Models.Repositories
 
         public async Task<bool> IsTagTakenAndNotId(string assetTag, Guid id)
         {
-            return await _context.Assets.FirstOrDefaultAsync(a => a.AssetTag == assetTag && a.Id != id) != null;
+            return await _context.Assets.AnyAsync(a => a.AssetTag == assetTag && a.Id != id);
         }
 
         public async Task<PagedResponse<Asset>> GetAssets(GetAssetsRequest request, Guid requestorId)
@@ -40,9 +38,11 @@ namespace AssetManagementSystem.Models.Repositories
                 query = query.Where(a => a.AssignedToUserId == requestorId);
             }
 
-            if (!String.IsNullOrEmpty(request.SearchText))
+            if (!string.IsNullOrEmpty(request.SearchText))
             {
-                query = query.Where(a => a.Name.Contains(request.SearchText) || a.AssetTag.Contains(request.SearchText));
+                query = query.Where(a =>
+                    a.Name.Contains(request.SearchText) ||
+                    a.AssetTag.Contains(request.SearchText));
             }
 
             if (request.Status != null)
@@ -88,29 +88,19 @@ namespace AssetManagementSystem.Models.Repositories
             };
 
             _context.Assets.Add(asset);
-
             _context.AddAssetHistory(asset.Id, createdByUserId, "Created Asset");
 
             await _context.SaveChangesAsync();
 
-            return new Asset
-            {
-                Id = asset.Id,
-                AssetTag = asset.AssetTag,
-                Name = asset.Name,
-                Category = asset.Category,
-                Status = asset.Status,
-                Condition = asset.Condition,
-                IsArchived = asset.IsArchived
-            };
+            return asset;
         }
 
         public async Task<List<AvailableAsset>> GetAvailableByCategory(AssetCategory category)
         {
-           return await _context.Assets
-                    .Where(a => a.Status == AssetStatus.Available && a.Category == category && !a.IsArchived)
-                    .Select(a => new AvailableAsset{Id = a.Id, Name = a.Name})
-                    .ToListAsync();
+            return await _context.Assets
+                .Where(a => a.Status == AssetStatus.Available && a.Category == category && !a.IsArchived)
+                .Select(a => new AvailableAsset { Id = a.Id, Name = a.Name })
+                .ToListAsync();
         }
 
         public async Task<Asset?> GetById(Guid id)
@@ -120,22 +110,20 @@ namespace AssetManagementSystem.Models.Repositories
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<Asset?> UpdateById(Guid id, UpdateAssetRequest request, Guid updatedByUserId)
+        public async Task<Asset> UpdateById(Asset asset, UpdateAssetRequest request, Guid updatedByUserId)
         {
-            Asset? asset = await GetById(id);
-            if (asset == null) return null;
-
             if (asset.SerialNumber != request.SerialNumber)
-                _context.AddAssetHistory(id, updatedByUserId, "Updated Serial Number", asset.SerialNumber, request.SerialNumber);
+                _context.AddAssetHistory(asset.Id, updatedByUserId, "Updated Serial Number", asset.SerialNumber, request.SerialNumber);
             asset.SerialNumber = request.SerialNumber;
 
             if (asset.AssetTag != request.AssetTag)
-                _context.AddAssetHistory(id, updatedByUserId, "Updated Asset Tag", asset.AssetTag, request.AssetTag);
+                _context.AddAssetHistory(asset.Id, updatedByUserId, "Updated Asset Tag", asset.AssetTag, request.AssetTag);
             asset.AssetTag = request.AssetTag;
 
             if (asset.Name != request.Name)
-                _context.AddAssetHistory(id, updatedByUserId, "Updated Asset Name", asset.Name, request.Name);
+                _context.AddAssetHistory(asset.Id, updatedByUserId, "Updated Asset Name", asset.Name, request.Name);
             asset.Name = request.Name;
+
             asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -143,54 +131,54 @@ namespace AssetManagementSystem.Models.Repositories
             return asset;
         }
 
-        public async Task<bool> ArchiveById(Guid id, Guid archivedByUserId)
+        public async Task ArchiveById(Asset asset, Guid archivedByUserId)
         {
-            Asset? asset = await GetById(id);
-            if (asset == null) return false;
-
-            _context.AddAssetHistory(id, archivedByUserId, "Archived Asset");
+            _context.AddAssetHistory(asset.Id, archivedByUserId, "Archived Asset");
             asset.IsArchived = true;
             asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-
-            return true;
         }
 
-        public async Task<bool> UpdateAssetStatus(Guid id, AssetStatus status, Guid updatedByUserId)
+        public async Task UpdateAssetStatus(
+            Asset asset,
+            AssetStatus status,
+            Guid updatedByUserId,
+            bool shouldUnassign)
         {
-            Asset? asset = await GetById(id);
-            if (asset == null) return false;
-
-            _context.AddAssetHistory(id, updatedByUserId, "Updated Asset Status", asset.Status.ToString(), status.ToString());
+            _context.AddAssetHistory(
+                asset.Id,
+                updatedByUserId,
+                "Updated Asset Status",
+                asset.Status.ToString(),
+                status.ToString());
 
             asset.Status = status;
             asset.UpdatedAt = DateTime.UtcNow;
 
-            // If an asset is assigned to a user, and is being marked as available, then it should be unassigned
-            if (status == AssetStatus.Available && asset.AssignedToUserId != null)
+            if (shouldUnassign)
             {
                 string userEmail = asset.AssignedToUser?.EmailAddress ?? "Unknown";
-                _context.AddAssetHistory(id, updatedByUserId, $"Unassigned Asset from {userEmail}");
+                _context.AddAssetHistory(asset.Id, updatedByUserId, $"Unassigned Asset from {userEmail}");
                 asset.AssignedToUserId = null;
             }
 
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> UpdateAssetCondition(Guid id, AssetCondition condition, Guid updatedByUserId)
+        public async Task UpdateAssetCondition(Asset asset, AssetCondition condition, Guid updatedByUserId)
         {
-            Asset? asset = await GetById(id);
-            if (asset == null) return false;
-
-            _context.AddAssetHistory(id, updatedByUserId, "Updated Asset Condition", asset.Condition.ToString(), condition.ToString());
+            _context.AddAssetHistory(
+                asset.Id,
+                updatedByUserId,
+                "Updated Asset Condition",
+                asset.Condition.ToString(),
+                condition.ToString());
 
             asset.Condition = condition;
             asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<List<AssetHistory>> GetAssetHistory(Guid id)
