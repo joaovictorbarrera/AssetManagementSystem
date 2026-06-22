@@ -27,8 +27,6 @@ namespace AssetManagementSystem.Controllers
         {
             // There is intentionally no check for password.
             // Managing passwords is outside the scope of this project.
-            if (String.IsNullOrEmpty(loginData.EmailAddress)) return BadRequest("Email cannot be null or empty.");
-
             User? user = await _userRepository.GetUserByEmailAsync(loginData.EmailAddress);
 
             if (user == null || !user.IsActive) return Unauthorized();
