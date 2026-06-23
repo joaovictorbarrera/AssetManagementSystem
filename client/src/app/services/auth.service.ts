@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import LoginRequestDto from '../DTOs/login-request.dto';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +9,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(body: LoginRequestDto) {
+  login(body: any) {
     return this.http
       .post(`${this.apiUrl}/login`, body, {
         withCredentials: true

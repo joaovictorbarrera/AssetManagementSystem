@@ -1,0 +1,12 @@
+<div class="bg-navbar h-15 flex px-5 items-center">
+
+    <strong>
+    {{ this.loggedInUser()?.firstName}} {{ this.loggedInUser()?.lastName }} ({{ this.loggedInUser()?.emailAddress }})
+    </strong>
+    <div class="ml-auto flex gap-2 items-center">
+        <span class="rounded p-2 bg-accent-glow">
+            {{ this.loggedInUser()?.role }}
+        </span>
+        <button class="bg-danger" (click)="logout()">Sign Out</button>
+    </div>
+</div>

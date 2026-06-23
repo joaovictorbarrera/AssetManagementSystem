@@ -1,0 +1,19 @@
+.nav-item {
+    cursor: pointer;
+    text-align: center;
+    background-color: var(--color-sidebar);
+    height: 100%;
+    padding-block: 1rem;
+}
+
+.nav-item:hover {
+    background-color: var(--color-surface-hover);
+}
+
+a {
+    display: block;
+}
+
+a.active > .nav-item {
+    background-color: var(--color-surface-active);
+}

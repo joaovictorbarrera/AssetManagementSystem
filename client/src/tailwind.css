@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+:root {
+  /* Backgrounds */
+  --bg-primary: #0B1220;
+  --bg-secondary: #0F1A2E;
+  --bg-elevated: #14213D;
+
+  /* Layout surfaces */
+  --sidebar: #0A1630;
+  --navbar: #101F3A;
+
+  /* Surfaces */
+  --surface: #111C33;
+  --surface-hover: #162447;
+  --surface-active: #1A2B52;
+
+  /* Borders */
+  --border: #23304D;
+  --border-strong: #2E3F66;
+
+  /* Text */
+  --text-primary: #E6EDFF;
+  --text-secondary: #9AA7C7;
+  --text-muted: #6B7A99;
+
+  /* Accent */
+  --accent: #3B82F6;
+  --accent-hover: #2563EB;
+  --accent-active: #1D4ED8;
+  --accent-glow: rgba(59, 130, 246, 0.35);
+
+  /* Status */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #06B6D4;
+
+  /* Charts */
+  --chart-1: #3B82F6;
+  --chart-2: #06B6D4;
+  --chart-3: #22C55E;
+  --chart-4: #A855F7;
+  --chart-5: #F59E0B;
+  --chart-6: #F43F5E;
+
+  /* Gradients */
+  --gradient-accent: linear-gradient(135deg, #3B82F6, #06B6D4);
+  --gradient-glow: radial-gradient(circle, rgba(59,130,246,0.25), transparent 70%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+@theme {
+  /* Backgrounds */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-elevated: var(--bg-elevated);
+
+  /* Layout */
+  --color-sidebar: var(--sidebar);
+  --color-navbar: var(--navbar);
+
+  /* Surfaces */
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-active: var(--surface-active);
+
+  /* Borders */
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  /* Text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
+  --color-accent-glow: var(--accent-glow);
+
+  /* Status */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+
+  /* Gradients */
+  --gradient-accent: var(--gradient-accent);
+  --gradient-glow: var(--gradient-glow);
+
+  /* Shadows */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}
+
+.btn {
+   background-color: var(--color-surface);
+}
+
+.btn:hover {
+   background-color: var(--color-surface-hover);
+}
+
+.btn:active {
+   background-color: var(--color-surface-active);
+}
+
+.btn-accent {
+   background-color: var(--color-accent);
+}
+
+.btn-accent:hover {
+   background-color: var(--color-accent-hover);
+}
+
+.btn-accent:active {
+   background-color: var(--color-accent-active);
+}
