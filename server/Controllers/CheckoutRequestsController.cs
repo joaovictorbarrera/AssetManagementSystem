@@ -14,18 +14,18 @@ namespace AssetManagementSystem.Controllers
     [ApiController]
     public class CheckoutRequestsController : ApiControllerBase
     {
-        private readonly CheckoutRequestService _service;
+        private readonly CheckoutRequestService _requestService;
 
-        public CheckoutRequestsController(CheckoutRequestService service)
+        public CheckoutRequestsController(CheckoutRequestService requestService)
         {
-            _service = service;
+            _requestService = requestService;
         }
 
         [HttpGet]
         public async Task<ActionResult<PagedResponse<CheckoutRequest>>> Get(
             [FromQuery] GetCheckoutRequestsRequest request)
         {
-            var result = await _service.GetRequests(request, User.GetUserId(), RolesHelper.IsAssetManager(User));
+            var result = await _requestService.GetRequests(request, User.GetUserId(), RolesHelper.IsAssetManager(User));
 
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
@@ -34,14 +34,14 @@ namespace AssetManagementSystem.Controllers
         public async Task<ActionResult<CheckoutRequest>> Create(
             [FromBody] CreateCheckoutRequestRequest request)
         {
-            var result = await _service.Create(request, User.GetUserId());
+            var result = await _requestService.Create(request, User.GetUserId());
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<CheckoutRequest>> GetDetail(Guid id)
         {
-            var result = await _service.GetDetail(id, User.GetUserId(), RolesHelper.IsAssetManager(User));
+            var result = await _requestService.GetDetail(id, User.GetUserId(), RolesHelper.IsAssetManager(User));
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
@@ -49,14 +49,14 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Archive(Guid id)
         {
-            var result = await _service.Archive(id);
+            var result = await _requestService.Archive(id);
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
         [HttpPatch("{id:guid}/cancel")]
         public async Task<IActionResult> Cancel(Guid id)
         {
-            var result = await _service.Cancel(id, User.GetUserId());
+            var result = await _requestService.Cancel(id, User.GetUserId());
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
@@ -64,7 +64,7 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<IActionResult> Approve(Guid id)
         {
-            var result = await _service.Approve(id, User.GetUserId());
+            var result = await _requestService.Approve(id, User.GetUserId());
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
@@ -72,7 +72,7 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<IActionResult> Reject(Guid id)
         {
-            var result = await _service.Reject(id, User.GetUserId());
+            var result = await _requestService.Reject(id, User.GetUserId());
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
@@ -82,7 +82,7 @@ namespace AssetManagementSystem.Controllers
             Guid id,
             [FromBody] AssignAssetRequest request)
         {
-            var result = await _service.AssignAsset(id, request, User.GetUserId());
+            var result = await _requestService.AssignAsset(id, request, User.GetUserId());
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
@@ -90,7 +90,7 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<IActionResult> Return(Guid id)
         {
-            var result = await _service.Return(id, User.GetUserId());
+            var result = await _requestService.Return(id, User.GetUserId());
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
     }
