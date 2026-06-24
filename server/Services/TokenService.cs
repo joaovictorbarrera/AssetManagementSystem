@@ -44,7 +44,7 @@ namespace AssetManagementSystem.Services
 
             TokenDto tokenDto = new()
             {
-                AuthorizationToken = new JwtSecurityTokenHandler().WriteToken(token)
+                AuthorizationToken = new JwtSecurityTokenHandler().WriteToken(token),
                 ExpirationDate = expires
             };
 
