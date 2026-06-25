@@ -1,21 +1,22 @@
 <div class="w-50 bg-sidebar h-full py-5">
     <a routerLink="/dashboard" routerLinkActive="active">
-        <nav class="nav-item">Dashboard</nav>
+        <nav class="nav-item"><ng-icon name="heroComputerDesktop" />Dashboard</nav>
     </a>
     <a routerLink="/requests" routerLinkActive="active">
-        <nav class="nav-item">Requests</nav>
+        <nav class="nav-item"><ng-icon name="heroInboxArrowDown" />Requests</nav>
     </a>
     @if (isManager()) {
         <a routerLink="/inventory" routerLinkActive="active">
-        <nav class="nav-item">Inventory</nav>
+            <nav class="nav-item"><ng-icon name="heroServerStack"/>Inventory</nav>
         </a>
         <a routerLink="/review" routerLinkActive="active">
-            <nav class="nav-item">Review</nav>
+            <nav class="nav-item"><ng-icon name="heroListBullet"/>Review</nav>
         </a>
     }
     @if (isAdmin()) {
         <a routerLink="/users" routerLinkActive="active">
-            <nav class="nav-item">Users</nav>
+            <nav class="nav-item"><ng-icon name="heroUser" />Users</nav>
         </a>
     }
 </div>
+

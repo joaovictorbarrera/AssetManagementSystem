@@ -1,15 +1,15 @@
 .dropdown {
     background-color: var(--color-bg-secondary);
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     border: 2px solid var(--color-bg-elevated);
-    padding: 8px;
+    padding-block: 8px;
+    padding-inline: 12px;
     outline: none;
-
+    width: 200px;
     cursor: pointer;
 
     &:hover {
         border: 2px solid var(--color-accent-hover);
         transition: all 300ms;
     }
-
 }

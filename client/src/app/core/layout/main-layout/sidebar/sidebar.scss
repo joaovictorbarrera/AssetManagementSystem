@@ -4,6 +4,10 @@
     background-color: var(--color-sidebar);
     height: 100%;
     padding-block: 1rem;
+    padding-inline: 1rem;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
 }
 
 .nav-item:hover {
@@ -11,7 +15,7 @@
 }
 
 a {
-    display: block;
+    display: block
 }
 
 a.active > .nav-item {
