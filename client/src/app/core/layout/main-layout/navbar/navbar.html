@@ -1,0 +1,12 @@
+<div class="bg-navbar h-15 flex px-5 items-center">
+
+    <strong>
+    {{ currentUser()?.firstName}} {{ currentUser()?.lastName }} ({{ currentUser()?.emailAddress }})
+    </strong>
+    <div class="ml-auto flex gap-2 items-center">
+        <span class="rounded p-2 bg-accent-glow">
+            {{ currentUser()?.role }}
+        </span>
+        <button class="bg-danger" (click)="authService.logout()">Sign Out</button>
+    </div>
+</div>

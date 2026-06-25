@@ -1,8 +1,8 @@
 import { Component, signal, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
-import { SubmitButton } from "../../components/submit-button/submit-button";
+import { SubmitButton } from '../../core/components/submit-button/submit-button';
+import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterModule, SubmitButton],
