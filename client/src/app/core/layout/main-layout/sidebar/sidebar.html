@@ -5,13 +5,17 @@
     <a routerLink="/requests" routerLinkActive="active">
         <nav class="nav-item">Requests</nav>
     </a>
-    <a routerLink="/inventory" routerLinkActive="active">
+    @if (isManager()) {
+        <a routerLink="/inventory" routerLinkActive="active">
         <nav class="nav-item">Inventory</nav>
-    </a>
-    <a routerLink="/review" routerLinkActive="active">
-        <nav class="nav-item">Review</nav>
-    </a>
-    <a routerLink="/users" routerLinkActive="active">
-        <nav class="nav-item">Users</nav>
-    </a>
+        </a>
+        <a routerLink="/review" routerLinkActive="active">
+            <nav class="nav-item">Review</nav>
+        </a>
+    }
+    @if (isAdmin()) {
+        <a routerLink="/users" routerLinkActive="active">
+            <nav class="nav-item">Users</nav>
+        </a>
+    }
 </div>

@@ -1,0 +1,11 @@
+<label class="flex flex-col">
+    <span class="text-sm p-1 text-text-muted">{{name}}</span>
+    <select (change)="onChange()" [(ngModel)]="value" name="conditions" class="dropdown">
+        <option value="all">
+            All
+        </option>
+        @for (item of list; track item) {
+            <option [value]="item"]>{{item}}</option>
+        }
+    </select>
+</label>

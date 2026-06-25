@@ -2,4 +2,14 @@
     <app-page-header>
         <h1 class="text-3xl text-center">My Assets</h1>
     </app-page-header>
+    <div class="flex gap-5 justify-center p-5 items-end">
+        <app-dropdown [name]="`Conditions`" [list]="assetFields().conditions" (dropdownChanged)="handleConditionChange($event)" />
+
+        <app-search-bar (search)="handleSearch($event)" />
+
+        <app-dropdown [name]="`Categories`" [list]="assetFields().categories" (dropdownChanged)="handleCategoryChange($event)" />
+
+        <app-dropdown [name]="`Statuses`" [list]="assetFields().statuses" (dropdownChanged)="handleStatusChange($event)" />
+
+    </div>
 </app-page>

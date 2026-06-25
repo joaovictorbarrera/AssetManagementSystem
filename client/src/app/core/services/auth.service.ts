@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import User from '../DTOs/user.dto';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class AuthService {
 
   private loadUserPromise?: Promise<User | null>;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(body: any) {
     return this.http.post(`${this.apiUrl}/login`, body);
@@ -23,6 +24,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('authorizationToken');
     this.currentUser.set(null);
+    this.router.navigate(["/login"]);
   }
 
   async loadUser(): Promise<User | null> {

@@ -1,0 +1,15 @@
+.dropdown {
+    background-color: var(--color-bg-secondary);
+    border-radius: 0.25rem;
+    border: 2px solid var(--color-bg-elevated);
+    padding: 8px;
+    outline: none;
+
+    cursor: pointer;
+
+    &:hover {
+        border: 2px solid var(--color-accent-hover);
+        transition: all 300ms;
+    }
+
+}

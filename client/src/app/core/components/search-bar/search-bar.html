@@ -1,0 +1,14 @@
+<div class="flex">
+    <input
+        [(ngModel)]="searchText"
+        type="text"
+        class="p-2 border-2 border-bg-elevated outline-none"
+        placeholder="Search"
+    >
+    <button
+        class="p-2 border-2 border-bg-elevated rounded-none! flex justify-center items-center"
+        (click)="onSearch()"
+    >
+        <ng-icon name="heroMagnifyingGlass"></ng-icon>
+    </button>
+</div>
