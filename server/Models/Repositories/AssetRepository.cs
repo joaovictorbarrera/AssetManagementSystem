@@ -110,7 +110,10 @@ namespace AssetManagementSystem.Models.Repositories
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public async Task<Asset> UpdateById(Asset asset, UpdateAssetRequest request, Guid updatedByUserId)
+        public async Task<Asset> UpdateById(
+            Asset asset, 
+            UpdateAssetRequest request, 
+            Guid updatedByUserId)
         {
             if (asset.SerialNumber != request.SerialNumber)
                 _context.AddAssetHistory(asset.Id, updatedByUserId, "Updated Serial Number", asset.SerialNumber, request.SerialNumber);
@@ -123,6 +126,8 @@ namespace AssetManagementSystem.Models.Repositories
             if (asset.Name != request.Name)
                 _context.AddAssetHistory(asset.Id, updatedByUserId, "Updated Asset Name", asset.Name, request.Name);
             asset.Name = request.Name;
+
+
 
             asset.UpdatedAt = DateTime.UtcNow;
 

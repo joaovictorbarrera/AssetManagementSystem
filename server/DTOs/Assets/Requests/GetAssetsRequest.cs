@@ -7,7 +7,7 @@ namespace AssetManagementSystem.DTOs.Assets.Requests
     public class GetAssetsRequest : PaginatedRequest
     {
         [MaxLength(50)]
-        public string SearchText { get; set; } = "";
+        public string? SearchText { get; set; } = "";
         public AssetStatus? Status { get; set; } = null;
 
         // ALL below are protected by Manager+ Role

@@ -6,7 +6,7 @@ namespace AssetManagementSystem.DTOs.Users
     public class GetUsersRequest : PaginatedRequest
     {
         [MaxLength(50)]
-        public string SearchText { get; set; } = "";
+        public string? SearchText { get; set; } = "";
         public bool HideInactive { get; set; } = false;
     }
 }

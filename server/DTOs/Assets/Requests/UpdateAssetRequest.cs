@@ -17,5 +17,9 @@ namespace AssetManagementSystem.DTOs.Assets.Requests
         [MaxLength(50)]
         [MinLength(1)]
         public string? SerialNumber { get; set; }
+
+        public required AssetCategory Category { get; set; }
+        public required AssetStatus Status { get; set; }
+        public required AssetCondition Condition { get; set; }
     }
 }
