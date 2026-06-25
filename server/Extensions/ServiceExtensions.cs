@@ -53,7 +53,7 @@ namespace AssetManagementSystem.Extensions
 
                             if (user == null || !user.IsActive)
                             {
-                                context.Fail("User is inactive");
+                                context.Fail("User is inactive or does not exist");
                                 return;
                             }
 
