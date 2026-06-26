@@ -1,6 +1,7 @@
 ﻿using AssetManagementSystem.DTOs.Assets.Requests;
 using AssetManagementSystem.DTOs.Assets.Responses;
 using AssetManagementSystem.DTOs.Pagination;
+using AssetManagementSystem.DTOs.Users;
 using AssetManagementSystem.Extensions;
 using AssetManagementSystem.Helpers;
 using AssetManagementSystem.Models.Entities;
@@ -23,10 +24,15 @@ namespace AssetManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResponse<Asset>>> Get(
+        public async Task<ActionResult<PagedResponse<AssetDto>>> Get(
             [FromQuery] GetAssetsRequest request)
         {
-            var result = await _service.GetAssets(request, User.GetUserId(), RolesHelper.IsAssetManager(User));
+            if (HttpContext.Items["User"] is not User user)
+            {
+                return BadRequest("User context is missing.");
+            }
+            Requestor requestor = user.GetRequestor();
+            var result = await _service.GetAssets(request, requestor);
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
@@ -34,7 +40,12 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Policy = "AssetManager+")]
         public async Task<ActionResult<Asset>> Create([FromBody] CreateAssetRequest request)
         {
-            var result = await _service.Create(request, User.GetUserId());
+            if (HttpContext.Items["User"] is not User user)
+            {
+                return BadRequest("User context is missing.");
+            }
+            Requestor requestor = user.GetRequestor();
+            var result = await _service.Create(request, requestor);
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
@@ -54,9 +65,14 @@ namespace AssetManagementSystem.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Asset>> GetDetail(Guid id)
+        public async Task<ActionResult<AssetDto>> GetDetail(Guid id)
         {
-            var result = await _service.GetDetail(id, User.GetUserId(), RolesHelper.IsAssetManager(User));
+            if (HttpContext.Items["User"] is not User user)
+            {
+                return BadRequest("User context is missing.");
+            }
+            Requestor requestor = user.GetRequestor();
+            var result = await _service.GetDetail(id, requestor);
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
@@ -66,7 +82,12 @@ namespace AssetManagementSystem.Controllers
             Guid id,
             [FromBody] UpdateAssetRequest request)
         {
-            var result = await _service.Update(id, request, User.GetUserId());
+            if (HttpContext.Items["User"] is not User user)
+            {
+                return BadRequest("User context is missing.");
+            }
+            Requestor requestor = user.GetRequestor();
+            var result = await _service.Update(id, request, requestor);
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
@@ -74,7 +95,12 @@ namespace AssetManagementSystem.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Archive(Guid id)
         {
-            var result = await _service.Archive(id, User.GetUserId());
+            if (HttpContext.Items["User"] is not User user)
+            {
+                return BadRequest("User context is missing.");
+            }
+            Requestor requestor = user.GetRequestor();
+            var result = await _service.Archive(id, requestor);
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
@@ -84,7 +110,12 @@ namespace AssetManagementSystem.Controllers
             Guid id,
             [FromBody] UpdateAssetStatusRequest request)
         {
-            var result = await _service.UpdateStatus(id, request, User.GetUserId());
+            if (HttpContext.Items["User"] is not User user)
+            {
+                return BadRequest("User context is missing.");
+            }
+            Requestor requestor = user.GetRequestor();
+            var result = await _service.UpdateStatus(id, request, requestor);
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 
@@ -94,7 +125,12 @@ namespace AssetManagementSystem.Controllers
             Guid id,
             [FromBody] UpdateAssetConditionRequest request)
         {
-            var result = await _service.UpdateCondition(id, request, User.GetUserId());
+            if (HttpContext.Items["User"] is not User user)
+            {
+                return BadRequest("User context is missing.");
+            }
+            Requestor requestor = user.GetRequestor();
+            var result = await _service.UpdateCondition(id, request, requestor);
             return result.Succeeded ? NoContent() : ToActionResult(result);
         }
 

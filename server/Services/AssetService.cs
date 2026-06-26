@@ -1,6 +1,7 @@
 ﻿using AssetManagementSystem.DTOs.Assets.Requests;
 using AssetManagementSystem.DTOs.Assets.Responses;
 using AssetManagementSystem.DTOs.Pagination;
+using AssetManagementSystem.DTOs.Users;
 using AssetManagementSystem.Enums;
 using AssetManagementSystem.Models.Entities;
 using AssetManagementSystem.Models.Repositories;
@@ -16,28 +17,27 @@ namespace AssetManagementSystem.Services
             _assetRepository = assetRepository;
         }
 
-        public async Task<ServiceResult<PagedResponse<Asset>>> GetAssets(
+        public async Task<ServiceResult<PagedResponse<AssetDto>>> GetAssets(
             GetAssetsRequest request,
-            Guid requestorId,
-            bool isManager)
+            Requestor requestor)
         {
             bool managerFeatures = request.Inventory || request.ViewArchived;
-            if (managerFeatures && !isManager)
-                return ServiceResult<PagedResponse<Asset>>.Forbidden("No permission to view all assets");
+            if (managerFeatures && !requestor.IsAssetManager)
+                return ServiceResult<PagedResponse<AssetDto>>.Forbidden("No permission to view all assets");
 
-            var result = await _assetRepository.GetAssets(request, requestorId);
+            var result = await _assetRepository.GetAssets(request, requestor.UserId);
 
-            return ServiceResult<PagedResponse<Asset>>.Success(result);
+            return ServiceResult<PagedResponse<AssetDto>>.Success(result);
         }
 
         public async Task<ServiceResult<Asset>> Create(
             CreateAssetRequest request,
-            Guid createdByUserId)
+            Requestor requestor)
         {
             if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, Guid.Empty))
                 return ServiceResult<Asset>.BadRequest("Asset Tag is taken");
 
-            Asset asset = await _assetRepository.CreateAsset(request, createdByUserId);
+            Asset asset = await _assetRepository.CreateAsset(request, requestor.UserId);
             return ServiceResult<Asset>.Success(asset);
         }
 
@@ -48,26 +48,25 @@ namespace AssetManagementSystem.Services
             return ServiceResult<List<AvailableAsset>>.Success(assets);
         }
 
-        public async Task<ServiceResult<Asset>> GetDetail(
+        public async Task<ServiceResult<AssetDto>> GetDetail(
             Guid id,
-            Guid requestorId,
-            bool isManager)
+            Requestor requestor)
         {
-            Asset? asset = await _assetRepository.GetById(id);
+            AssetDto? asset = await _assetRepository.GetDtoById(id);
 
             if (asset == null)
-                return ServiceResult<Asset>.NotFound();
+                return ServiceResult<AssetDto>.NotFound();
 
-            if (asset.AssignedToUserId != requestorId && !isManager)
-                return ServiceResult<Asset>.Forbidden("Asset is not assigned to you");
+            if (asset.AssignedToUserId != requestor.UserId && !requestor.IsAssetManager)
+                return ServiceResult<AssetDto>.Forbidden("Asset is not assigned to you");
 
-            return ServiceResult<Asset>.Success(asset);
+            return ServiceResult<AssetDto>.Success(asset);
         }
 
         public async Task<ServiceResult<Asset>> Update(
             Guid id,
             UpdateAssetRequest request,
-            Guid updatedByUserId)
+            Requestor requestor)
         {
             if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, id))
                 return ServiceResult<Asset>.BadRequest("Asset Tag is taken");
@@ -80,12 +79,12 @@ namespace AssetManagementSystem.Services
             if (existing.IsArchived)
                 return ServiceResult<Asset>.BadRequest("Cannot update archived assets");
 
-            Asset updated = await _assetRepository.UpdateById(existing, request, updatedByUserId);
+            Asset updated = await _assetRepository.UpdateById(existing, request, requestor.UserId);
 
             return ServiceResult<Asset>.Success(updated);
         }
 
-        public async Task<ServiceResult> Archive(Guid id, Guid archivedByUserId)
+        public async Task<ServiceResult> Archive(Guid id, Requestor requestor)
         {
             Asset? existing = await _assetRepository.GetById(id);
 
@@ -95,7 +94,7 @@ namespace AssetManagementSystem.Services
             if (existing.IsArchived)
                 return ServiceResult.BadRequest("Asset is already archived");
 
-            await _assetRepository.ArchiveById(existing, archivedByUserId);
+            await _assetRepository.ArchiveById(existing, requestor.UserId);
 
             return ServiceResult.Success();
         }
@@ -103,7 +102,7 @@ namespace AssetManagementSystem.Services
         public async Task<ServiceResult> UpdateStatus(
             Guid id,
             UpdateAssetStatusRequest request,
-            Guid updatedByUserId)
+            Requestor requestor)
         {
             Asset? existing = await _assetRepository.GetById(id);
 
@@ -119,7 +118,7 @@ namespace AssetManagementSystem.Services
             await _assetRepository.UpdateAssetStatus(
                 existing,
                 request.Status,
-                updatedByUserId,
+                requestor.UserId,
                 shouldUnassign);
 
             return ServiceResult.Success();
@@ -128,7 +127,7 @@ namespace AssetManagementSystem.Services
         public async Task<ServiceResult> UpdateCondition(
             Guid id,
             UpdateAssetConditionRequest request,
-            Guid updatedByUserId)
+            Requestor requestor)
         {
             Asset? existing = await _assetRepository.GetById(id);
 
@@ -138,7 +137,7 @@ namespace AssetManagementSystem.Services
             if (existing.IsArchived)
                 return ServiceResult.BadRequest("Cannot update archived assets");
 
-            await _assetRepository.UpdateAssetCondition(existing, request.Condition, updatedByUserId);
+            await _assetRepository.UpdateAssetCondition(existing, request.Condition, requestor.UserId);
 
             return ServiceResult.Success();
         }

@@ -1,0 +1,26 @@
+td {
+    padding: 1.25rem;
+}
+
+.assigned {
+    background-color: var(--chip-info-bg) !important;
+    color: var(--chip-info-text) !important
+}
+
+.maintenance {
+    background-color: var(--chip-danger-bg) !important;
+    color: var(--chip-danger-text) !important
+}
+
+.pending {
+    background-color: var(--chip-warning-bg) !important;
+    color: var(--chip-warning-text) !important
+}
+
+.chip {
+    padding: 8px;
+    border-radius: .5rem;
+    text-transform: capitalize;
+    background-color: var(--chip-info-bg);
+    color: var(--chip-info-text)
+}

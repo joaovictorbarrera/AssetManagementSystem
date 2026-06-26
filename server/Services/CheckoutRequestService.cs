@@ -1,5 +1,6 @@
 ﻿using AssetManagementSystem.DTOs.CheckoutRequests;
 using AssetManagementSystem.DTOs.Pagination;
+using AssetManagementSystem.DTOs.Users;
 using AssetManagementSystem.Enums;
 using AssetManagementSystem.Models.Entities;
 using AssetManagementSystem.Models.Repositories;
@@ -21,20 +22,19 @@ namespace AssetManagementSystem.Services
 
         public async Task<ServiceResult<PagedResponse<CheckoutRequest>>> GetRequests(
             GetCheckoutRequestsRequest request,
-            Guid requestorId,
-            bool isManager)
+            Requestor requestor)
         {
-            if (request.Review && !isManager)
+            if (request.Review && !requestor.IsAssetManager)
                 return ServiceResult<PagedResponse<CheckoutRequest>>.Forbidden("No permission to view all requests");
 
-            var result = await _requestRepository.GetRequests(request, requestorId);
+            var result = await _requestRepository.GetRequests(request, requestor.UserId);
 
             return ServiceResult<PagedResponse<CheckoutRequest>>.Success(result);
         }
 
         public async Task<ServiceResult<CheckoutRequest>> Create(
             CreateCheckoutRequestRequest request,
-            Guid requestorId)
+            Requestor requestor)
         {
             if (request.RequestType == CheckoutRequestType.Return)
             {
@@ -48,26 +48,25 @@ namespace AssetManagementSystem.Services
                     return ServiceResult<CheckoutRequest>.BadRequest(
                         "Asset does not exist");
 
-                if (asset.AssignedToUserId != requestorId)
+                if (asset.AssignedToUserId != requestor.UserId)
                     return ServiceResult<CheckoutRequest>.Forbidden(
                         "Asset is not assigned to you");
             }
 
-            CheckoutRequest created = await _requestRepository.Create(request, requestorId);
+            CheckoutRequest created = await _requestRepository.Create(request, requestor.UserId);
             return ServiceResult<CheckoutRequest>.Success(created);
         }
 
         public async Task<ServiceResult<CheckoutRequest>> GetDetail(
             Guid id,
-            Guid requestorId,
-            bool isManager)
+            Requestor requestor)
         {
             CheckoutRequest? checkoutRequest = await _requestRepository.GetById(id);
 
             if (checkoutRequest == null)
                 return ServiceResult<CheckoutRequest>.NotFound();
 
-            if (!isManager && checkoutRequest.RequestedByUserId != requestorId)
+            if (!requestor.IsAssetManager && checkoutRequest.RequestedByUserId != requestor.UserId)
                 return ServiceResult<CheckoutRequest>.Forbidden(
                     "Request does not belong to you");
 
@@ -83,14 +82,14 @@ namespace AssetManagementSystem.Services
                 : ServiceResult.NotFound();
         }
 
-        public async Task<ServiceResult> Cancel(Guid id, Guid requestorId)
+        public async Task<ServiceResult> Cancel(Guid id, Requestor requestor)
         {
             CheckoutRequest? checkoutRequest = await _requestRepository.GetById(id);
 
             if (checkoutRequest == null)
                 return ServiceResult.NotFound();
 
-            if (checkoutRequest.RequestedByUserId != requestorId)
+            if (checkoutRequest.RequestedByUserId != requestor.UserId)
                 return ServiceResult.Forbidden("Request does not belong to you");
 
             if (checkoutRequest.Status != CheckoutRequestStatus.Pending)
@@ -106,7 +105,7 @@ namespace AssetManagementSystem.Services
                 : ServiceResult.NotFound();
         }
 
-        public async Task<ServiceResult> Approve(Guid id, Guid reviewedByUserId)
+        public async Task<ServiceResult> Approve(Guid id, Requestor requestor)
         {
             CheckoutRequest? checkoutRequest = await _requestRepository.GetById(id);
 
@@ -122,14 +121,14 @@ namespace AssetManagementSystem.Services
             if (checkoutRequest.IsArchived)
                 return ServiceResult.BadRequest("Cannot update archived requests");
 
-            bool success = await _requestRepository.ApproveById(id, reviewedByUserId);
+            bool success = await _requestRepository.ApproveById(id, requestor.UserId);
 
             return success
                 ? ServiceResult.Success()
                 : ServiceResult.NotFound();
         }
 
-        public async Task<ServiceResult> Reject(Guid id, Guid reviewedByUserId)
+        public async Task<ServiceResult> Reject(Guid id, Requestor requestor)
         {
             CheckoutRequest? checkoutRequest = await _requestRepository.GetById(id);
 
@@ -142,7 +141,7 @@ namespace AssetManagementSystem.Services
             if (checkoutRequest.IsArchived)
                 return ServiceResult.BadRequest("Cannot update archived requests");
 
-            bool success = await _requestRepository.RejectById(id, reviewedByUserId);
+            bool success = await _requestRepository.RejectById(id, requestor.UserId);
 
             return success
                 ? ServiceResult.Success()
@@ -152,7 +151,7 @@ namespace AssetManagementSystem.Services
         public async Task<ServiceResult> AssignAsset(
             Guid id,
             AssignAssetRequest request,
-            Guid reviewedByUserId)
+            Requestor requestor)
         {
             CheckoutRequest? checkoutRequest = await _requestRepository.GetById(id);
 
@@ -180,12 +179,12 @@ namespace AssetManagementSystem.Services
             await _requestRepository.AssignAssetById(
                 checkoutRequest,
                 asset,
-                reviewedByUserId);
+                requestor.UserId);
 
             return ServiceResult.Success();
         }
 
-        public async Task<ServiceResult> Return(Guid id, Guid reviewedByUserId)
+        public async Task<ServiceResult> Return(Guid id, Requestor requestor)
         {
             CheckoutRequest? request = await _requestRepository.GetById(id);
 
@@ -218,7 +217,7 @@ namespace AssetManagementSystem.Services
             await _requestRepository.ReturnById(
                 request,
                 asset,
-                reviewedByUserId,
+                requestor.UserId,
                 shouldBeAvailable);
 
             return ServiceResult.Success();

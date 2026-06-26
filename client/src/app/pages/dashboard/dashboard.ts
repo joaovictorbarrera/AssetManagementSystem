@@ -18,10 +18,10 @@ import { TablePagination } from "../../core/components/table-components/table-pa
 })
 export class Dashboard implements OnInit {
   assetFields: WritableSignal<AssetFields> = signal({categories: [], statuses: [], conditions: []})
-  headers = ["Asset Tag", "Name", "Category", "Condition", "Actions"]
+  headers = ["Asset Tag", "Name", "Category", "Status", "Return Status"]
 
   category = signal("")
-  condition = signal("")
+  status = signal("")
   searchText = signal("")
   assets = signal(defaultPaginatedResponse<Asset>())
   pageSize = signal(25)
@@ -32,10 +32,7 @@ export class Dashboard implements OnInit {
   constructor(private assetService: AssetService) {}
 
   ngOnInit(): void {
-    this.assetService.getFields().subscribe({
-      next: res => this.assetFields.set(res as AssetFields)
-    })
-
+    this.getFields()
     this.getAssets()
   }
 
@@ -44,8 +41,8 @@ export class Dashboard implements OnInit {
     this.getAssets()
   }
 
-  handleConditionChange(value: string) {
-    this.condition.set(value === "all" ? "" : value)
+  handleStatusChange(value: string) {
+    this.status.set(value === "all" ? "" : value)
     this.getAssets()
   }
 
@@ -60,6 +57,13 @@ export class Dashboard implements OnInit {
     this.getAssets()
   }
 
+  getFields() {
+    this.assetService.getFields().subscribe({
+      next: res => this.assetFields.set(res as AssetFields),
+      error: err => window.alert(err.message)
+    })
+  }
+
   getAssets() {
     if (this.loadingAssets()) return
 
@@ -68,7 +72,7 @@ export class Dashboard implements OnInit {
       pageNumber: this.pageNumber(),
       pageSize: this.pageSize(),
       searchText: this.searchText(),
-      condition: this.condition(),
+      status: this.status(),
       category: this.category()
     }).subscribe({
       next: data => {

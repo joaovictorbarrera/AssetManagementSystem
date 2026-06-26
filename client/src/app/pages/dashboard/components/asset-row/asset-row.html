@@ -1,0 +1,17 @@
+
+<td>{{asset.assetTag}}</td>
+<td>{{asset.name}}</td>
+<td class="capitalize">{{asset.category}}</td>
+<td>
+    <span [classList]="asset.status + ' chip'">
+        {{asset.status}}
+    </span>
+</td>
+<td>
+@if (asset.isPendingReturn) {
+    <span class="chip pending">Request Sent</span>
+} @else {
+    <button (click)="handleReturnRequest()" class="bg-accent hover:bg-accent-hover">Request Return</button>
+}
+</td>
+

@@ -86,7 +86,7 @@ namespace AssetManagementSystem.Data
                     .HasForeignKey(c => c.ReviewedByUserId);
 
                 entity.HasOne(c => c.AssignedAsset)
-                    .WithMany()
+                    .WithMany(a => a.Requests)
                     .HasForeignKey(c => c.AssignedAssetId);
 
                 entity.HasData(SeedData.CheckoutRequests);

@@ -1,4 +1,6 @@
-﻿using AssetManagementSystem.Enums;
+﻿using AssetManagementSystem.DTOs.Users;
+using AssetManagementSystem.Enums;
+using AssetManagementSystem.Helpers;
 
 namespace AssetManagementSystem.Models.Entities
 {
@@ -13,5 +15,14 @@ namespace AssetManagementSystem.Models.Entities
         public DateTime? UpdatedAt { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
+
+        public Requestor GetRequestor()
+        {
+            return new Requestor
+            {
+                UserId = Id,
+                IsAssetManager = RolesHelper.IsAssetManager(Role)
+            };
+        }
     }
 }

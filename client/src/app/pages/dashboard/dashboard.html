@@ -3,7 +3,7 @@
         <h1 class="text-3xl text-center">My Assets</h1>
     </app-page-header>
     <div class="flex gap-5 justify-center p-5 items-end">
-        <app-dropdown [name]="`Condition`" [list]="assetFields().conditions" (dropdownChanged)="handleConditionChange($event)" />
+        <app-dropdown [name]="`Status`" [list]="assetFields().statuses" (dropdownChanged)="handleStatusChange($event)" />
 
         <app-search-bar (search)="handleSearch($event)" />
 

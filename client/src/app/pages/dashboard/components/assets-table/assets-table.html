@@ -1,20 +1,12 @@
-<div class="assets-table__wrapper flex-1 min-h-0 flex flex-col overflow-hidden relative">
-    <div class="assets-table__content flex-1 min-h-0 overflow-y-auto">
-        <table class="table-fixed w-full min-h-0">
+<div class="assets-table-wrapper flex-col overflow-hidden relative">
+    <div class="assets-table-content overflow-y-auto">
+        <table class="table-fixed w-full">
             <thead app-table-header [headers]="headers" class="sticky top-0"></thead>
 
             <tbody>
                 @if (!loading) {
                     @for (asset of assets.items; track asset.id) {
-                        <tr class="cursor-pointer">
-                            <td>{{asset.assetTag}}</td>
-                            <td>{{asset.name}}</td>
-                            <td><span class="flex justify-center bg-chip-category-1 capitalize w-30 p-2 rounded-2xl">{{asset.category}}</span></td>
-                            <td><span class="flex justify-center bg-chip-category-3 capitalize w-30 p-2 rounded-2xl">{{asset.condition}}</span></td>
-                            <td>
-                                <button class="bg-accent hover:bg-accent-hover">Return</button>
-                            </td>
-                        </tr>
+                        <tr class="cursor-pointer" app-asset-row [asset]="asset"></tr>
                     }
                     @if (assets.items.length === 0) {
                         <tr>

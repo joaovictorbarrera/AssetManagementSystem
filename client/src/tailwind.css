@@ -1,127 +1,105 @@
 @import "tailwindcss";
 
 :root {
-  /* Backgrounds */
-  --bg-primary: #0D141F;
-  --bg-secondary: #101A28;
-  --bg-elevated: #162235;
+  --bg-primary: #07101C;
+  --bg-secondary: #0A1525;
+  --bg-elevated: #0E1C2F;
 
-  /* Layout surfaces */
-  --sidebar: #0C1726;
-  --navbar: #121E2E;
+  --sidebar: #0A1525;
+  --navbar: #0E1C2F;
 
-  /* Surfaces */
-  --surface: #121B29;
-  --surface-hover: #172436;
-  --surface-active: #1C2C42;
+  --surface: #0E1C2F;
+  --surface-hover: #122038;
+  --surface-active: #162540;
 
-  /* Borders */
-  --border: #263245;
-  --border-strong: #314058;
+  --border: #1E2E45;
+  --border-strong: #263B58;
 
-  /* Text */
-  --text-primary: #E3E9F5;
-  --text-secondary: #A3AEC4;
-  --text-muted: #6F7C92;
+  --text-primary: #E8EFF8;
+  --text-secondary: #8A9BB5;
+  --text-muted: #4D5F78;
 
-  /* Accent (muted blue, less neon, slightly gray-shifted) */
-  --accent: #4F7DBA;
-  --accent-hover: #3F6BA6;
-  --accent-active: #345A8C;
-  --accent-glow: rgba(79, 125, 186, 0.22);
+  --accent: #2F80ED;
+  --accent-hover: #5B9FF5;
+  --accent-active: #1A6BD4;
+  --accent-glow: rgba(47, 128, 237, 0.2);
 
-  /* Status (reduced saturation, more "UI-safe") */
-  --success: #3AAE6B;
-  --warning: #C08A3A;
-  --danger: #C84A4A;
-  --info: #3E9FB3;
+  --success: #2EAD6B;
+  --warning: #D4882F;
+  --danger: #C44040;
+  --info: #2E9DB0;
 
-  /* Charts (kept hue separation, reduced intensity) */
-  --chart-1: #4F7DBA;
-  --chart-2: #3E9FB3;
-  --chart-3: #3AAE6B;
-  --chart-4: #8B6BBF;
-  --chart-5: #C08A3A;
-  --chart-6: #C04B66;
+  --chart-1: #2F80ED;
+  --chart-2: #2E9DB0;
+  --chart-3: #2EAD6B;
+  --chart-4: #7B5EA7;
+  --chart-5: #D4882F;
+  --chart-6: #C44060;
 
-  /* Gradients */
-  --gradient-accent: linear-gradient(135deg, #4F7DBA, #3E9FB3);
-  --gradient-glow: radial-gradient(circle, rgba(79,125,186,0.18), transparent 70%);
+  --gradient-accent: linear-gradient(135deg, #2F80ED, #2E9DB0);
+  --gradient-glow: radial-gradient(circle, rgba(47,128,237,0.16), transparent 70%);
 
-  /* Shadows (slightly softened feel) */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.45);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.55);
-  --shadow-lg: 0 10px 30px rgba(0,0,0,0.65);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.6);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.7);
 
-  /* Base chip */
-   --chip-bg: #162235;
-   --chip-bg-hover: #1C2C42;
-   --chip-border: #2A3A52;
-   --chip-text: #D6DEEE;
+  --chip-bg: #0E1C2F;
+  --chip-bg-hover: #122038;
+  --chip-border: #1E2E45;
+  --chip-text: #C8D8EE;
 
-   /* Neutral / Category chips (default tags) */
-   --chip-neutral-bg: #152033;
-   --chip-neutral-text: #B9C4DA;
-   --chip-neutral-border: #27364D;
+  --chip-neutral-bg: #0C1828;
+  --chip-neutral-text: #8A9BB5;
+  --chip-neutral-border: #1A2B40;
 
-   /* Category variants (muted blues/teals/purples) */
-   --chip-category-1: #2B3E5C; /* slate blue */
-   --chip-category-2: #2A4550; /* muted teal */
-   --chip-category-3: #3A3552; /* muted indigo */
-   --chip-category-4: #3D3A2E; /* muted amber-gray */
-   --chip-category-5: #3A2F33; /* muted rose-gray */
+  --chip-category-1: #122038;
+  --chip-category-2: #102030;
+  --chip-category-3: #181830;
+  --chip-category-4: #1E1C10;
+  --chip-category-5: #1E1010;
 
-   /* Condition / status chips (soft semantic fills) */
-   --chip-success-bg: rgba(58, 174, 107, 0.14);
-   --chip-success-text: #8FD9B0;
+  --chip-success-bg: rgba(46, 173, 107, 0.13);
+  --chip-success-text: #5ECFA3;
 
-   --chip-warning-bg: rgba(192, 138, 58, 0.14);
-   --chip-warning-text: #E3C08A;
+  --chip-warning-bg: rgba(212, 136, 47, 0.13);
+  --chip-warning-text: #E3B870;
 
-   --chip-danger-bg: rgba(200, 74, 74, 0.14);
-   --chip-danger-text: #E6A0A0;
+  --chip-danger-bg: rgba(255, 0, 0, 0.1);
+  --chip-danger-text: #b80000;
 
-   --chip-info-bg: rgba(62, 159, 179, 0.14);
-   --chip-info-text: #A7DCE6;
+  --chip-info-bg: rgba(46, 157, 176, 0.13);
+  --chip-info-text: #7ACFDE;
 }
 
 @theme {
-  /* Backgrounds */
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
   --color-bg-elevated: var(--bg-elevated);
 
-  /* Layout */
   --color-sidebar: var(--sidebar);
   --color-navbar: var(--navbar);
 
-  /* Surfaces */
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);
   --color-surface-active: var(--surface-active);
 
-  /* Borders */
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
 
-  /* Text */
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
 
-  /* Accent */
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-active: var(--accent-active);
   --color-accent-glow: var(--accent-glow);
 
-  /* Status */
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
   --color-info: var(--info);
 
-  /* Charts */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -129,34 +107,28 @@
   --color-chart-5: var(--chart-5);
   --color-chart-6: var(--chart-6);
 
-  /* Gradients */
   --gradient-accent: var(--gradient-accent);
   --gradient-glow: var(--gradient-glow);
 
-  /* Shadows */
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
 
-  /* Base chip */
   --color-chip: var(--chip-bg);
   --color-chip-hover: var(--chip-bg-hover);
   --color-chip-border: var(--chip-border);
   --color-chip-text: var(--chip-text);
 
-  /* Neutral chip */
   --color-chip-neutral-bg: var(--chip-neutral-bg);
   --color-chip-neutral-text: var(--chip-neutral-text);
   --color-chip-neutral-border: var(--chip-neutral-border);
 
-  /* Category chips */
   --color-chip-category-1: var(--chip-category-1);
   --color-chip-category-2: var(--chip-category-2);
   --color-chip-category-3: var(--chip-category-3);
   --color-chip-category-4: var(--chip-category-4);
   --color-chip-category-5: var(--chip-category-5);
 
-  /* Status chips */
   --color-chip-success-bg: var(--chip-success-bg);
   --color-chip-success-text: var(--chip-success-text);
 
@@ -169,30 +141,29 @@
   --color-chip-info-bg: var(--chip-info-bg);
   --color-chip-info-text: var(--chip-info-text);
 
-  /* Active / focus */
   --color-chip-ring: var(--chip-active-ring);
 }
 
 .btn {
-   background-color: var(--color-surface);
+  background-color: var(--color-surface);
 }
 
 .btn:hover {
-   background-color: var(--color-surface-hover);
+  background-color: var(--color-surface-hover);
 }
 
 .btn:active {
-   background-color: var(--color-surface-active);
+  background-color: var(--color-surface-active);
 }
 
 .btn-accent {
-   background-color: var(--color-accent);
+  background-color: var(--color-accent);
 }
 
 .btn-accent:hover {
-   background-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
 }
 
 .btn-accent:active {
-   background-color: var(--color-accent-active);
+  background-color: var(--color-accent-active);
 }

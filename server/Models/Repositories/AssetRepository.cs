@@ -24,7 +24,7 @@ namespace AssetManagementSystem.Models.Repositories
             return await _context.Assets.AnyAsync(a => a.AssetTag == assetTag && a.Id != id);
         }
 
-        public async Task<PagedResponse<Asset>> GetAssets(GetAssetsRequest request, Guid requestorId)
+        public async Task<PagedResponse<AssetDto>> GetAssets(GetAssetsRequest request, Guid requestorId)
         {
             IQueryable<Asset> query = _context.Assets;
 
@@ -62,15 +62,32 @@ namespace AssetManagementSystem.Models.Repositories
 
             int totalCount = await query.CountAsync();
 
-            List<Asset> assets = await query
+            List<AssetDto> assets = await query
                 .OrderBy(a => a.AssetTag)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
+                .Select(a => new AssetDto()
+                {
+                    Id = a.Id,
+                    AssetTag = a.AssetTag,
+                    Name = a.Name,
+                    SerialNumber = a.SerialNumber,
+                    Category = a.Category,
+                    Status = a.Status,
+                    Condition = a.Condition,
+                    AssignedToUserId = a.AssignedToUserId,
+                    UpdatedAt = a.UpdatedAt,
+                    CreatedAt = a.CreatedAt,
+                    IsArchived = a.IsArchived,
+                    IsPendingReturn = a.Requests.Any(r => r.RequestType == CheckoutRequestType.Return && 
+                                                        !r.IsArchived && 
+                                                        r.Status == CheckoutRequestStatus.Pending)
+                })
                 .ToListAsync();
 
             int totalPages = PaginationHelper.GetTotalPageCount(totalCount, request.PageSize);
 
-            return new PagedResponse<Asset>
+            return new PagedResponse<AssetDto>
             {
                 Items = assets,
                 Pagination = new PaginationMetadata
@@ -117,6 +134,30 @@ namespace AssetManagementSystem.Models.Repositories
         {
             return await _context.Assets
                 .Include(a => a.AssignedToUser)
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<AssetDto?> GetDtoById(Guid id)
+        {
+            return await _context.Assets
+                .Include(a => a.AssignedToUser)
+                .Select(a => new AssetDto()
+                {
+                    Id = a.Id,
+                    AssetTag = a.AssetTag,
+                    Name = a.Name,
+                    SerialNumber = a.SerialNumber,
+                    Category = a.Category,
+                    Status = a.Status,
+                    Condition = a.Condition,
+                    AssignedToUserId = a.AssignedToUserId,
+                    UpdatedAt = a.UpdatedAt,
+                    CreatedAt = a.CreatedAt,
+                    IsArchived = a.IsArchived,
+                    IsPendingReturn = a.Requests.Any(r => r.RequestType == CheckoutRequestType.Return &&
+                                                        !r.IsArchived &&
+                                                        r.Status == CheckoutRequestStatus.Pending)
+                })
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 

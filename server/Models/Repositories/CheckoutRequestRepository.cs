@@ -185,6 +185,16 @@ namespace AssetManagementSystem.Models.Repositories
                 AssetStatus.Available.ToString());
 
                 asset.Status = AssetStatus.Available;
+            } else
+            {
+                _context.AddAssetHistory(
+                asset.Id,
+                reviewedByUserId,
+                "Updated Asset Status",
+                asset.Status.ToString(),
+                AssetStatus.Maintenance.ToString());
+
+                asset.Status = AssetStatus.Maintenance;
             }
 
             _context.AddAssetHistory(
@@ -196,6 +206,13 @@ namespace AssetManagementSystem.Models.Repositories
             asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsAssetPendingReturn(Guid assetId)
+        {
+            return await _context.CheckoutRequests.AnyAsync(r => r.AssignedAssetId == assetId &&
+                                                    r.RequestType == CheckoutRequestType.Return &&
+                                                    r.Status == CheckoutRequestStatus.Pending);
         }
     }
 }

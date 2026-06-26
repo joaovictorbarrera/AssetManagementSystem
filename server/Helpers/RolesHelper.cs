@@ -1,13 +1,14 @@
-﻿using AssetManagementSystem.Models.Entities;
+﻿using AssetManagementSystem.Enums;
+using AssetManagementSystem.Models.Entities;
 using System.Security.Claims;
 
 namespace AssetManagementSystem.Helpers
 {
     public class RolesHelper
     {
-        public static bool IsAssetManager(ClaimsPrincipal user)
+        public static bool IsAssetManager(Role role)
         {
-            return user.IsInRole("AssetManager") || user.IsInRole("Admin");
+            return role == Role.AssetManager || role == Role.Admin;
         }
     }
 }
