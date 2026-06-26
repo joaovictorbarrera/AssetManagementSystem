@@ -2,56 +2,87 @@
 
 :root {
   /* Backgrounds */
-  --bg-primary: #0B1220;
-  --bg-secondary: #0F1A2E;
-  --bg-elevated: #14213D;
+  --bg-primary: #0D141F;
+  --bg-secondary: #101A28;
+  --bg-elevated: #162235;
 
   /* Layout surfaces */
-  --sidebar: #0A1630;
-  --navbar: #101F3A;
+  --sidebar: #0C1726;
+  --navbar: #121E2E;
 
   /* Surfaces */
-  --surface: #111C33;
-  --surface-hover: #162447;
-  --surface-active: #1A2B52;
+  --surface: #121B29;
+  --surface-hover: #172436;
+  --surface-active: #1C2C42;
 
   /* Borders */
-  --border: #23304D;
-  --border-strong: #2E3F66;
+  --border: #263245;
+  --border-strong: #314058;
 
   /* Text */
-  --text-primary: #E6EDFF;
-  --text-secondary: #9AA7C7;
-  --text-muted: #6B7A99;
+  --text-primary: #E3E9F5;
+  --text-secondary: #A3AEC4;
+  --text-muted: #6F7C92;
 
-  /* Accent */
-  --accent: #3B82F6;
-  --accent-hover: #2563EB;
-  --accent-active: #1D4ED8;
-  --accent-glow: rgba(59, 130, 246, 0.35);
+  /* Accent (muted blue, less neon, slightly gray-shifted) */
+  --accent: #4F7DBA;
+  --accent-hover: #3F6BA6;
+  --accent-active: #345A8C;
+  --accent-glow: rgba(79, 125, 186, 0.22);
 
-  /* Status */
-  --success: #22C55E;
-  --warning: #F59E0B;
-  --danger: #EF4444;
-  --info: #06B6D4;
+  /* Status (reduced saturation, more "UI-safe") */
+  --success: #3AAE6B;
+  --warning: #C08A3A;
+  --danger: #C84A4A;
+  --info: #3E9FB3;
 
-  /* Charts */
-  --chart-1: #3B82F6;
-  --chart-2: #06B6D4;
-  --chart-3: #22C55E;
-  --chart-4: #A855F7;
-  --chart-5: #F59E0B;
-  --chart-6: #F43F5E;
+  /* Charts (kept hue separation, reduced intensity) */
+  --chart-1: #4F7DBA;
+  --chart-2: #3E9FB3;
+  --chart-3: #3AAE6B;
+  --chart-4: #8B6BBF;
+  --chart-5: #C08A3A;
+  --chart-6: #C04B66;
 
   /* Gradients */
-  --gradient-accent: linear-gradient(135deg, #3B82F6, #06B6D4);
-  --gradient-glow: radial-gradient(circle, rgba(59,130,246,0.25), transparent 70%);
+  --gradient-accent: linear-gradient(135deg, #4F7DBA, #3E9FB3);
+  --gradient-glow: radial-gradient(circle, rgba(79,125,186,0.18), transparent 70%);
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
-  --shadow-lg: 0 10px 30px rgba(0,0,0,0.6);
+  /* Shadows (slightly softened feel) */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.45);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.55);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.65);
+
+  /* Base chip */
+   --chip-bg: #162235;
+   --chip-bg-hover: #1C2C42;
+   --chip-border: #2A3A52;
+   --chip-text: #D6DEEE;
+
+   /* Neutral / Category chips (default tags) */
+   --chip-neutral-bg: #152033;
+   --chip-neutral-text: #B9C4DA;
+   --chip-neutral-border: #27364D;
+
+   /* Category variants (muted blues/teals/purples) */
+   --chip-category-1: #2B3E5C; /* slate blue */
+   --chip-category-2: #2A4550; /* muted teal */
+   --chip-category-3: #3A3552; /* muted indigo */
+   --chip-category-4: #3D3A2E; /* muted amber-gray */
+   --chip-category-5: #3A2F33; /* muted rose-gray */
+
+   /* Condition / status chips (soft semantic fills) */
+   --chip-success-bg: rgba(58, 174, 107, 0.14);
+   --chip-success-text: #8FD9B0;
+
+   --chip-warning-bg: rgba(192, 138, 58, 0.14);
+   --chip-warning-text: #E3C08A;
+
+   --chip-danger-bg: rgba(200, 74, 74, 0.14);
+   --chip-danger-text: #E6A0A0;
+
+   --chip-info-bg: rgba(62, 159, 179, 0.14);
+   --chip-info-text: #A7DCE6;
 }
 
 @theme {
@@ -106,6 +137,40 @@
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
+
+  /* Base chip */
+  --color-chip: var(--chip-bg);
+  --color-chip-hover: var(--chip-bg-hover);
+  --color-chip-border: var(--chip-border);
+  --color-chip-text: var(--chip-text);
+
+  /* Neutral chip */
+  --color-chip-neutral-bg: var(--chip-neutral-bg);
+  --color-chip-neutral-text: var(--chip-neutral-text);
+  --color-chip-neutral-border: var(--chip-neutral-border);
+
+  /* Category chips */
+  --color-chip-category-1: var(--chip-category-1);
+  --color-chip-category-2: var(--chip-category-2);
+  --color-chip-category-3: var(--chip-category-3);
+  --color-chip-category-4: var(--chip-category-4);
+  --color-chip-category-5: var(--chip-category-5);
+
+  /* Status chips */
+  --color-chip-success-bg: var(--chip-success-bg);
+  --color-chip-success-text: var(--chip-success-text);
+
+  --color-chip-warning-bg: var(--chip-warning-bg);
+  --color-chip-warning-text: var(--chip-warning-text);
+
+  --color-chip-danger-bg: var(--chip-danger-bg);
+  --color-chip-danger-text: var(--chip-danger-text);
+
+  --color-chip-info-bg: var(--chip-info-bg);
+  --color-chip-info-text: var(--chip-info-text);
+
+  /* Active / focus */
+  --color-chip-ring: var(--chip-active-ring);
 }
 
 .btn {

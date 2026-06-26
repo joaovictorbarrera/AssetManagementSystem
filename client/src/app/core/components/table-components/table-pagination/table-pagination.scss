@@ -1,0 +1,8 @@
+:host {
+    width: 100%;
+}
+
+button:disabled {
+    cursor: default;
+    color: var(--color-text-muted)
+}

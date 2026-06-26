@@ -1,0 +1,33 @@
+<div class="assets-table__wrapper flex-1 min-h-0 flex flex-col overflow-hidden relative">
+    <div class="assets-table__content flex-1 min-h-0 overflow-y-auto">
+        <table class="table-fixed w-full min-h-0">
+            <thead app-table-header [headers]="headers" class="sticky top-0"></thead>
+
+            <tbody>
+                @if (!loading) {
+                    @for (asset of assets.items; track asset.id) {
+                        <tr class="cursor-pointer">
+                            <td>{{asset.assetTag}}</td>
+                            <td>{{asset.name}}</td>
+                            <td><span class="flex justify-center bg-chip-category-1 capitalize w-30 p-2 rounded-2xl">{{asset.category}}</span></td>
+                            <td><span class="flex justify-center bg-chip-category-3 capitalize w-30 p-2 rounded-2xl">{{asset.condition}}</span></td>
+                            <td>
+                                <button class="bg-accent hover:bg-accent-hover">Return</button>
+                            </td>
+                        </tr>
+                    }
+                    @if (assets.items.length === 0) {
+                        <tr>
+                            <td [attr.colspan]="headers.length" class="text-center">Nothing to display</td>
+                        </tr>
+                    }
+                } @else {
+                    <div class="bg-bg-primary opacity-60 absolute w-full h-full flex justify-center p-5">
+                        <app-spinning-wheel></app-spinning-wheel>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

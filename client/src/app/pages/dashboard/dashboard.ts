@@ -5,22 +5,29 @@ import { AssetService } from '../../core/services/asset.service';
 import AssetFields from '../../core/DTOs/asset-fields.dto';
 import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { SearchBar } from "../../core/components/search-bar/search-bar";
+import { AssetsTable } from "./components/assets-table/assets-table";
+import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/paginated.response';
+import { Asset } from '../../core/DTOs/asset.dto';
+import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Page, PageHeader, Dropdown, SearchBar],
+  imports: [Page, PageHeader, Dropdown, SearchBar, AssetsTable, TablePagination],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
   assetFields: WritableSignal<AssetFields> = signal({categories: [], statuses: [], conditions: []})
+  headers = ["Asset Tag", "Name", "Category", "Condition", "Actions"]
+
   category = signal("")
-  status = signal("")
   condition = signal("")
   searchText = signal("")
-  assets = []
-  pageSize = 50
-  pageNumber = 1
+  assets = signal(defaultPaginatedResponse<Asset>())
+  pageSize = signal(25)
+  pageNumber = signal(1)
+
+  loadingAssets = signal(false)
 
   constructor(private assetService: AssetService) {}
 
@@ -28,6 +35,8 @@ export class Dashboard implements OnInit {
     this.assetService.getFields().subscribe({
       next: res => this.assetFields.set(res as AssetFields)
     })
+
+    this.getAssets()
   }
 
   handleSearch(searchText: string) {
@@ -45,19 +54,32 @@ export class Dashboard implements OnInit {
     this.getAssets()
   }
 
-  handleStatusChange(value: string) {
-    this.status.set(value === "all" ? "" : value)
+  handlePaginationChange(pagination: { pageNumber: number; pageSize: number }) {
+    this.pageNumber.set(pagination.pageNumber)
+    this.pageSize.set(pagination.pageSize)
     this.getAssets()
   }
 
   getAssets() {
+    if (this.loadingAssets()) return
+
+    this.loadingAssets.set(true)
     this.assetService.getAssets({
-      pageNumber: this.pageNumber,
-      pageSize: this.pageSize,
+      pageNumber: this.pageNumber(),
+      pageSize: this.pageSize(),
       searchText: this.searchText(),
       condition: this.condition(),
-      status: this.status(),
       category: this.category()
-    }).subscribe()
+    }).subscribe({
+      next: data => {
+        this.assets.set(data as PaginatedResponse<Asset>)
+        this.loadingAssets.set(false)
+      },
+      error: (err) => {
+        window.alert(err.message)
+        this.assets.set(defaultPaginatedResponse<Asset>())
+        this.loadingAssets.set(false)
+      }
+    })
   }
 }

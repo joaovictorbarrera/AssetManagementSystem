@@ -6,8 +6,36 @@ body {
 }
 
 button {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    white-space: nowrap;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+option {
+  cursor: pointer;
+}
+
+/* Dark mode scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-glow);
+  border-radius: 9999px;
+  border: 2px solid var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bg-accent);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-bg);
 }

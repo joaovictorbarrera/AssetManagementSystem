@@ -9,6 +9,8 @@ namespace AssetManagementSystem.DTOs.Assets.Requests
         [MaxLength(50)]
         public string? SearchText { get; set; } = "";
         public AssetStatus? Status { get; set; } = null;
+        public AssetCondition? Condition { get; set; } = null;
+        public AssetCategory? Category { get; set; } = null;
 
         // ALL below are protected by Manager+ Role
         public bool Inventory { get; set; } = false;

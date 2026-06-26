@@ -2,12 +2,13 @@
     cursor: pointer;
     text-align: center;
     background-color: var(--color-sidebar);
-    height: 100%;
-    padding-block: 1rem;
-    padding-inline: 1rem;
+    padding-block: .75rem;
+    padding-inline: 1.25rem;
     display: flex;
-    gap: .5rem;
+    gap: .75rem;
     align-items: center;
+    border-radius: .5rem;
+    margin: .75rem;
 }
 
 .nav-item:hover {

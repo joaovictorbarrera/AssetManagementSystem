@@ -1,0 +1,33 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.assets-table__wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.assets-table__content {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+table {
+    min-height: 0;
+}
+
+td {
+    padding: 1.25rem;
+}
+
+tr:hover {
+    background-color: var(--color-surface-hover);
+}
+

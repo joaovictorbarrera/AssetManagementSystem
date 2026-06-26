@@ -50,6 +50,16 @@ namespace AssetManagementSystem.Models.Repositories
                 query = query.Where(a => a.Status == request.Status);
             }
 
+            if (request.Category != null)
+            {
+                query = query.Where(a => a.Category == request.Category);
+            }
+
+            if (request.Condition != null)
+            {
+                query = query.Where(a => a.Condition == request.Condition);
+            }
+
             int totalCount = await query.CountAsync();
 
             List<Asset> assets = await query
