@@ -3,11 +3,11 @@
         <h1 class="text-3xl text-center">My Assets</h1>
     </app-page-header>
     <div class="flex gap-5 justify-center p-5 items-end">
-        <app-dropdown class="w-50" [name]="`Status`" [list]="assetFields().statuses" (dropdownChanged)="handleStatusChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [name]="`Status`" [list]="assetFields().statuses" (dropdownChanged)="handleStatusChange($event)" />
 
         <app-search-bar (search)="handleSearch($event)" />
 
-        <app-dropdown class="w-50" [name]="`Category`" [list]="assetFields().categories" (dropdownChanged)="handleCategoryChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [name]="`Category`" [list]="assetFields().categories" (dropdownChanged)="handleCategoryChange($event)" />
     </div>
     <app-assets-table [headers]="headers" [assets]="assets()" [loading]="loadingAssets()" />
     <app-table-pagination [name]="'Assets'" [colspan]="headers.length" [pagination]="assets().pagination" (paginationChanged)="handlePaginationChange($event)" />

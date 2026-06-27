@@ -4,7 +4,7 @@ import PaginatedResponse from '../../../../core/DTOs/paginated.response';
 import { Asset } from '../../../../core/DTOs/asset.dto';
 import { SpinningWheel } from "../../../../core/components/spinning-wheel/spinning-wheel";
 import { InventoryRow } from "../inventory-row/inventory-row";
-import { TableWrapper } from "../../../../core/components/table-wrapper/table-wrapper";
+import { TableWrapper } from "../../../../core/components/table-components/table-wrapper/table-wrapper";
 import AssetFields from '../../../../core/DTOs/asset-fields.dto';
 
 @Component({

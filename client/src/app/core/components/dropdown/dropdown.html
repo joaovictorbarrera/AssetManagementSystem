@@ -2,10 +2,12 @@
     @if (name) {
         <span class="text-sm p-1 text-text-muted">{{name}}</span>
     }
-    <select (change)="onChange()" [(ngModel)]="value" name="conditions" class="dropdown">
-        <option value="all">
-            All
-        </option>
+    <select (change)="onChange()" [(ngModel)]="value" class="dropdown">
+        @if (enableAll) {
+            <option value="all">
+                All
+            </option>
+        }
         @for (item of list; track item) {
             <option [value]="item">{{item | titlecase}}</option>
         }

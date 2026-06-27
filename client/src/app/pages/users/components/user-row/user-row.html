@@ -1,0 +1,25 @@
+<td>{{ user.emailAddress }}</td>
+<td>{{ user.firstName }} {{ user.lastName }}</td>
+<td>
+    <app-dropdown
+        class="w-40"
+        [enableAll]="false"
+        [name]="''"
+        [defaultSelected]="user.role"
+        [list]="roles"
+        (dropdownChanged)="handleRoleChange($event)"
+    />
+</td>
+<td>
+    <label class="flex items-center gap-2">
+        <input
+            class="checkbox"
+            type="checkbox"
+            [checked]="user.isActive"
+            (change)="toggleActive()"
+        />
+        <span>{{ user.isActive ? 'Active' : 'Inactive' }}</span>
+    </label>
+</td>
+<td> {{ user.lastLoginAt ? (user.lastLoginAt | date:'M/d/yy, h:mm a') : "-" }}</td>
+<td>{{ user.createdAt | date:'M/d/yy, h:mm a' }}</td>

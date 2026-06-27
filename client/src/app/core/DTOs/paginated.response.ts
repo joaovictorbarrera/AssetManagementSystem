@@ -8,10 +8,10 @@ export default interface PaginatedResponse<T> {
 export const defaultPaginatedResponse = <T>(): PaginatedResponse<T> => ({
   items: [],
   pagination: {
-    pageNumber: 1,
-    pageSize: 1,
-    totalCount: 1,
-    totalPages: 1,
+    pageNumber: 0,
+    pageSize: 0,
+    totalCount: 0,
+    totalPages: 0,
     hasPreviousPage: false,
     hasNextPage: false,
   },

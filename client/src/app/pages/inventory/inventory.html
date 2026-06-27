@@ -3,12 +3,12 @@
         <h1 class="text-3xl text-center">Inventory</h1>
     </app-page-header>
     <div class="flex gap-5 justify-center p-5 items-end">
-        <app-dropdown class="w-50" [name]="`Status`" [list]="assetFields().statuses" (dropdownChanged)="handleStatusChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [name]="`Status`" [list]="assetFields().statuses" (dropdownChanged)="handleStatusChange($event)" />
 
         <app-search-bar (search)="handleSearch($event)" />
 
-        <app-dropdown class="w-50" [name]="`Category`" [list]="assetFields().categories" (dropdownChanged)="handleCategoryChange($event)" />
-        <app-dropdown class="w-50" [name]="`Condition`" [list]="assetFields().conditions" (dropdownChanged)="handleConditionChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [name]="`Category`" [list]="assetFields().categories" (dropdownChanged)="handleCategoryChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [name]="`Condition`" [list]="assetFields().conditions" (dropdownChanged)="handleConditionChange($event)" />
 
         <div class="flex gap-2 text-text-muted text-sm items-center mb-3">
             <input class="checkbox" type="checkbox" (change)="handleIncludeArchived($event)"/>

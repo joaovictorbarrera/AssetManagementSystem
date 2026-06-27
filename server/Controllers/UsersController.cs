@@ -34,6 +34,12 @@ namespace AssetManagementSystem.Controllers
             return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
         }
 
+        [HttpGet("fields")]
+        public ActionResult<UserFields> GetFields()
+        {
+            return Ok(new UserFields());
+        }
+
         [HttpPatch("{id:guid}/role")]
         public async Task<ActionResult<User>> UpdateRole(Guid id, [FromBody] UpdateUserRoleRequest request)
         {

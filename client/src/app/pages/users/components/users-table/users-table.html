@@ -1,0 +1,21 @@
+<app-table-wrapper>
+    <table class="table-fixed w-full">
+        <thead app-table-header [headers]="headers" class="sticky top-0"></thead>
+        <tbody>
+            @if (!loading) {
+                @for (user of users.items; track user.id) {
+                    <tr class="cursor-default" app-user-row [user]="user" [roles]="roles"></tr>
+                }
+                @if (users.items.length === 0) {
+                    <tr>
+                        <td [attr.colspan]="headers.length" class="text-center"><p class="p-2">Nothing to display</p></td>
+                    </tr>
+                }
+            } @else {
+                <div class="bg-bg-primary opacity-60 absolute w-full h-full flex justify-center p-5">
+                    <app-spinning-wheel></app-spinning-wheel>
+                </div>
+            }
+        </tbody>
+    </table>
+</app-table-wrapper>

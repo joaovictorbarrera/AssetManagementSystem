@@ -8,24 +8,42 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './table-pagination.html',
   styleUrl: './table-pagination.scss',
 })
-export class TablePagination {
+export class TablePagination implements OnChanges {
   @Input() colspan!: number
   @Input() pagination!: Pagination
   @Input() name!: string
   @Output() paginationChanged = new EventEmitter<{ pageSize: number; pageNumber: number }>();
 
-  pageNumber = signal(this.pagination?.pageNumber ?? 1)
-  pageSize = signal(this.pagination?.pageSize ?? 25)
+  pageNumber = signal(1)
+  pageSize = signal(25)
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['pagination'] && this.pagination) {
+      this.pageNumber.set(this.pagination.pageNumber || 1)
+      this.pageSize.set(this.pagination.pageSize || 25)
+    }
+  }
 
   get showingFrom() {
-    return this.pagination.pageSize * (this.pageNumber() - 1) + 1;
+    if (!this.pagination || this.pagination.totalCount === 0) {
+      return 0
+    }
+
+    return Math.min(
+      this.pagination.pageSize * (this.pageNumber() - 1) + 1,
+      this.pagination.totalCount
+    )
   }
 
   get showingTo() {
+    if (!this.pagination || this.pagination.totalCount === 0) {
+      return 0
+    }
+
     return Math.min(
       this.pagination.pageSize * this.pageNumber(),
       this.pagination.totalCount
-    );
+    )
   }
 
   handleNextPage() {

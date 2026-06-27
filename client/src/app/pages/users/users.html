@@ -2,4 +2,14 @@
     <app-page-header>
         <h1 class="text-3xl text-center">Users</h1>
     </app-page-header>
+    <div class="flex gap-5 justify-center p-5 items-end">
+        <app-search-bar (search)="handleSearch($event)" />
+
+        <div class="flex gap-2 text-text-muted text-sm items-center mb-3">
+            <input class="checkbox" type="checkbox" (change)="handleHideInactive($event)" />
+            <span>Hide Inactive</span>
+        </div>
+    </div>
+    <app-users-table [headers]="headers" [users]="users()" [roles]="userFields().roles" [loading]="loadingUsers()" />
+    <app-table-pagination [name]="'Users'" [colspan]="headers.length" [pagination]="users().pagination" (paginationChanged)="handlePaginationChange($event)" />
 </app-page>

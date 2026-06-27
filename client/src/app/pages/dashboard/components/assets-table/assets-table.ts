@@ -4,7 +4,7 @@ import PaginatedResponse from '../../../../core/DTOs/paginated.response';
 import { Asset } from '../../../../core/DTOs/asset.dto';
 import { SpinningWheel } from "../../../../core/components/spinning-wheel/spinning-wheel";
 import { AssetRow } from "../asset-row/asset-row";
-import { TableWrapper } from "../../../../core/components/table-wrapper/table-wrapper";
+import { TableWrapper } from "../../../../core/components/table-components/table-wrapper/table-wrapper";
 
 @Component({
   selector: 'app-assets-table',
