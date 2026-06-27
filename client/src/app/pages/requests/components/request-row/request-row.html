@@ -4,5 +4,9 @@
 <td>{{request.assetCategory}}</td>
 <td>{{request.createdAt | date:'M/d/yy, h:mm a'}}</td>
 <td>
-    <button class="cancel hover:brightness-120" (click)="handleCancel()">Cancel</button>
+    @if(request.status === "pending" || request.status === "approved") {
+        <button class="cancel hover:brightness-120" (click)="handleCancel()">Cancel</button>
+    } @else {
+        -
+    }
 </td>
