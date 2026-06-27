@@ -1,3 +1,11 @@
 <main class="h-screen w-screen">
   <router-outlet />
+  @if (pageLoading.isLoading()) {
+    <div class="fixed inset-0 bg-bg-primary flex items-center justify-center z-50">
+      <div class="flex flex-col items-center gap-4 text-accent">
+        <app-spinning-wheel></app-spinning-wheel>
+        <p class="text-text-primary text-sm">Loading...</p>
+      </div>
+    </div>
+  }
 </main>
