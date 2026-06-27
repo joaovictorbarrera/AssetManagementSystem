@@ -18,7 +18,7 @@ import { RequestTable } from '../requests/components/request-table/request-table
   styleUrl: './review.scss',
 })
 export class Review implements OnInit {
-  headers = ['Type', 'Status', 'Asset', 'Category', 'Request Date']
+  headers = ['Type', 'Status', 'Asset', 'Category', 'Request Date', 'Actions']
   requests = signal(defaultPaginatedResponse<CheckoutRequest>())
   requestFields = signal<CheckoutRequestFields>({types: [], statuses: []})
   assetFields = signal<AssetFields>({categories: [], statuses: [], conditions: []})
