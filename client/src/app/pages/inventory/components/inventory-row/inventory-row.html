@@ -1,9 +1,13 @@
-
 <td>{{asset.assetTag}}</td>
 <td>{{asset.name}}</td>
 <td class="capitalize">{{asset.category}}</td>
 <td>
-    <app-dropdown [initialSelection]="asset.status" [list]="assetFields.statuses" />
+    <app-dropdown
+        #statusDropdown
+        [initialSelection]="asset.status"
+        [list]="assetFields.statuses"
+        (dropdownChanged)="handleStatusChange($event)"
+    />
 </td>
 <td>{{asset.assignedToUser ? `${asset.assignedToUser.firstName} ${asset.assignedToUser.lastName}` : "-"}}</td>
 <td><app-dropdown [initialSelection]="asset.condition" [list]="assetFields.conditions" /></td>
