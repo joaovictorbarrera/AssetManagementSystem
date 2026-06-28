@@ -20,6 +20,10 @@ export class UserService {
         return this.http.get(`${this.apiUrl}/fields`)
     }
 
+    create(request: any) {
+        return this.http.post(this.apiUrl, request)
+    }
+
     updateRole(id: string, role: string) {
         return this.http.patch(`${this.apiUrl}/${id}/role`, { role })
     }
