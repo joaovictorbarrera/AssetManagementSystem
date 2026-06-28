@@ -5,11 +5,11 @@
         </span>
 
         <div class="flex items-center gap-2">
-            <button class="select-none shadow-none!" (click)="handlePreviousPage()" [disabled]="this.pageNumber() <= 1" >
+            <button class="btn select-none shadow-none!" (click)="handlePreviousPage()" [disabled]="this.pageNumber() <= 1" >
                 <ng-icon size="12" name="heroChevronLeft"></ng-icon>
             </button>
             <span>{{pageNumber()}}</span>
-            <button class="select-none shadow-none!" (click)="handleNextPage()" [disabled]="this.pageNumber() >= this.pagination.totalPages">
+            <button class="btn select-none shadow-none!" (click)="handleNextPage()" [disabled]="this.pageNumber() >= this.pagination.totalPages">
                 <ng-icon size="12" name="heroChevronRight"></ng-icon>
             </button>
         </div>

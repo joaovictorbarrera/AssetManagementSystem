@@ -1,10 +1,10 @@
-import User from "../user/user.dto";
+import UserDto from "../user/user.dto";
 
 export interface CheckoutRequestDto {
   id: string;
   requestType: string;
   requestedByUserId: string;
-  requestedByUser: User;
+  requestedByUser: UserDto;
   status: string;
   assignedAssetId?: string;
   assetCategory: string;

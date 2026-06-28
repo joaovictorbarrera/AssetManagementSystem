@@ -30,6 +30,7 @@ namespace AssetManagementSystem.DTOs.Assets.Projections
             {
                 Id = a.Id,
                 AssetTag = a.AssetTag,
+                SerialNumber = a.SerialNumber,
                 Name = a.Name,
                 Category = a.Category,
                 Status = a.Status,

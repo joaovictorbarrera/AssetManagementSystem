@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { SubmitButton } from '../../core/components/submit-button/submit-button';
@@ -11,7 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class Login {
   emailAddress = new FormControl("")
-  failMessage: WritableSignal<string | null> = signal(null)
+  failMessage = signal<string | null>(null)
   loading = signal(false)
 
   constructor(public authService: AuthService, public router: Router) {}

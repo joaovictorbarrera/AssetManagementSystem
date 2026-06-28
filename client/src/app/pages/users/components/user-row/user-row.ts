@@ -2,7 +2,7 @@ import { Component, Input, signal, ViewChild } from '@angular/core'
 import { DatePipe } from '@angular/common'
 import { Dropdown } from '../../../../core/components/dropdown/dropdown'
 import { AuthService } from '../../../../core/services/auth.service'
-import User from '../../../../core/DTOs/user/user.dto'
+import UserDto from '../../../../core/DTOs/user/user.dto'
 import { Role } from '../../../../core/enums/role'
 import { UserService } from '../../../../core/services/user.service'
 
@@ -13,7 +13,7 @@ import { UserService } from '../../../../core/services/user.service'
   styleUrl: './user-row.scss',
 })
 export class UserRow {
-  @Input() user!: User
+  @Input() user!: UserDto
   @Input() roles: string[] = []
   @ViewChild('roleDropdown') roleDropdown!: Dropdown
 

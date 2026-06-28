@@ -13,11 +13,6 @@ import { NgIcon } from '@ng-icons/core';
 })
 export class Sidebar {
   currentRole = computed(() => this.authService.currentUser()?.role)
-  isManager = computed(() =>
-    this.currentRole() === Role.AssetManager ||
-    this.currentRole() === Role.Admin
-  )
-  isAdmin = computed(() => this.currentRole() === Role.Admin)
 
   constructor(public authService: AuthService) {}
 }

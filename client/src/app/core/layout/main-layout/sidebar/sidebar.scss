@@ -1,7 +1,7 @@
 .nav-item {
     cursor: pointer;
     text-align: center;
-    background-color: var(--color-sidebar);
+    background-color: var(--sidebar);
     padding-block: .75rem;
     padding-inline: 1.25rem;
     display: flex;
@@ -12,7 +12,7 @@
 }
 
 .nav-item:hover {
-    background-color: var(--color-surface-hover);
+    background-color: var(--surface-hover);
 }
 
 a {
@@ -20,5 +20,5 @@ a {
 }
 
 a.active > .nav-item {
-    background-color: var(--color-surface-active);
+    background-color: var(--surface-active);
 }

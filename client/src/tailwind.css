@@ -29,16 +29,6 @@
   --danger: #C44040;
   --info: #2E9DB0;
 
-  --chart-1: #2F80ED;
-  --chart-2: #2E9DB0;
-  --chart-3: #2EAD6B;
-  --chart-4: #7B5EA7;
-  --chart-5: #D4882F;
-  --chart-6: #C44060;
-
-  --gradient-accent: linear-gradient(135deg, #2F80ED, #2E9DB0);
-  --gradient-glow: radial-gradient(circle, rgba(47,128,237,0.16), transparent 70%);
-
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.6);
   --shadow-lg: 0 10px 30px rgba(0,0,0,0.7);
@@ -47,16 +37,6 @@
   --chip-bg-hover: #122038;
   --chip-border: #1E2E45;
   --chip-text: #C8D8EE;
-
-  --chip-neutral-bg: #0C1828;
-  --chip-neutral-text: #8A9BB5;
-  --chip-neutral-border: #1A2B40;
-
-  --chip-category-1: #122038;
-  --chip-category-2: #102030;
-  --chip-category-3: #181830;
-  --chip-category-4: #1E1C10;
-  --chip-category-5: #1E1010;
 
   --chip-success-bg: rgba(46, 173, 107, 0.13);
   --chip-success-text: #5ECFA3;
@@ -70,8 +50,8 @@
   --chip-info-bg: rgba(46, 157, 176, 0.13);
   --chip-info-text: #7ACFDE;
 
-  --chip-fulfilled-bg: rgba(138, 96, 219, 0.14);
-  --chip-fulfilled-text: #C49BFF;
+  --chip-fulfilled-bg: rgba(0, 34, 255, 0.14);
+  --chip-fulfilled-text: #2567ff;
 
   --chip-canceled-bg: rgba(134, 146, 158, 0.16);
   --chip-canceled-text: #B0BEC5;
@@ -106,16 +86,6 @@
   --color-danger: var(--danger);
   --color-info: var(--info);
 
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-chart-6: var(--chart-6);
-
-  --gradient-accent: var(--gradient-accent);
-  --gradient-glow: var(--gradient-glow);
-
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
@@ -124,16 +94,6 @@
   --color-chip-hover: var(--chip-bg-hover);
   --color-chip-border: var(--chip-border);
   --color-chip-text: var(--chip-text);
-
-  --color-chip-neutral-bg: var(--chip-neutral-bg);
-  --color-chip-neutral-text: var(--chip-neutral-text);
-  --color-chip-neutral-border: var(--chip-neutral-border);
-
-  --color-chip-category-1: var(--chip-category-1);
-  --color-chip-category-2: var(--chip-category-2);
-  --color-chip-category-3: var(--chip-category-3);
-  --color-chip-category-4: var(--chip-category-4);
-  --color-chip-category-5: var(--chip-category-5);
 
   --color-chip-success-bg: var(--chip-success-bg);
   --color-chip-success-text: var(--chip-success-text);
@@ -152,30 +112,4 @@
 
   --color-chip-canceled-bg: var(--chip-canceled-bg);
   --color-chip-canceled-text: var(--chip-canceled-text);
-
-  --color-chip-ring: var(--chip-active-ring);
-}
-
-.btn {
-  background-color: var(--color-surface);
-}
-
-.btn:hover {
-  background-color: var(--color-surface-hover);
-}
-
-.btn:active {
-  background-color: var(--color-surface-active);
-}
-
-.btn-accent {
-  background-color: var(--color-accent);
-}
-
-.btn-accent:hover {
-  background-color: var(--color-accent-hover);
-}
-
-.btn-accent:active {
-  background-color: var(--color-accent-active);
 }

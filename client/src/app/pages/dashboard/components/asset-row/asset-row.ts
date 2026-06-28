@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { AssetDto } from '../../../../core/DTOs/asset/asset.dto';
 import { CheckoutRequestService } from '../../../../core/services/checkout-requests.service';
+import { DrawerService } from '../../../../core/services/drawer.service';
+import { AssetDetail } from '../../../../core/components/drawers/asset-detail/asset-detail';
 
 @Component({
   selector: 'tr[app-asset-row]',
@@ -11,7 +13,10 @@ import { CheckoutRequestService } from '../../../../core/services/checkout-reque
 export class AssetRow {
   @Input() asset!: AssetDto
 
-  constructor(private requestService: CheckoutRequestService) {}
+  constructor(
+    private requestService: CheckoutRequestService,
+    private drawer: DrawerService
+  ) {}
 
   handleReturnRequest() {
     let reason = window.prompt("What is the reason for return?")
@@ -29,5 +34,10 @@ export class AssetRow {
         }
       })
     }
+  }
+
+  @HostListener('click')
+  viewDetail() {
+    this.drawer.open(AssetDetail, { assetId: this.asset.id })
   }
 }

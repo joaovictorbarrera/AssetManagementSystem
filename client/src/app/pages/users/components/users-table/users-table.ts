@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core'
 import { TableHeader } from '../../../../core/components/table-components/table-header/table-header'
 import PaginatedResponse from '../../../../core/DTOs/shared/paginated.response'
-import User from '../../../../core/DTOs/user/user.dto'
+import UserDto from '../../../../core/DTOs/user/user.dto'
 import { SpinningWheel } from '../../../../core/components/spinning-wheel/spinning-wheel'
 import { UserRow } from '../user-row/user-row'
 import { TableWrapper } from '../../../../core/components/table-components/table-wrapper/table-wrapper'
@@ -13,7 +13,7 @@ import { TableWrapper } from '../../../../core/components/table-components/table
   styleUrl: './users-table.scss',
 })
 export class UsersTable {
-  @Input() users!: PaginatedResponse<User>
+  @Input() users!: PaginatedResponse<UserDto>
   @Input() headers: string[] = []
   @Input() roles: string[] = []
   @Input() loading: boolean = false

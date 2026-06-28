@@ -5,7 +5,8 @@ body {
   box-sizing: border-box;
 }
 
-button {
+.btn {
+  background-color: var(--color-surface);
   padding: 0.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -13,8 +14,28 @@ button {
   box-shadow: var(--shadow-sm);
 }
 
-button:hover {
-  filter: brightness(120%)
+.btn-accent {
+  background-color: var(--color-accent);
+}
+
+.btn-accent:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+}
+
+.btn-danger:hover {
+  filter: brightness(120%);
+}
+
+.btn-cancel {
+  background-color: var(--chip-canceled-bg);
+}
+
+.btn-cancel:hover {
+  filter: brightness(120%);
 }
 
 option {
@@ -80,7 +101,7 @@ option {
   color: var(--chip-canceled-text) !important
 }
 
-.approved {
+.approved, .checkout {
   color: var(--chip-success-text) !important
 }
 
@@ -109,4 +130,24 @@ option {
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+// Drawer
+.drawer-backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.cdk-overlay-pane {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  height: 100%;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+  overflow-y: auto;
+  animation: slide-in 0.3s ease;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
 }

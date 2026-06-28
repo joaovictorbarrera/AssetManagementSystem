@@ -95,7 +95,7 @@ namespace AssetManagementSystem.Models.Repositories
                 Name = request.Name,
                 Condition = request.Condition,
                 SerialNumber = request.SerialNumber,
-                Status = request.Status,
+                Status = AssetStatus.Available,
                 Category = request.Category
             };
 

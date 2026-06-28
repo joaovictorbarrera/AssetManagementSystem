@@ -1,9 +1,11 @@
-import { Component, Input, signal, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, signal, ViewChild } from '@angular/core';
 import { AssetDto } from '../../../../core/DTOs/asset/asset.dto';
 import { CheckoutRequestService } from '../../../../core/services/checkout-requests.service';
 import { Dropdown } from '../../../../core/components/dropdown/dropdown';
 import AssetFields from '../../../../core/DTOs/asset/asset-fields.dto';
 import { AssetService } from '../../../../core/services/asset.service';
+import { DrawerService } from '../../../../core/services/drawer.service';
+import { AssetDetail } from '../../../../core/components/drawers/asset-detail/asset-detail';
 
 @Component({
   selector: 'tr[app-inventory-row]',
@@ -19,7 +21,10 @@ export class InventoryRow {
   showStatusSuccess = signal(false)
   showConditionSuccess = signal(false)
 
-  constructor(private assetService: AssetService) {}
+  constructor(
+    private assetService: AssetService,
+    private drawer: DrawerService
+  ) {}
 
   handleStatusChange(status: string) {
     if (status === 'available' && this.asset.userId) {
@@ -60,5 +65,10 @@ export class InventoryRow {
           window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
         }
     })
+  }
+
+  @HostListener('click')
+  viewDetail() {
+    this.drawer.open(AssetDetail, { assetId: this.asset.id })
   }
 }

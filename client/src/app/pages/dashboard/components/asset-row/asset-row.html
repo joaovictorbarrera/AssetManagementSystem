@@ -11,7 +11,7 @@
 @if (asset.isPendingReturn) {
     <span class="chip pending">Request Sent</span>
 } @else {
-    <button (click)="handleReturnRequest()" class="bg-accent">Request Return</button>
+    <button (click)="handleReturnRequest(); $event.stopPropagation()" class="btn btn-accent">Request Return</button>
 }
 </td>
 

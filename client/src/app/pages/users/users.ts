@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { PageHeader } from '../components/page-header/page-header';
 import { Page } from '../components/page/page';
 import { SearchBar } from '../../core/components/search-bar/search-bar';
@@ -6,7 +6,7 @@ import { UsersTable } from './components/users-table/users-table';
 import { TablePagination } from '../../core/components/table-components/table-pagination/table-pagination';
 import { UserService } from '../../core/services/user.service';
 import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/shared/paginated.response';
-import User from '../../core/DTOs/user/user.dto';
+import UserDto from '../../core/DTOs/user/user.dto';
 import UserFields from '../../core/DTOs/user/user-fields.dto';
 import { NgIcon } from '@ng-icons/core';
 
@@ -18,8 +18,8 @@ import { NgIcon } from '@ng-icons/core';
 })
 export class Users implements OnInit {
   headers = ['Email', 'Name', 'Role', 'Active', 'Last Logged In', 'Created Date'];
-  users = signal(defaultPaginatedResponse<User>());
-  userFields: WritableSignal<UserFields> = signal({ roles: [] });
+  users = signal(defaultPaginatedResponse<UserDto>());
+  userFields = signal<UserFields>({ roles: [] });
 
   searchText = signal('');
   hideInactive = signal(false);
@@ -73,12 +73,12 @@ export class Users implements OnInit {
       })
       .subscribe({
         next: users => {
-          this.users.set(users as PaginatedResponse<User>);
+          this.users.set(users as PaginatedResponse<UserDto>);
           this.loadingUsers.set(false);
         },
         error: err => {
           window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error");
-          this.users.set(defaultPaginatedResponse<User>());
+          this.users.set(defaultPaginatedResponse<UserDto>());
           this.loadingUsers.set(false);
         },
       });

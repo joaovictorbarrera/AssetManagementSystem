@@ -4,6 +4,6 @@
             <strong>{{ currentUser()?.firstName}} {{ currentUser()?.lastName }}</strong>
             <span class="text-text-secondary">{{ currentUser()?.emailAddress }}</span>
         </div>
-        <button class="bg-danger" (click)="authService.logout()">Sign Out</button>
+        <button class="btn btn-danger" (click)="authService.logout()">Sign Out</button>
     </div>
 </div>

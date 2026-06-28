@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Page } from "../components/page/page";
 import { PageHeader } from '../components/page-header/page-header';
 import { AssetService } from '../../core/services/asset.service';
@@ -17,7 +17,7 @@ import { TablePagination } from "../../core/components/table-components/table-pa
   styleUrl: './dashboard.scss',
 })
 export class Dashboard implements OnInit {
-  assetFields: WritableSignal<AssetFields> = signal({categories: [], statuses: [], conditions: []})
+  assetFields = signal<AssetFields>({categories: [], statuses: [], conditions: []})
   headers = ["Asset Tag", "Name", "Category", "Status", "Return Status"]
 
   category = signal("")

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { Page } from "../components/page/page";
 import { PageHeader } from '../components/page-header/page-header';
 import { AssetService } from '../../core/services/asset.service';
@@ -10,6 +10,8 @@ import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/sha
 import { AssetDto } from '../../core/DTOs/asset/asset.dto';
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
 import { NgIcon } from '@ng-icons/core';
+import { AssetEventsService } from '../../core/services/asset-events.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-inventory',
@@ -18,7 +20,7 @@ import { NgIcon } from '@ng-icons/core';
   styleUrl: './inventory.scss',
 })
 export class Inventory implements OnInit {
-  assetFields: WritableSignal<AssetFields> = signal({categories: [], statuses: [], conditions: []})
+  assetFields = signal<AssetFields>({categories: [], statuses: [], conditions: []})
   headers = ["Asset Tag", "Name", "Category", "Status", "Assigned To", "Condition"]
   assets = signal(defaultPaginatedResponse<AssetDto>())
 
@@ -34,11 +36,18 @@ export class Inventory implements OnInit {
 
   loadingAssets = signal(false)
 
-  constructor(private assetService: AssetService) {}
+  constructor(
+    private assetService: AssetService,
+    private assetEvents: AssetEventsService,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.getFields()
     this.getAssets()
+    this.assetEvents.assetUpdated$
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(() => this.getAssets());
   }
 
   handleIncludeArchived(event: Event) {

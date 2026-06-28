@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import User from '../DTOs/user/user.dto';
+import UserDto from '../DTOs/user/user.dto';
 import { Router } from '@angular/router';
+import { Role } from '../enums/role';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +12,17 @@ import { Router } from '@angular/router';
 export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/Auth`;
 
-  readonly currentUser = signal<User | null>(null);
+  readonly currentUser = signal<UserDto | null>(null);
 
-  private loadUserPromise?: Promise<User | null>;
+  private loadUserPromise?: Promise<UserDto | null>;
+
+  public get isManager() {
+    return this.currentUser()?.role === Role.Admin || this.currentUser()?.role === Role.AssetManager
+  }
+
+  public get isAdmin() {
+    return this.currentUser()?.role === Role.Admin
+  }
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -27,7 +36,7 @@ export class AuthService {
     this.router.navigate(["/login"]);
   }
 
-  async loadUser(): Promise<User | null> {
+  async loadUser(): Promise<UserDto | null> {
     if (this.currentUser()) {
       return this.currentUser();
     }
@@ -42,7 +51,7 @@ export class AuthService {
     }
 
     this.loadUserPromise = firstValueFrom(
-      this.http.get<User>(`${this.apiUrl}/me`)
+      this.http.get<UserDto>(`${this.apiUrl}/me`)
     )
       .then((user) => {
         this.currentUser.set(user);

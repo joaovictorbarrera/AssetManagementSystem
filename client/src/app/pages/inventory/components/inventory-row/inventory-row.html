@@ -1,5 +1,5 @@
 <td>{{asset.assetTag}}</td>
-<td>{{asset.name}}</td>
+<td>{{`${asset.name}${asset.isArchived ? ' (Archived)' : ''}`}}</td>
 <td class="capitalize">{{asset.category}}</td>
 <td>
     <app-dropdown

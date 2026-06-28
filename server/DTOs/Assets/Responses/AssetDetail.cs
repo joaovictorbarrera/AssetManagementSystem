@@ -8,7 +8,7 @@ namespace AssetManagementSystem.DTOs.Assets.Responses
 
         public required string AssetTag { get; set; }
         public required string Name { get; set; }
-
+        public string? SerialNumber { get; set; }
         public required AssetCategory Category { get; set; }
         public required AssetStatus Status { get; set; }
         public required AssetCondition Condition { get; set; }
