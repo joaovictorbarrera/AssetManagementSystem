@@ -1,5 +1,4 @@
-import { AssetDto } from "./asset.dto";
-import User from "./user.dto";
+import User from "../user/user.dto";
 
 export interface CheckoutRequestDto {
   id: string;

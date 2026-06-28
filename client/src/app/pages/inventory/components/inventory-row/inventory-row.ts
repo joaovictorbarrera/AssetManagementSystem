@@ -1,8 +1,8 @@
 import { Component, Input, signal, ViewChild } from '@angular/core';
-import { AssetDto } from '../../../../core/DTOs/asset.dto';
+import { AssetDto } from '../../../../core/DTOs/asset/asset.dto';
 import { CheckoutRequestService } from '../../../../core/services/checkout-requests.service';
 import { Dropdown } from '../../../../core/components/dropdown/dropdown';
-import AssetFields from '../../../../core/DTOs/asset-fields.dto';
+import AssetFields from '../../../../core/DTOs/asset/asset-fields.dto';
 import { AssetService } from '../../../../core/services/asset.service';
 
 @Component({

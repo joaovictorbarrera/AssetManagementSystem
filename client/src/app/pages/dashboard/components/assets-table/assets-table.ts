@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TableHeader } from "../../../../core/components/table-components/table-header/table-header";
-import PaginatedResponse from '../../../../core/DTOs/paginated.response';
-import { AssetDto } from '../../../../core/DTOs/asset.dto';
+import PaginatedResponse from '../../../../core/DTOs/shared/paginated.response';
+import { AssetDto } from '../../../../core/DTOs/asset/asset.dto';
 import { SpinningWheel } from "../../../../core/components/spinning-wheel/spinning-wheel";
 import { AssetRow } from "../asset-row/asset-row";
 import { TableWrapper } from "../../../../core/components/table-components/table-wrapper/table-wrapper";

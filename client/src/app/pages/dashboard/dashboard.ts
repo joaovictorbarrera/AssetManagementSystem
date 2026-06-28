@@ -2,12 +2,12 @@ import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { Page } from "../components/page/page";
 import { PageHeader } from '../components/page-header/page-header';
 import { AssetService } from '../../core/services/asset.service';
-import AssetFields from '../../core/DTOs/asset-fields.dto';
+import AssetFields from '../../core/DTOs/asset/asset-fields.dto';
 import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { SearchBar } from "../../core/components/search-bar/search-bar";
 import { AssetsTable } from "./components/assets-table/assets-table";
-import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/paginated.response';
-import { AssetDto } from '../../core/DTOs/asset.dto';
+import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/shared/paginated.response';
+import { AssetDto } from '../../core/DTOs/asset/asset.dto';
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
 
 @Component({

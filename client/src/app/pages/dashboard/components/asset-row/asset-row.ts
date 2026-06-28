@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AssetDto } from '../../../../core/DTOs/asset.dto';
+import { AssetDto } from '../../../../core/DTOs/asset/asset.dto';
 import { CheckoutRequestService } from '../../../../core/services/checkout-requests.service';
 
 @Component({

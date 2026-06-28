@@ -4,11 +4,11 @@ import { Page } from "../components/page/page";
 import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { RequestTable } from "./components/request-table/request-table";
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
-import { CheckoutRequestDto } from '../../core/DTOs/checkout-request.dto';
-import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/paginated.response';
+import { CheckoutRequestDto } from '../../core/DTOs/checkout-request/checkout-request.dto';
+import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/shared/paginated.response';
 import { CheckoutRequestService } from '../../core/services/checkout-requests.service';
-import CheckoutRequestFields from '../../core/DTOs/checkout-request-fields.dto';
-import AssetFields from '../../core/DTOs/asset-fields.dto';
+import CheckoutRequestFields from '../../core/DTOs/checkout-request/checkout-request-fields.dto';
+import AssetFields from '../../core/DTOs/asset/asset-fields.dto';
 import { AssetService } from '../../core/services/asset.service';
 import { NgIcon } from '@ng-icons/core';
 

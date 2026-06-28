@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CheckoutRequestDto } from '../../../../core/DTOs/checkout-request.dto';
+import { CheckoutRequestDto } from '../../../../core/DTOs/checkout-request/checkout-request.dto';
 import { DatePipe } from '@angular/common';
 import { CheckoutRequestService } from '../../../../core/services/checkout-requests.service';
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, signal } from '@angular/core';
-import Pagination from '../../../DTOs/pagination';
+import Pagination from '../../../DTOs/shared/pagination';
 import { FormsModule } from '@angular/forms';
 import { NgIcon } from '@ng-icons/core';
 

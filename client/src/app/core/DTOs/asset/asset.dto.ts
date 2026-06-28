@@ -1,5 +1,3 @@
-import User from "./user.dto";
-
 export interface AssetDto {
   id: string
   assetTag: string

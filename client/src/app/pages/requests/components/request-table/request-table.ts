@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { CheckoutRequestDto } from '../../../../core/DTOs/checkout-request.dto';
-import PaginatedResponse from '../../../../core/DTOs/paginated.response';
+import { CheckoutRequestDto } from '../../../../core/DTOs/checkout-request/checkout-request.dto';
+import PaginatedResponse from '../../../../core/DTOs/shared/paginated.response';
 import { TableWrapper } from "../../../../core/components/table-components/table-wrapper/table-wrapper";
 import { TableHeader } from "../../../../core/components/table-components/table-header/table-header";
 import { SpinningWheel } from "../../../../core/components/spinning-wheel/spinning-wheel";

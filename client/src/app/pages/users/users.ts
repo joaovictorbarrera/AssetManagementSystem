@@ -5,9 +5,9 @@ import { SearchBar } from '../../core/components/search-bar/search-bar';
 import { UsersTable } from './components/users-table/users-table';
 import { TablePagination } from '../../core/components/table-components/table-pagination/table-pagination';
 import { UserService } from '../../core/services/user.service';
-import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/paginated.response';
-import User from '../../core/DTOs/user.dto';
-import UserFields from '../../core/DTOs/user-fields.dto';
+import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/shared/paginated.response';
+import User from '../../core/DTOs/user/user.dto';
+import UserFields from '../../core/DTOs/user/user-fields.dto';
 import { NgIcon } from '@ng-icons/core';
 
 @Component({

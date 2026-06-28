@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { CheckoutRequestDto } from '../../../../core/DTOs/checkout-request.dto';
+import { CheckoutRequestDto } from '../../../../core/DTOs/checkout-request/checkout-request.dto';
 
 @Component({
   selector: 'tr[app-review-row]',
