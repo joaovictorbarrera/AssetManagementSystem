@@ -1,15 +1,16 @@
-import { Asset } from "./asset.dto";
+import { AssetDto } from "./asset.dto";
 import User from "./user.dto";
 
-export interface CheckoutRequest {
+export interface CheckoutRequestDto {
   id: string;
   requestType: string;
   requestedByUserId: string;
   requestedByUser: User;
-  assetCategory?: string;
   status: string;
   assignedAssetId?: string;
-  assignedAsset?: Asset;
+  assetCategory: string;
+  assignedAssetName?: string;
+  assignedAssetTag?: string;
   createdAt: Date;
   isArchived: boolean;
 }

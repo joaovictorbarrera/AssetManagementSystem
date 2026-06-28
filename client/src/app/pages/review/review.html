@@ -14,6 +14,6 @@
             <span>Include Closed Requests</span>
         </div>
     </div>
-    <app-request-table [headers]="headers" [requests]="requests()" [loading]="loadingRequests()" />
+    <app-review-table [headers]="headers" [requests]="requests()" [loading]="loadingRequests()" />
     <app-table-pagination [name]="'Requests'" [colspan]="headers.length" [pagination]="requests().pagination" (paginationChanged)="handlePaginationChange($event)" />
 </app-page>

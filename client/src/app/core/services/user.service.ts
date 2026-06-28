@@ -19,4 +19,12 @@ export class UserService {
     getFields() {
         return this.http.get(`${this.apiUrl}/fields`)
     }
+
+    updateRole(id: string, role: string) {
+        return this.http.patch(`${this.apiUrl}/${id}/role`, { role })
+    }
+
+    updateActive(id: string, isActive: boolean) {
+        return this.http.patch(`${this.apiUrl}/${id}/active`, { isActive })
+    }
 }

@@ -7,7 +7,7 @@ import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { SearchBar } from "../../core/components/search-bar/search-bar";
 import { InventoryTable } from "./components/inventory-table/inventory-table";
 import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/paginated.response';
-import { Asset } from '../../core/DTOs/asset.dto';
+import { AssetDto } from '../../core/DTOs/asset.dto';
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
 import { NgIcon } from '@ng-icons/core';
 
@@ -20,7 +20,7 @@ import { NgIcon } from '@ng-icons/core';
 export class Inventory implements OnInit {
   assetFields: WritableSignal<AssetFields> = signal({categories: [], statuses: [], conditions: []})
   headers = ["Asset Tag", "Name", "Category", "Status", "Assigned To", "Condition"]
-  assets = signal(defaultPaginatedResponse<Asset>())
+  assets = signal(defaultPaginatedResponse<AssetDto>())
 
   category = signal("")
   status = signal("")
@@ -44,26 +44,27 @@ export class Inventory implements OnInit {
   handleIncludeArchived(event: Event) {
     const target = event?.target as HTMLInputElement | null
     this.includeArchived.set(target?.checked ?? false)
-    this.getAssets()
+    this.getAssets(true)
   }
 
   handleSearch(searchText: string) {
     this.searchText.set(searchText)
-    this.getAssets()
+    this.getAssets(true)
   }
 
   handleStatusChange(status: string) {
     this.status.set(status === "all" ? "" : status)
-    this.getAssets()
+    this.getAssets(true)
   }
 
   handleCategoryChange(category: string) {
     this.category.set(category === "all" ? "" : category)
-    this.getAssets()
+    this.getAssets(true)
   }
 
   handleConditionChange(condition: string) {
     this.condition.set(condition === "all" ? "" : condition)
+    this.getAssets(true)
   }
 
   handlePaginationChange(pagination: { pageNumber: number; pageSize: number }) {
@@ -75,12 +76,13 @@ export class Inventory implements OnInit {
   getFields() {
     this.assetService.getFields().subscribe({
       next: res => this.assetFields.set(res as AssetFields),
-      error: err => window.alert(err.message)
+      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
     })
   }
 
-  getAssets() {
+  getAssets(backToPageOne: boolean = false) {
     if (this.loadingAssets()) return
+    if (backToPageOne) this.pageNumber.set(1)
 
     this.loadingAssets.set(true)
     this.assetService.getAssets({
@@ -94,12 +96,12 @@ export class Inventory implements OnInit {
       includeArchived: this.includeArchived()
     }).subscribe({
       next: data => {
-        this.assets.set(data as PaginatedResponse<Asset>)
+        this.assets.set(data as PaginatedResponse<AssetDto>)
         this.loadingAssets.set(false)
       },
       error: (err) => {
-        window.alert(err.message)
-        this.assets.set(defaultPaginatedResponse<Asset>())
+        window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        this.assets.set(defaultPaginatedResponse<AssetDto>())
         this.loadingAssets.set(false)
       }
     })

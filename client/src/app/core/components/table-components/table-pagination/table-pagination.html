@@ -15,7 +15,7 @@
         </div>
 
         <select
-            [ngModel]="pageSize()"
+            [(ngModel)]="pageSize"
             (ngModelChange)="emitPaginationChanged(true)"
             class="bg-bg-secondary p-1 rounded cursor-pointer"
         >

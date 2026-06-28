@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Asset } from '../../../../core/DTOs/asset.dto';
+import { AssetDto } from '../../../../core/DTOs/asset.dto';
 import { CheckoutRequestService } from '../../../../core/services/checkout-requests.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { CheckoutRequestService } from '../../../../core/services/checkout-reque
   styleUrl: './asset-row.scss',
 })
 export class AssetRow {
-  @Input() asset!: Asset
+  @Input() asset!: AssetDto
 
   constructor(private requestService: CheckoutRequestService) {}
 
@@ -25,7 +25,7 @@ export class AssetRow {
       }).subscribe({
         error: err => {
           this.asset.isPendingReturn = false
-          window.alert(err.message)
+          window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
         }
       })
     }

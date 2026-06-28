@@ -8,6 +8,18 @@
         [list]="assetFields.statuses"
         (dropdownChanged)="handleStatusChange($event)"
     />
+    @if (showStatusSuccess()) {
+        <span class="text-success">Succesfully Updated Status</span>
+    }
 </td>
-<td>{{asset.assignedToUser ? `${asset.assignedToUser.firstName} ${asset.assignedToUser.lastName}` : "-"}}</td>
-<td><app-dropdown [initialSelection]="asset.condition" [list]="assetFields.conditions" /></td>
+<td>{{asset.userFirstName && asset.userLastName ? `${asset.userFirstName} ${asset.userLastName}` : "-"}}</td>
+<td>
+    <app-dropdown
+        [initialSelection]="asset.condition"
+        [list]="assetFields.conditions"
+        (dropdownChanged)="handleConditionChange($event)"
+    />
+    @if (showConditionSuccess()) {
+        <span class="text-success">Succesfully Updated Condition</span>
+    }
+</td>

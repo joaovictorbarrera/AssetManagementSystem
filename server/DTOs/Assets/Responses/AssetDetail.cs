@@ -1,9 +1,8 @@
 ﻿using AssetManagementSystem.Enums;
-using AssetManagementSystem.Models.Entities;
 
 namespace AssetManagementSystem.DTOs.Assets.Responses
 {
-    public class AssetDto
+    public class AssetDetail
     {
         public Guid Id { get; set; }
 
@@ -16,7 +15,9 @@ namespace AssetManagementSystem.DTOs.Assets.Responses
         public Guid? UserId { get; set; }
         public string? UserFirstName { get; set; }
         public string? UserLastName { get; set; }
-        public bool IsArchived { get; set; } = false;
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         public bool IsPendingReturn { get; set; } = false;
+        public bool IsArchived { get; set; } = false;
     }
 }

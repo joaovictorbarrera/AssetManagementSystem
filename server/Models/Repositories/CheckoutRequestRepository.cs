@@ -1,6 +1,8 @@
 ﻿using AssetManagementSystem.Data;
 using AssetManagementSystem.DTOs.Assets.Responses;
 using AssetManagementSystem.DTOs.CheckoutRequests;
+using AssetManagementSystem.DTOs.CheckoutRequests.Projections;
+using AssetManagementSystem.DTOs.CheckoutRequests.Requests;
 using AssetManagementSystem.DTOs.Pagination;
 using AssetManagementSystem.Enums;
 using AssetManagementSystem.Extensions;
@@ -60,30 +62,7 @@ namespace AssetManagementSystem.Models.Repositories
             .OrderByDescending(r => r.CreatedAt)
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(r => new CheckoutRequestDto
-            {
-                Id = r.Id,
-                RequestType = r.RequestType,
-                RequestedByUserId = r.RequestedByUserId,
-                RequestedByUser = r.RequestedByUser,
-                AssetCategory = r.AssetCategory,
-                Status = r.Status,
-                AssignedAssetId = r.AssignedAssetId,
-                IsArchived = r.IsArchived,
-                CreatedAt = r.CreatedAt,
-                AssignedAsset = r.AssignedAsset == null ? null : new AssetDto
-                {
-                    Id = r.AssignedAsset.Id,
-                    AssetTag = r.AssignedAsset.AssetTag,
-                    Name = r.AssignedAsset.Name,
-                    Category = r.AssignedAsset.Category,
-                    Status = r.AssignedAsset.Status,
-                    Condition = r.AssignedAsset.Condition,
-                    AssignedToUserId = r.AssignedAsset.AssignedToUserId,
-                    IsArchived = r.AssignedAsset.IsArchived,
-                    IsPendingReturn = true
-                }
-            })
+            .Select(CheckoutRequestExpressions.ToDto)
             .ToListAsync();
 
             int totalPages = PaginationHelper.GetTotalPageCount(totalCount, request.PageSize);
@@ -106,13 +85,18 @@ namespace AssetManagementSystem.Models.Repositories
         public async Task<CheckoutRequest?> GetById(Guid id)
         {
             return await _context.CheckoutRequests
-                .Include(r => r.RequestedByUser)
-                .Include(r => r.ReviewedByUser)
-                .Include(r => r.AssignedAsset)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task Create(CreateCheckoutRequestRequest request, Guid userId)
+        public async Task<CheckoutRequestDetail?> GetDetailById(Guid id)
+        {
+            return await _context.CheckoutRequests
+                        .Where(r => r.Id == id)
+                        .Select(CheckoutRequestExpressions.ToDetail)
+                        .FirstOrDefaultAsync();
+        }
+
+        public async Task<Guid> Create(CreateCheckoutRequestRequest request, Guid userId)
         {
             CheckoutRequest checkoutRequest = new()
             {
@@ -127,6 +111,8 @@ namespace AssetManagementSystem.Models.Repositories
             _context.CheckoutRequests.Add(checkoutRequest);
 
             await _context.SaveChangesAsync();
+
+            return checkoutRequest.Id;
         }
 
         public async Task<bool> ArchiveById(Guid id)
@@ -244,13 +230,6 @@ namespace AssetManagementSystem.Models.Repositories
             asset.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<bool> IsAssetPendingReturn(Guid assetId)
-        {
-            return await _context.CheckoutRequests.AnyAsync(r => r.AssignedAssetId == assetId &&
-                                                    r.RequestType == CheckoutRequestType.Return &&
-                                                    r.Status == CheckoutRequestStatus.Pending);
         }
     }
 }

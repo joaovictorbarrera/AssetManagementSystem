@@ -38,7 +38,7 @@ namespace AssetManagementSystem.Controllers
 
         [HttpPost]
         [Authorize(Policy = "AssetManager+")]
-        public async Task<ActionResult<Asset>> Create([FromBody] CreateAssetRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateAssetRequest request)
         {
             if (HttpContext.Items["User"] is not User user)
             {
@@ -46,7 +46,9 @@ namespace AssetManagementSystem.Controllers
             }
             Requestor requestor = user.GetRequestor();
             var result = await _service.Create(request, requestor);
-            return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
+            return result.Succeeded ? 
+                CreatedAtAction(nameof(GetDetail), new { id = result.Value }, null) : 
+                ToActionResult(result);
         }
 
         [HttpGet("available")]
@@ -65,7 +67,7 @@ namespace AssetManagementSystem.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<AssetDto>> GetDetail(Guid id)
+        public async Task<ActionResult<AssetDetail>> GetDetail(Guid id)
         {
             if (HttpContext.Items["User"] is not User user)
             {

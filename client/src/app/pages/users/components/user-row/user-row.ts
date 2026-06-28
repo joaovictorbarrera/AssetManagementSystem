@@ -1,9 +1,10 @@
-import { Component, Input, ViewChild } from '@angular/core'
+import { Component, Input, signal, ViewChild } from '@angular/core'
 import { DatePipe } from '@angular/common'
 import { Dropdown } from '../../../../core/components/dropdown/dropdown'
 import { AuthService } from '../../../../core/services/auth.service'
 import User from '../../../../core/DTOs/user.dto'
 import { Role } from '../../../../core/enums/role'
+import { UserService } from '../../../../core/services/user.service'
 
 @Component({
   selector: 'tr[app-user-row]',
@@ -16,7 +17,10 @@ export class UserRow {
   @Input() roles: string[] = []
   @ViewChild('roleDropdown') roleDropdown!: Dropdown
 
-  constructor(private authService: AuthService) {}
+  showRoleSuccess = signal(false)
+  showActiveSuccess = signal(false)
+
+  constructor(private authService: AuthService, private userService: UserService) {}
 
   get isCurrentUser(): boolean {
     return this.authService.currentUser()?.emailAddress === this.user.emailAddress
@@ -34,7 +38,18 @@ export class UserRow {
         return
       }
     }
-    this.user.isActive = checkbox.checked
+
+    this.userService.updateActive(this.user.id, checkbox.checked).subscribe({
+        next: () => {
+            this.user.isActive = checkbox.checked
+            this.showActiveSuccess.set(true)
+            setTimeout(() => this.showActiveSuccess.set(false), 1500)
+        },
+        error: err => {
+            checkbox.checked = this.user.isActive
+            window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        }
+    })
   }
 
   handleRoleChange(role: string) {
@@ -47,6 +62,17 @@ export class UserRow {
         return
       }
     }
-    this.user.role = role as Role
+
+    this.userService.updateRole(this.user.id, role).subscribe({
+        next: () => {
+            this.user.role = role as Role
+            this.showRoleSuccess.set(true)
+            setTimeout(() => this.showRoleSuccess.set(false), 1500)
+        },
+        error: err => {
+            this.roleDropdown.revert()
+            window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        }
+    })
   }
 }

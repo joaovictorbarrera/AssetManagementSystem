@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CheckoutRequest } from '../../../../core/DTOs/checkout-request.dto';
+import { CheckoutRequestDto } from '../../../../core/DTOs/checkout-request.dto';
 import PaginatedResponse from '../../../../core/DTOs/paginated.response';
 import { TableWrapper } from "../../../../core/components/table-components/table-wrapper/table-wrapper";
 import { TableHeader } from "../../../../core/components/table-components/table-header/table-header";
@@ -13,7 +13,7 @@ import { RequestRow } from "../request-row/request-row";
   styleUrl: './request-table.scss',
 })
 export class RequestTable {
-  @Input() requests!: PaginatedResponse<CheckoutRequest>
+  @Input() requests!: PaginatedResponse<CheckoutRequestDto>
   @Input() headers: string[] = []
   @Input() loading = false
 

@@ -4,7 +4,7 @@ import { Page } from "../components/page/page";
 import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { RequestTable } from "./components/request-table/request-table";
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
-import { CheckoutRequest } from '../../core/DTOs/checkout-request.dto';
+import { CheckoutRequestDto } from '../../core/DTOs/checkout-request.dto';
 import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/paginated.response';
 import { CheckoutRequestService } from '../../core/services/checkout-requests.service';
 import CheckoutRequestFields from '../../core/DTOs/checkout-request-fields.dto';
@@ -20,7 +20,7 @@ import { NgIcon } from '@ng-icons/core';
 })
 export class Requests implements OnInit {
   headers = ['Type', 'Status', 'Asset', 'Category', 'Request Date', 'Actions']
-  requests = signal(defaultPaginatedResponse<CheckoutRequest>())
+  requests = signal(defaultPaginatedResponse<CheckoutRequestDto>())
   requestFields = signal<CheckoutRequestFields>({types: [], statuses: []})
   assetFields = signal<AssetFields>({categories: [], statuses: [], conditions: []})
 
@@ -45,23 +45,23 @@ export class Requests implements OnInit {
 
   handleStatusChange(status: string) {
     this.status.set(status === "all" ? "" : status)
-    this.getRequests()
+    this.getRequests(true)
   }
 
   handleTypeChange(type: string) {
     this.type.set(type === "all" ? "" : type)
-    this.getRequests()
+    this.getRequests(true)
   }
 
   handleCategoryChange(category: string) {
     this.assetCategory.set(category === "all" ? "" : category)
-    this.getRequests()
+    this.getRequests(true)
   }
 
   handleIncludeClosed(event: Event) {
     const target = event?.target as HTMLInputElement | null
     this.includeClosed.set(target?.checked ?? false)
-    this.getRequests()
+    this.getRequests(true)
   }
 
   handlePaginationChange(pagination: {pageSize: number, pageNumber: number}) {
@@ -73,16 +73,19 @@ export class Requests implements OnInit {
   getFields() {
     this.requestService.getFields().subscribe({
       next: fields => this.requestFields.set(fields as CheckoutRequestFields),
-      error: err => window.alert(err.message)
+      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
     })
 
     this.assetService.getFields().subscribe({
       next: fields => this.assetFields.set(fields as AssetFields),
-      error: err => window.alert(err.message)
+      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
     })
   }
 
-  getRequests() {
+  getRequests(backToPageOne: boolean = false) {
+    if (this.loadingRequests()) return
+    if (backToPageOne) this.pageNumber.set(1)
+
     this.loadingRequests.set(true)
     this.requestService.getCheckoutRequests({
       type: this.type(),
@@ -93,11 +96,11 @@ export class Requests implements OnInit {
       pageNumber: this.pageNumber()
     }).subscribe({
       next: requests => {
-        this.requests.set(requests as PaginatedResponse<CheckoutRequest>)
+        this.requests.set(requests as PaginatedResponse<CheckoutRequestDto>)
         this.loadingRequests.set(false)
       },
       error: err => {
-        window.alert(err.message)
+        window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
         this.loadingRequests.set(false)
       }
     })

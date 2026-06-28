@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using AssetManagementSystem.Enums;
 using AssetManagementSystem.Helpers;
 
-namespace AssetManagementSystem.DTOs.CheckoutRequests
+namespace AssetManagementSystem.DTOs.CheckoutRequests.Responses
 {
     public class CheckoutRequestFields
     {

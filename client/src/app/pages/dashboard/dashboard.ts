@@ -7,7 +7,7 @@ import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { SearchBar } from "../../core/components/search-bar/search-bar";
 import { AssetsTable } from "./components/assets-table/assets-table";
 import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/paginated.response';
-import { Asset } from '../../core/DTOs/asset.dto';
+import { AssetDto } from '../../core/DTOs/asset.dto';
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
 
 @Component({
@@ -23,7 +23,7 @@ export class Dashboard implements OnInit {
   category = signal("")
   status = signal("")
   searchText = signal("")
-  assets = signal(defaultPaginatedResponse<Asset>())
+  assets = signal(defaultPaginatedResponse<AssetDto>())
   pageSize = signal(25)
   pageNumber = signal(1)
 
@@ -38,17 +38,17 @@ export class Dashboard implements OnInit {
 
   handleSearch(searchText: string) {
     this.searchText.set(searchText)
-    this.getAssets()
+    this.getAssets(true)
   }
 
   handleStatusChange(status: string) {
     this.status.set(status === "all" ? "" : status)
-    this.getAssets()
+    this.getAssets(true)
   }
 
   handleCategoryChange(category: string) {
     this.category.set(category === "all" ? "" : category)
-    this.getAssets()
+    this.getAssets(true)
   }
 
   handlePaginationChange(pagination: { pageNumber: number; pageSize: number }) {
@@ -60,12 +60,14 @@ export class Dashboard implements OnInit {
   getFields() {
     this.assetService.getFields().subscribe({
       next: res => this.assetFields.set(res as AssetFields),
-      error: err => window.alert(err.message)
+      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
     })
   }
 
-  getAssets() {
+  getAssets(backToPageOne: boolean = false) {
     if (this.loadingAssets()) return
+
+    if (backToPageOne) this.pageNumber.set(1)
 
     this.loadingAssets.set(true)
     this.assetService.getAssets({
@@ -76,12 +78,12 @@ export class Dashboard implements OnInit {
       category: this.category()
     }).subscribe({
       next: data => {
-        this.assets.set(data as PaginatedResponse<Asset>)
+        this.assets.set(data as PaginatedResponse<AssetDto>)
         this.loadingAssets.set(false)
       },
       error: (err) => {
-        window.alert(err.message)
-        this.assets.set(defaultPaginatedResponse<Asset>())
+        window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        this.assets.set(defaultPaginatedResponse<AssetDto>())
         this.loadingAssets.set(false)
       }
     })

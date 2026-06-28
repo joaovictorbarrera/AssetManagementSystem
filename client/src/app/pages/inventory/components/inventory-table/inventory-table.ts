@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TableHeader } from "../../../../core/components/table-components/table-header/table-header";
 import PaginatedResponse from '../../../../core/DTOs/paginated.response';
-import { Asset } from '../../../../core/DTOs/asset.dto';
+import { AssetDto } from '../../../../core/DTOs/asset.dto';
 import { SpinningWheel } from "../../../../core/components/spinning-wheel/spinning-wheel";
 import { InventoryRow } from "../inventory-row/inventory-row";
 import { TableWrapper } from "../../../../core/components/table-components/table-wrapper/table-wrapper";
@@ -14,7 +14,7 @@ import AssetFields from '../../../../core/DTOs/asset-fields.dto';
   styleUrl: './inventory-table.scss',
 })
 export class InventoryTable {
-  @Input() assets!: PaginatedResponse<Asset>
+  @Input() assets!: PaginatedResponse<AssetDto>
   @Input() headers: string[] = []
   @Input() loading: boolean = false
   @Input() assetFields!: AssetFields

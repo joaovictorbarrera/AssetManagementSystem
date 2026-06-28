@@ -2,17 +2,16 @@
 <td>{{ user.firstName }} {{ user.lastName }}</td>
 <td>
     <app-dropdown
-        #roleDropdown
-        class="w-40"
-        [enableAll]="false"
-        [label]="''"
         [initialSelection]="user.role"
         [list]="roles"
         (dropdownChanged)="handleRoleChange($event)"
     />
+    @if (showRoleSuccess()) {
+        <span class="text-success">Succesfully Updated Role</span>
+    }
 </td>
 <td>
-    <label class="flex items-center gap-2">
+    <div class="flex gap-2 items-center w-full">
         <input
             class="checkbox"
             type="checkbox"
@@ -20,7 +19,10 @@
             (change)="toggleActive($event)"
         />
         <span>{{ user.isActive ? 'Active' : 'Inactive' }}</span>
-    </label>
+    </div>
+    @if (showActiveSuccess()) {
+        <span class="text-success">Succesfully Updated Status</span>
+    }
 </td>
 <td> {{ user.lastLoginAt ? (user.lastLoginAt | date:'M/d/yy, h:mm a') : "-" }}</td>
 <td>{{ user.createdAt | date:'M/d/yy, h:mm a' }}</td>

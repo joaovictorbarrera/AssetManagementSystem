@@ -59,7 +59,7 @@ namespace AssetManagementSystem.Repositories
             };
         }
 
-        public async Task<User> CreateUserAsync(CreateUserRequest request)
+        public async Task<Guid> CreateUserAsync(CreateUserRequest request)
         {
             User user = new()
             {
@@ -73,7 +73,7 @@ namespace AssetManagementSystem.Repositories
 
             await _context.SaveChangesAsync();
 
-            return user;
+            return user.Id;
         }
         public Task<User?> GetUserByEmailAsync(string email)
         {

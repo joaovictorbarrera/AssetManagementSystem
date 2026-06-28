@@ -1,4 +1,5 @@
 ﻿using AssetManagementSystem.Data;
+using AssetManagementSystem.DTOs.Assets.Projections;
 using AssetManagementSystem.DTOs.Assets.Requests;
 using AssetManagementSystem.DTOs.Assets.Responses;
 using AssetManagementSystem.DTOs.Pagination;
@@ -66,21 +67,7 @@ namespace AssetManagementSystem.Models.Repositories
                 .OrderBy(a => a.AssetTag)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(a => new AssetDto()
-                {
-                    Id = a.Id,
-                    AssetTag = a.AssetTag,
-                    Name = a.Name,
-                    Category = a.Category,
-                    Status = a.Status,
-                    Condition = a.Condition,
-                    AssignedToUserId = a.AssignedToUserId,
-                    AssignedToUser = a.AssignedToUser,
-                    IsArchived = a.IsArchived,
-                    IsPendingReturn = a.Requests.Any(r => r.RequestType == CheckoutRequestType.Return && 
-                                                        !r.IsArchived && 
-                                                        r.Status == CheckoutRequestStatus.Pending)
-                })
+                .Select(AssetExpressions.ToDto)
                 .ToListAsync();
 
             int totalPages = PaginationHelper.GetTotalPageCount(totalCount, request.PageSize);
@@ -100,7 +87,7 @@ namespace AssetManagementSystem.Models.Repositories
             };
         }
 
-        public async Task<Asset> CreateAsset(CreateAssetRequest request, Guid createdByUserId)
+        public async Task<Guid> CreateAsset(CreateAssetRequest request, Guid createdByUserId)
         {
             Asset asset = new()
             {
@@ -117,7 +104,7 @@ namespace AssetManagementSystem.Models.Repositories
 
             await _context.SaveChangesAsync();
 
-            return asset;
+            return asset.Id;
         }
 
         public async Task<List<AvailableAsset>> GetAvailableByCategory(AssetCategory category)
@@ -131,29 +118,23 @@ namespace AssetManagementSystem.Models.Repositories
         public async Task<Asset?> GetById(Guid id)
         {
             return await _context.Assets
-                .Include(a => a.AssignedToUser)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<AssetDto?> GetDtoById(Guid id)
         {
             return await _context.Assets
-                .Include(a => a.AssignedToUser)
-                .Select(a => new AssetDto()
-                {
-                    Id = a.Id,
-                    AssetTag = a.AssetTag,
-                    Name = a.Name,
-                    Category = a.Category,
-                    Status = a.Status,
-                    Condition = a.Condition,
-                    AssignedToUserId = a.AssignedToUserId,
-                    IsArchived = a.IsArchived,
-                    IsPendingReturn = a.Requests.Any(r => r.RequestType == CheckoutRequestType.Return &&
-                                                        !r.IsArchived &&
-                                                        r.Status == CheckoutRequestStatus.Pending)
-                })
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .Where(a => a.Id == id)
+                .Select(AssetExpressions.ToDto)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<AssetDetail?> GetDetailById(Guid id)
+        {
+            return await _context.Assets
+                .Where(a => a.Id == id)
+                .Select(AssetExpressions.ToDetail)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Asset> UpdateById(

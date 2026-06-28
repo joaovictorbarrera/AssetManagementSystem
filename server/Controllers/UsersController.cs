@@ -31,7 +31,9 @@ namespace AssetManagementSystem.Controllers
         public async Task<ActionResult<User>> Create([FromBody] CreateUserRequest request)
         {
             var result = await _userService.Create(request);
-            return result.Succeeded ? Ok(result.Value) : ToActionResult(result);
+            return result.Succeeded ? 
+                CreatedAtAction(nameof(Get), new { id = result.Value }, null) : 
+                ToActionResult(result);
         }
 
         [HttpGet("fields")]

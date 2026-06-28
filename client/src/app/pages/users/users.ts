@@ -36,15 +36,13 @@ export class Users implements OnInit {
 
   handleSearch(searchText: string) {
     this.searchText.set(searchText);
-    this.pageNumber.set(1);
-    this.getUsers();
+    this.getUsers(true);
   }
 
   handleHideInactive(event: Event) {
     const target = event?.target as HTMLInputElement | null;
     this.hideInactive.set(target?.checked ?? false);
-    this.pageNumber.set(1);
-    this.getUsers();
+    this.getUsers(true);
   }
 
   handlePaginationChange(pagination: { pageSize: number; pageNumber: number }) {
@@ -56,14 +54,16 @@ export class Users implements OnInit {
   getFields() {
     this.userService.getFields().subscribe({
       next: fields => this.userFields.set(fields as UserFields),
-      error: err => window.alert(err.message),
+      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error"),
     });
   }
 
-  getUsers() {
+  getUsers(backToPageOne: boolean = false) {
     if (this.loadingUsers()) return;
 
     this.loadingUsers.set(true);
+    if (backToPageOne) this.pageNumber.set(1)
+
     this.userService
       .getUsers({
         pageNumber: this.pageNumber(),
@@ -77,7 +77,7 @@ export class Users implements OnInit {
           this.loadingUsers.set(false);
         },
         error: err => {
-          window.alert(err.message);
+          window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error");
           this.users.set(defaultPaginatedResponse<User>());
           this.loadingUsers.set(false);
         },

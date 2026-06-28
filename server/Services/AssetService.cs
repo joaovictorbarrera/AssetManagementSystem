@@ -30,15 +30,15 @@ namespace AssetManagementSystem.Services
             return ServiceResult<PagedResponse<AssetDto>>.Success(result);
         }
 
-        public async Task<ServiceResult<Asset>> Create(
+        public async Task<ServiceResult<Guid>> Create(
             CreateAssetRequest request,
             Requestor requestor)
         {
             if (await _assetRepository.IsTagTakenAndNotId(request.AssetTag, Guid.Empty))
-                return ServiceResult<Asset>.BadRequest("Asset Tag is taken");
+                return ServiceResult<Guid>.BadRequest("Asset Tag is taken");
 
-            Asset asset = await _assetRepository.CreateAsset(request, requestor.UserId);
-            return ServiceResult<Asset>.Success(asset);
+            Guid newAssetId = await _assetRepository.CreateAsset(request, requestor.UserId);
+            return ServiceResult<Guid>.Success(newAssetId);
         }
 
         public async Task<ServiceResult<List<AvailableAsset>>> GetAvailableByCategory(
@@ -48,19 +48,19 @@ namespace AssetManagementSystem.Services
             return ServiceResult<List<AvailableAsset>>.Success(assets);
         }
 
-        public async Task<ServiceResult<AssetDto>> GetDetail(
+        public async Task<ServiceResult<AssetDetail>> GetDetail(
             Guid id,
             Requestor requestor)
         {
-            AssetDto? asset = await _assetRepository.GetDtoById(id);
+            AssetDetail? asset = await _assetRepository.GetDetailById(id);
 
             if (asset == null)
-                return ServiceResult<AssetDto>.NotFound();
+                return ServiceResult<AssetDetail>.NotFound();
 
-            if (asset.AssignedToUserId != requestor.UserId && !requestor.IsAssetManager)
-                return ServiceResult<AssetDto>.Forbidden("Asset is not assigned to you");
+            if (asset.UserId != requestor.UserId && !requestor.IsAssetManager)
+                return ServiceResult<AssetDetail>.Forbidden("Asset is not assigned to you");
 
-            return ServiceResult<AssetDto>.Success(asset);
+            return ServiceResult<AssetDetail>.Success(asset);
         }
 
         public async Task<ServiceResult<Asset>> Update(
@@ -111,6 +111,9 @@ namespace AssetManagementSystem.Services
 
             if (existing.IsArchived)
                 return ServiceResult.BadRequest("Cannot update archived assets");
+
+            if (request.Status == AssetStatus.Assigned)
+                return ServiceResult.BadRequest("Incorrect way to assign");
 
             bool shouldUnassign = request.Status == AssetStatus.Available
                 && existing.AssignedToUserId != null;

@@ -5,12 +5,7 @@
         <tbody>
             @if (!loading) {
                 @for (request of requests.items; track request.id) {
-                    <tr app-request-row
-                        class="cursor-pointer"
-                        [request]="request"
-                        (cancelled)="handleCancelled(request.id)"
-                    >
-                    </tr>
+                    <tr app-review-row class="cursor-pointer" [request]="request"></tr>
                 }
                 @if (requests.items.length === 0) {
                     <tr>

@@ -1,4 +1,4 @@
-﻿namespace AssetManagementSystem.DTOs.CheckoutRequests
+﻿namespace AssetManagementSystem.DTOs.CheckoutRequests.Requests
 {
     public class AssignAssetRequest
     {

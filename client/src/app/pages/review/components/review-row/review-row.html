@@ -2,11 +2,5 @@
 <td><span [classList]="request.status + ' chip'">{{request.status + (request.isArchived ? ' (Archived)' : '')}}</span></td>
 <td>{{request.assignedAssetName && request.assignedAssetTag ? `${request.assignedAssetName} \\ ${request.assignedAssetTag}` : "-"}}</td>
 <td>{{request.assetCategory}}</td>
+<td>{{request.requestedByUser.firstName + " " + request.requestedByUser.lastName}}</td>
 <td>{{request.createdAt | date:'M/d/yy, h:mm a'}}</td>
-<td>
-    @if(request.status === "pending" || request.status === "approved") {
-        <button class="cancel hover:brightness-120" (click)="handleCancel()">Cancel</button>
-    } @else {
-        -
-    }
-</td>

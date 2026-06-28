@@ -16,12 +16,12 @@ export class TablePagination implements OnChanges {
   @Output() paginationChanged = new EventEmitter<{ pageSize: number; pageNumber: number }>();
 
   pageNumber = signal(1)
-  pageSize = signal(25)
+  pageSize = 25
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['pagination'] && this.pagination) {
       this.pageNumber.set(this.pagination.pageNumber || 1)
-      this.pageSize.set(this.pagination.pageSize || 25)
+      this.pageSize = this.pagination.pageSize || 25
     }
   }
 
@@ -59,7 +59,7 @@ export class TablePagination implements OnChanges {
 
   emitPaginationChanged(backToPageOne: boolean = false) {
     this.paginationChanged.emit({
-      pageSize: this.pageSize(),
+      pageSize: this.pageSize,
       pageNumber: backToPageOne ? 1 : this.pageNumber()
     })
   }

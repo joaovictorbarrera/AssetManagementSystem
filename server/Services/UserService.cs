@@ -25,14 +25,14 @@ namespace AssetManagementSystem.Services
             return ServiceResult<PagedResponse<User>>.Success(users);
         }
 
-        public async Task<ServiceResult<User>> Create([FromBody] CreateUserRequest request)
+        public async Task<ServiceResult<Guid>> Create([FromBody] CreateUserRequest request)
         {
             bool userExists = await _userRepository.GetUserByEmailAsync(request.EmailAddress) != null;
-            if (userExists) return ServiceResult<User>.BadRequest("Email Address is taken");
+            if (userExists) return ServiceResult<Guid>.BadRequest("Email Address is taken");
 
-            User user = await _userRepository.CreateUserAsync(request);
+            Guid newUserId = await _userRepository.CreateUserAsync(request);
 
-            return ServiceResult<User>.Success(user);
+            return ServiceResult<Guid>.Success(newUserId);
         }
 
         public async Task<ServiceResult> UpdateRole(Guid id, [FromBody] UpdateUserRoleRequest request)

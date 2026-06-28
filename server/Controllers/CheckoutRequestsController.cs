@@ -1,4 +1,6 @@
 ﻿using AssetManagementSystem.DTOs.CheckoutRequests;
+using AssetManagementSystem.DTOs.CheckoutRequests.Requests;
+using AssetManagementSystem.DTOs.CheckoutRequests.Responses;
 using AssetManagementSystem.DTOs.Pagination;
 using AssetManagementSystem.DTOs.Users;
 using AssetManagementSystem.Extensions;
@@ -46,7 +48,9 @@ namespace AssetManagementSystem.Controllers
             }
             Requestor requestor = user.GetRequestor();
             var result = await _requestService.Create(request, requestor);
-            return result.Succeeded ? Created() : ToActionResult(result);
+            return result.Succeeded ? 
+                CreatedAtAction(nameof(GetDetail), new {id = result.Value}, null) : 
+                ToActionResult(result);
         }
 
         [HttpGet("fields")]
@@ -56,7 +60,7 @@ namespace AssetManagementSystem.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<CheckoutRequest>> GetDetail(Guid id)
+        public async Task<ActionResult<CheckoutRequestDetail>> GetDetail(Guid id)
         {
             if (HttpContext.Items["User"] is not User user)
             {

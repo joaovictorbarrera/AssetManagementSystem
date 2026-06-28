@@ -1,4 +1,6 @@
-﻿using AssetManagementSystem.DTOs.CheckoutRequests;
+﻿using AssetManagementSystem.DTOs.Assets.Responses;
+using AssetManagementSystem.DTOs.CheckoutRequests;
+using AssetManagementSystem.DTOs.CheckoutRequests.Requests;
 using AssetManagementSystem.DTOs.Pagination;
 using AssetManagementSystem.DTOs.Users;
 using AssetManagementSystem.Enums;
@@ -32,45 +34,51 @@ namespace AssetManagementSystem.Services
             return ServiceResult<PagedResponse<CheckoutRequestDto>>.Success(result);
         }
 
-        public async Task<ServiceResult> Create(
+        public async Task<ServiceResult<Guid>> Create(
             CreateCheckoutRequestRequest request,
             Requestor requestor)
         {
             if (request.RequestType == CheckoutRequestType.Return)
             {
                 if (request.AssetId == null)
-                    return ServiceResult.BadRequest(
+                    return ServiceResult<Guid>.BadRequest(
                         "Return requests require an AssetId");
 
-                Asset? asset = await _assetRepository.GetById(request.AssetId.Value);
+                AssetDto? asset = await _assetRepository.GetDtoById(request.AssetId.Value);
 
                 if (asset == null)
-                    return ServiceResult.BadRequest(
+                    return ServiceResult<Guid>.BadRequest(
                         "Asset does not exist");
 
-                if (asset.AssignedToUserId != requestor.UserId)
-                    return ServiceResult.Forbidden(
+                if (asset.UserId != requestor.UserId)
+                    return ServiceResult<Guid>.Forbidden(
                         "Asset is not assigned to you");
+
+                if (asset.IsPendingReturn)
+                {
+                    return ServiceResult<Guid>.BadRequest(
+                        "Asset is already pending return");
+                }
             }
 
-            await _requestRepository.Create(request, requestor.UserId);
-            return ServiceResult.Success();
+            Guid createdId = await _requestRepository.Create(request, requestor.UserId);
+            return ServiceResult<Guid>.Success(createdId);
         }
 
-        public async Task<ServiceResult<CheckoutRequest>> GetDetail(
+        public async Task<ServiceResult<CheckoutRequestDetail>> GetDetail(
             Guid id,
             Requestor requestor)
         {
-            CheckoutRequest? checkoutRequest = await _requestRepository.GetById(id);
+            CheckoutRequestDetail? checkoutRequest = await _requestRepository.GetDetailById(id);
 
             if (checkoutRequest == null)
-                return ServiceResult<CheckoutRequest>.NotFound();
+                return ServiceResult<CheckoutRequestDetail>.NotFound();
 
-            if (!requestor.IsAssetManager && checkoutRequest.RequestedByUserId != requestor.UserId)
-                return ServiceResult<CheckoutRequest>.Forbidden(
+            if (!requestor.IsAssetManager && checkoutRequest.RequestedByUser.Id != requestor.UserId)
+                return ServiceResult<CheckoutRequestDetail>.Forbidden(
                     "Request does not belong to you");
 
-            return ServiceResult<CheckoutRequest>.Success(checkoutRequest);
+            return ServiceResult<CheckoutRequestDetail>.Success(checkoutRequest);
         }
 
         public async Task<ServiceResult> Archive(Guid id)
