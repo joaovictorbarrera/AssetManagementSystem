@@ -3,10 +3,10 @@ import { Subject } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class AssetEventsService {
-  private _assetUpdated = new Subject<void>();
-  assetUpdated$ = this._assetUpdated.asObservable();
+  private _assetsChanged = new Subject<void>();
+  assetsChanged$ = this._assetsChanged.asObservable();
 
-  emitAssetUpdated(): void {
-    this._assetUpdated.next();
+  emitAssetsChanged(): void {
+    this._assetsChanged.next();
   }
 }

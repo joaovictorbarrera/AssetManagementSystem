@@ -1,7 +1,7 @@
 <app-page>
     <app-page-header>
         <div class="flex items-center w-full relative">
-            <button class="btn btn-accent text-text-primary px-4 py-2 rounded flex items-center gap-0.5">
+            <button (click)="openCreateUser()" class="btn btn-accent flex items-center gap-0.5">
                 <ng-icon name="heroPlus" size="20" />
                 <span class="pb-px">New User</span>
             </button>
@@ -12,8 +12,8 @@
         <app-search-bar (search)="handleSearch($event)" />
 
         <div class="flex gap-2 text-text-muted text-sm items-center mb-3">
-            <input class="checkbox" type="checkbox" (change)="handleHideInactive($event)" />
-            <span>Hide Inactive</span>
+            <input class="checkbox" type="checkbox" (change)="handleShowInactive($event)" />
+            <span>Show Inactive</span>
         </div>
     </div>
     <app-users-table [headers]="headers" [users]="users()" [roles]="userFields().roles" [loading]="loadingUsers()" />

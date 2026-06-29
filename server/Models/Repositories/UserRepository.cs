@@ -22,7 +22,7 @@ namespace AssetManagementSystem.Repositories
         {
             IQueryable<User> query = _context.Users;
 
-            if (request.HideInactive)
+            if (!request.ShowInactive)
             {
                 query = query.Where(u => u.IsActive);
             }

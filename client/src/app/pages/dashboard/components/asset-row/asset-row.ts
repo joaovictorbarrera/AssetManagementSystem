@@ -30,7 +30,7 @@ export class AssetRow {
       }).subscribe({
         error: err => {
           this.asset.isPendingReturn = false
-          window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+          window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
         }
       })
     }

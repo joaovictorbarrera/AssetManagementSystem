@@ -7,6 +7,6 @@ namespace AssetManagementSystem.DTOs.Users
     {
         [MaxLength(50)]
         public string? SearchText { get; set; } = "";
-        public bool HideInactive { get; set; } = false;
+        public bool ShowInactive { get; set; } = false;
     }
 }

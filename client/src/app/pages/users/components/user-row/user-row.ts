@@ -47,7 +47,7 @@ export class UserRow {
         },
         error: err => {
             checkbox.checked = this.user.isActive
-            window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+            window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
         }
     })
   }
@@ -71,7 +71,7 @@ export class UserRow {
         },
         error: err => {
             this.roleDropdown.revert()
-            window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+            window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
         }
     })
   }

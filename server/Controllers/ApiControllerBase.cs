@@ -13,15 +13,15 @@ namespace AssetManagementSystem.Controllers
                 ServiceErrorType.Unauthorized => Unauthorized(),
                 ServiceErrorType.Forbidden => StatusCode(StatusCodes.Status403Forbidden, new
                 {
-                    Message = result.ErrorMessage
+                    Title = result.ErrorMessage
                 }),
                 ServiceErrorType.BadRequest => BadRequest(new
                 {
-                    Message = result.ErrorMessage
+                    Title = result.ErrorMessage
                 }),
                 _ => StatusCode(500, new
                 {
-                    Message = "An unexpected error occurred"
+                    Title = "An unexpected error occurred"
                 })
             };
 

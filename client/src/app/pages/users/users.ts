@@ -9,6 +9,9 @@ import PaginatedResponse, { defaultPaginatedResponse } from '../../core/DTOs/sha
 import UserDto from '../../core/DTOs/user/user.dto';
 import UserFields from '../../core/DTOs/user/user-fields.dto';
 import { NgIcon } from '@ng-icons/core';
+import { UserCreate } from '../../core/components/drawers/user-create/user-create';
+import { DrawerService } from '../../core/services/drawer.service';
+import { UserEventsService } from '../../core/services/user-events.service';
 
 @Component({
   selector: 'app-users',
@@ -22,16 +25,21 @@ export class Users implements OnInit {
   userFields = signal<UserFields>({ roles: [] });
 
   searchText = signal('');
-  hideInactive = signal(false);
+  showInactive = signal(false);
   pageSize = signal(25);
   pageNumber = signal(1);
   loadingUsers = signal(false);
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private drawer: DrawerService,
+    private userEventsService: UserEventsService
+  ) {}
 
   ngOnInit(): void {
-    this.getFields();
-    this.getUsers();
+    this.getFields()
+    this.getUsers()
+    this.userEventsService.usersChanged$.subscribe(() => this.getUsers())
   }
 
   handleSearch(searchText: string) {
@@ -39,9 +47,9 @@ export class Users implements OnInit {
     this.getUsers(true);
   }
 
-  handleHideInactive(event: Event) {
+  handleShowInactive(event: Event) {
     const target = event?.target as HTMLInputElement | null;
-    this.hideInactive.set(target?.checked ?? false);
+    this.showInactive.set(target?.checked ?? false);
     this.getUsers(true);
   }
 
@@ -54,7 +62,7 @@ export class Users implements OnInit {
   getFields() {
     this.userService.getFields().subscribe({
       next: fields => this.userFields.set(fields as UserFields),
-      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error"),
+      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error"),
     });
   }
 
@@ -69,7 +77,7 @@ export class Users implements OnInit {
         pageNumber: this.pageNumber(),
         pageSize: this.pageSize(),
         searchText: this.searchText(),
-        hideInactive: this.hideInactive(),
+        showInactive: this.showInactive(),
       })
       .subscribe({
         next: users => {
@@ -77,10 +85,14 @@ export class Users implements OnInit {
           this.loadingUsers.set(false);
         },
         error: err => {
-          window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error");
+          window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error");
           this.users.set(defaultPaginatedResponse<UserDto>());
           this.loadingUsers.set(false);
         },
       });
+  }
+
+  openCreateUser() {
+    this.drawer.open(UserCreate, {})
   }
 }

@@ -5,15 +5,15 @@
                 {{`${assetDetails()!.name}${assetDetails()!.isArchived ? ' (Archived)' : ''}`}}
             </h2>
             <div class="flex flex-col gap-5 h-full">
-                <div class="flex flex-col gap-2 uppercase">
+                <div class="flex flex-col gap-2">
                     <p class="text-text-secondary">Asset ID</p>
-                    <span>{{assetDetails()!.id}}</span>
+                    <span class="uppercase">{{assetDetails()!.id}}</span>
                 </div>
 
                 <div class="flex flex-col gap-2">
                     <p class="text-text-secondary">Asset Name</p>
                     @if (authService.isManager) {
-                        <input [value]="assetDetails()!.name" />
+                        <input class="drawer-input" [value]="assetDetails()!.name" />
                     } @else {
                         <span>{{assetDetails()!.name}}</span>
                     }
@@ -22,7 +22,7 @@
                 <div class="flex flex-col gap-2">
                     <p class="text-text-secondary">Asset Tag</p>
                     @if (authService.isManager) {
-                        <input [value]="assetDetails()!.assetTag" />
+                        <input class="drawer-input" [value]="assetDetails()!.assetTag" />
                     } @else {
                         <span>{{assetDetails()!.assetTag}}</span>
                     }
@@ -31,7 +31,7 @@
                 <div class="flex flex-col gap-2">
                     <p class="text-text-secondary">Serial Number</p>
                     @if (authService.isManager) {
-                        <input [value]="assetDetails()!.serialNumber" />
+                        <input class="drawer-input" [value]="assetDetails()!.serialNumber" />
                     } @else {
                         @if (!assetDetails()!.serialNumber) {
                             <span>No Serial Number</span>

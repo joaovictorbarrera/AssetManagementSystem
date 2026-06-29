@@ -151,3 +151,16 @@ option {
   from { transform: translateX(100%); }
   to   { transform: translateX(0); }
 }
+
+.drawer-input {
+    padding: .5rem .75rem;
+    background-color: var(--bg-secondary);
+    border-radius: .5rem;
+    outline: none;
+    border: 2px solid var(--chip-border);
+
+    &:hover {
+        border: 2px solid var(--accent);
+        transition: all 300ms;
+    }
+}

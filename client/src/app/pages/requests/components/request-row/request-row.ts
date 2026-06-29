@@ -19,7 +19,7 @@ export class RequestRow {
     if (window.confirm("Are you sure you want to cancel this request?")) {
       this.requestService.cancel(this.request.id).subscribe({
         next: () => this.cancelled.emit(this.request.id),
-        error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
       })
     }
   }

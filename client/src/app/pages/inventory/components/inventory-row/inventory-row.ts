@@ -57,7 +57,7 @@ export class InventoryRow {
           setTimeout(() => this.showStatusSuccess.set(false), 3000)
         },
         error: err => {
-          window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+          window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
         }
     })
   }
@@ -70,7 +70,7 @@ export class InventoryRow {
           setTimeout(() => this.showConditionSuccess.set(false), 3000)
         },
         error: err => {
-          window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+          window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
         }
     })
   }

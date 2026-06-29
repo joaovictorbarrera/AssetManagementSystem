@@ -73,12 +73,12 @@ export class Requests implements OnInit {
   getFields() {
     this.requestService.getFields().subscribe({
       next: fields => this.requestFields.set(fields as CheckoutRequestFields),
-      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
     })
 
     this.assetService.getFields().subscribe({
       next: fields => this.assetFields.set(fields as AssetFields),
-      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
     })
   }
 
@@ -100,7 +100,7 @@ export class Requests implements OnInit {
         this.loadingRequests.set(false)
       },
       error: err => {
-        window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
         this.loadingRequests.set(false)
       }
     })

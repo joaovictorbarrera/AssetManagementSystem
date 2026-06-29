@@ -1,10 +1,10 @@
 <button
-  class="btn btn-accent w-100"
+  class="btn btn-accent w-full"
   type="submit"
   [disabled]="disabled || loading"
 >
   @if (!loading) {
-    Submit
+    {{text}}
   } @else {
     <span class="flex items-center justify-center gap-2">
       <app-spinning-wheel />

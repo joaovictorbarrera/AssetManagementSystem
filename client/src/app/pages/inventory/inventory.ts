@@ -45,7 +45,7 @@ export class Inventory implements OnInit {
   ngOnInit(): void {
     this.getFields()
     this.getAssets()
-    this.assetEvents.assetUpdated$
+    this.assetEvents.assetsChanged$
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(() => this.getAssets());
   }
@@ -85,7 +85,7 @@ export class Inventory implements OnInit {
   getFields() {
     this.assetService.getFields().subscribe({
       next: res => this.assetFields.set(res as AssetFields),
-      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
     })
   }
 
@@ -109,7 +109,7 @@ export class Inventory implements OnInit {
         this.loadingAssets.set(false)
       },
       error: (err) => {
-        window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
         this.assets.set(defaultPaginatedResponse<AssetDto>())
         this.loadingAssets.set(false)
       }

@@ -7,6 +7,7 @@ import { SpinningWheel } from '../spinning-wheel/spinning-wheel';
   templateUrl: './submit-button.html',
 })
 export class SubmitButton {
+  @Input() text!: string
   @Input() loading: boolean = false;
   @Input() disabled: boolean = false;
 }

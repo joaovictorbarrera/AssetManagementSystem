@@ -41,7 +41,7 @@ export class AssetDetail implements OnInit {
         this.loadingDetails.set(false)
       },
       error: err => {
-        window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+        window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
       }
     })
   }
@@ -49,7 +49,7 @@ export class AssetDetail implements OnInit {
   getFields() {
     this.assetService.getFields().subscribe({
       next: res => this.assetFields.set(res as AssetFields),
-      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
     })
   }
 
@@ -57,9 +57,9 @@ export class AssetDetail implements OnInit {
     this.assetService.archive(this.assetId).subscribe({
       next: () => {
         this.drawerService.close()
-        this.assetEvents.emitAssetUpdated()
+        this.assetEvents.emitAssetsChanged()
       },
-      error: err => window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
+      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
     })
   }
 }
