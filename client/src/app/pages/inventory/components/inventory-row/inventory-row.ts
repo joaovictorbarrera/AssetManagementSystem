@@ -18,6 +18,14 @@ export class InventoryRow {
   @Input() assetFields!: AssetFields
   @ViewChild('statusDropdown') statusDropdown!: Dropdown
 
+  excludedStatuses = ['assigned']
+
+  get availableStatuses() {
+    return this.asset.status === 'assigned'
+      ? this.assetFields.statuses
+      : this.assetFields.statuses.filter(s => s !== 'assigned');
+  }
+
   showStatusSuccess = signal(false)
   showConditionSuccess = signal(false)
 
@@ -46,7 +54,7 @@ export class InventoryRow {
           }
           this.asset.status = status
           this.showStatusSuccess.set(true)
-          setTimeout(() => this.showStatusSuccess.set(false), 1500)
+          setTimeout(() => this.showStatusSuccess.set(false), 3000)
         },
         error: err => {
           window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")
@@ -59,7 +67,7 @@ export class InventoryRow {
         next: () => {
           this.asset.condition = condition
           this.showConditionSuccess.set(true)
-          setTimeout(() => this.showConditionSuccess.set(false), 1500)
+          setTimeout(() => this.showConditionSuccess.set(false), 3000)
         },
         error: err => {
           window.alert(`${err.status} error: ` + err.error.message ? err.error.message : "Unknown Error")

@@ -18,8 +18,6 @@ export class Dropdown implements OnChanges {
   currentValue = ''
   private initialValue = ''
 
-  constructor(private cdr: ChangeDetectorRef) {}
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['initialSelection'] && this.initialSelection !== undefined) {
       this.currentValue = this.initialSelection
@@ -35,7 +33,9 @@ export class Dropdown implements OnChanges {
   }
 
   revert() {
-    this.currentValue = this.initialValue
-    this.cdr.detectChanges()
+    // Needs to update on the next cycle
+    setTimeout(() => {
+      this.currentValue = this.initialValue
+    })
   }
 }

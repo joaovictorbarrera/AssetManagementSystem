@@ -1,8 +1,8 @@
 <div class="bg-navbar h-15 flex px-5 items-center">
     <div class="ml-auto flex gap-4 items-center">
         <div class="flex flex-col text-right text-sm">
-            <strong>{{ currentUser()?.firstName}} {{ currentUser()?.lastName }}</strong>
-            <span class="text-text-secondary">{{ currentUser()?.emailAddress }}</span>
+            <strong>{{ authService.currentUser()?.firstName}} {{ authService.currentUser()?.lastName }}</strong>
+            <span class="text-text-secondary">{{ authService.currentUser()?.emailAddress }}</span>
         </div>
         <button class="btn btn-danger" (click)="authService.logout()">Sign Out</button>
     </div>

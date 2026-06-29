@@ -5,12 +5,13 @@
     <app-dropdown
         #statusDropdown
         [initialSelection]="asset.status"
-        [list]="assetFields.statuses"
+        [list]="availableStatuses"
         (dropdownChanged)="handleStatusChange($event)"
     />
     @if (showStatusSuccess()) {
         <span class="text-success">Succesfully Updated Status</span>
     }
+
 </td>
 <td>{{asset.userFirstName && asset.userLastName ? `${asset.userFirstName} ${asset.userLastName}` : "-"}}</td>
 <td>

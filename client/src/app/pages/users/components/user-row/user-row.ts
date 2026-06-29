@@ -43,7 +43,7 @@ export class UserRow {
         next: () => {
             this.user.isActive = checkbox.checked
             this.showActiveSuccess.set(true)
-            setTimeout(() => this.showActiveSuccess.set(false), 1500)
+            setTimeout(() => this.showActiveSuccess.set(false), 3000)
         },
         error: err => {
             checkbox.checked = this.user.isActive
@@ -67,7 +67,7 @@ export class UserRow {
         next: () => {
             this.user.role = role as Role
             this.showRoleSuccess.set(true)
-            setTimeout(() => this.showRoleSuccess.set(false), 1500)
+            setTimeout(() => this.showRoleSuccess.set(false), 3000)
         },
         error: err => {
             this.roleDropdown.revert()
