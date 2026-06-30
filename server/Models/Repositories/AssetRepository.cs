@@ -119,6 +119,7 @@ namespace AssetManagementSystem.Models.Repositories
         public async Task<Asset?> GetById(Guid id)
         {
             return await _context.Assets
+                .Include(a => a.AssignedToUser)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
