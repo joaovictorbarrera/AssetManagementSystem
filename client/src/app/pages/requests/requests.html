@@ -1,4 +1,4 @@
-<app-page>
+<app-page-wrapper>
     <app-page-header>
         <div class="flex items-center w-full relative">
             <button (click)="openCreateRequest()" class="btn btn-accent flex items-center gap-0.5">
@@ -25,4 +25,4 @@
     </div>
     <app-request-table [headers]="headers" [requests]="requests()" [loading]="loadingRequests()" />
     <app-table-pagination [name]="'Requests'" [colspan]="headers.length" [pagination]="requests().pagination" (paginationChanged)="handlePaginationChange($event)" />
-</app-page>
+</app-page-wrapper>

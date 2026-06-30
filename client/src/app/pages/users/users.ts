@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { PageHeader } from '../components/page-header/page-header';
-import { Page } from '../components/page/page';
+import { PageHeader } from '../../core/components/page-components/page-header/page-header';
+import { PageWrapper } from '../../core/components/page-components/page-wrapper/page-wrapper';
 import { SearchBar } from '../../core/components/search-bar/search-bar';
 import { UsersTable } from './components/users-table/users-table';
 import { TablePagination } from '../../core/components/table-components/table-pagination/table-pagination';
@@ -15,7 +15,7 @@ import { UserEventsService } from '../../core/services/events/user-events.servic
 
 @Component({
   selector: 'app-users',
-  imports: [PageHeader, Page, SearchBar, UsersTable, TablePagination, NgIcon],
+  imports: [PageHeader, PageWrapper, SearchBar, UsersTable, TablePagination, NgIcon],
   templateUrl: './users.html',
   styleUrl: './users.scss',
 })

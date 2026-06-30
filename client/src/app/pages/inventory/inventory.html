@@ -1,4 +1,4 @@
-<app-page>
+<app-page-wrapper>
     <app-page-header>
         <div class="flex items-center w-full relative">
             <button (click)="openCreateAsset()" class="btn btn-accent flex items-center gap-0.5">
@@ -25,4 +25,4 @@
     </div>
     <app-inventory-table [assetFields]="assetFields()" [headers]="headers" [assets]="assets()" [loading]="loadingAssets()" />
     <app-table-pagination [name]="'Assets'" [colspan]="headers.length" [pagination]="assets().pagination" (paginationChanged)="handlePaginationChange($event)" />
-</app-page>
+</app-page-wrapper>

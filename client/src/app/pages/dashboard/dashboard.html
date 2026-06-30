@@ -1,4 +1,4 @@
-<app-page>
+<app-page-wrapper>
     <app-page-header>
         <h1 class="text-3xl flex w-full text-center gap-2 items-end justify-center">
             <ng-icon name="heroComputerDesktop" />Asset Dashboard
@@ -13,4 +13,4 @@
     </div>
     <app-assets-table [headers]="headers" [assets]="assets()" [loading]="loadingAssets()" />
     <app-table-pagination [name]="'Assets'" [colspan]="headers.length" [pagination]="assets().pagination" (paginationChanged)="handlePaginationChange($event)" />
-</app-page>
+</app-page-wrapper>

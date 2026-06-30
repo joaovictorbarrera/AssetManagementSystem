@@ -1,4 +1,4 @@
-<app-page>
+<app-page-wrapper>
     <app-page-header>
         <div class="flex items-center w-full relative">
             <button (click)="openCreateUser()" class="btn btn-accent flex items-center gap-0.5">
@@ -20,4 +20,4 @@
     </div>
     <app-users-table [headers]="headers" [users]="users()" [roles]="userFields().roles" [loading]="loadingUsers()" />
     <app-table-pagination [name]="'Users'" [colspan]="headers.length" [pagination]="users().pagination" (paginationChanged)="handlePaginationChange($event)" />
-</app-page>
+</app-page-wrapper>

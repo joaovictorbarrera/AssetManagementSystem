@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { Page } from "../components/page/page";
-import { PageHeader } from '../components/page-header/page-header';
+import { PageWrapper } from "../../core/components/page-components/page-wrapper/page-wrapper";
+import { PageHeader } from '../../core/components/page-components/page-header/page-header';
 import { AssetService } from '../../core/services/api/asset.service';
 import AssetFields from '../../core/DTOs/asset/asset-fields.dto';
 import { Dropdown } from "../../core/components/dropdown/dropdown";
@@ -17,7 +17,7 @@ import { AssetCreate } from '../../core/components/drawers/asset-create/asset-cr
 
 @Component({
   selector: 'app-inventory',
-  imports: [Page, PageHeader, Dropdown, SearchBar, InventoryTable, TablePagination, NgIcon],
+  imports: [PageWrapper, PageHeader, Dropdown, SearchBar, InventoryTable, TablePagination, NgIcon],
   templateUrl: './inventory.html',
   styleUrl: './inventory.scss',
 })

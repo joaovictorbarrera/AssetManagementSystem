@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { Page } from "../components/page/page";
-import { PageHeader } from '../components/page-header/page-header';
+import { PageWrapper } from "../../core/components/page-components/page-wrapper/page-wrapper";
+import { PageHeader } from '../../core/components/page-components/page-header/page-header';
 import { AssetService } from '../../core/services/api/asset.service';
 import AssetFields from '../../core/DTOs/asset/asset-fields.dto';
 import { Dropdown } from "../../core/components/dropdown/dropdown";
@@ -13,7 +13,7 @@ import { NgIcon } from '@ng-icons/core';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Page, PageHeader, Dropdown, SearchBar, AssetsTable, TablePagination, NgIcon],
+  imports: [PageWrapper, PageHeader, Dropdown, SearchBar, AssetsTable, TablePagination, NgIcon],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

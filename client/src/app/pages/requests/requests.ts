@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { PageHeader } from "../components/page-header/page-header";
-import { Page } from "../components/page/page";
+import { PageHeader } from "../../core/components/page-components/page-header/page-header";
+import { PageWrapper } from "../../core/components/page-components/page-wrapper/page-wrapper";
 import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { RequestTable } from "./components/request-table/request-table";
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
@@ -17,7 +17,7 @@ import { RequestCreate } from '../../core/components/drawers/request-create/requ
 
 @Component({
   selector: 'app-requests',
-  imports: [PageHeader, Page, Dropdown, RequestTable, TablePagination, NgIcon],
+  imports: [PageHeader, PageWrapper, Dropdown, RequestTable, TablePagination, NgIcon],
   templateUrl: './requests.html',
   styleUrl: './requests.scss',
 })

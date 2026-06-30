@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { PageHeader } from "../components/page-header/page-header";
-import { Page } from "../components/page/page";
+import { PageHeader } from "../../core/components/page-components/page-header/page-header";
+import { PageWrapper } from "../../core/components/page-components/page-wrapper/page-wrapper";
 import { Dropdown } from "../../core/components/dropdown/dropdown";
 import { TablePagination } from "../../core/components/table-components/table-pagination/table-pagination";
 import { CheckoutRequestDto } from '../../core/DTOs/checkout-request/checkout-request.dto';
@@ -14,7 +14,7 @@ import { NgIcon } from '@ng-icons/core';
 
 @Component({
   selector: 'app-review',
-  imports: [PageHeader, Page, Dropdown, ReviewTable, TablePagination, NgIcon],
+  imports: [PageHeader, PageWrapper, Dropdown, ReviewTable, TablePagination, NgIcon],
   templateUrl: './review.html',
   styleUrl: './review.scss',
 })
