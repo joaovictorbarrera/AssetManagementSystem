@@ -1,99 +1,26 @@
-<div class="flex flex-col w-full h-full justify-center items-center p-10 relative">
+<div class="flex flex-col w-full h-full justify-center items-center relative">
     @if (assetDetails() && !loadingDetails()) {
-        <div class="flex flex-col gap-8 w-full h-full overflow-auto mb-10">
+        <div class="flex flex-col gap-8 w-full h-full overflow-auto mb-10 p-10">
             <h2 class="text-3xl font-bold inline">
-                {{`${assetDetails()!.name}${assetDetails()!.isArchived ? ' (Archived)' : ''}`}}
+                {{`${assetDetails()!.name}${assetDetails()!.isArchived ? ' (Archived)' : ''} `}}
             </h2>
-            <div class="flex flex-col gap-5 h-full">
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Asset ID</p>
-                    <span class="uppercase">{{assetDetails()!.id}}</span>
+            <div class="w-full h-full flex flex-col gap-4">
+                <div class="flex">
+                    <span [class.active]="this.page() === 'details'" (click)="handleOpenDetails()" class="menu">Details</span>
+                    <span [class.active]="this.page() === 'history'" (click)="handleOpenHistory()" class="menu">History</span>
                 </div>
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Asset Name</p>
-                    @if (authService.isManager) {
-                        <input class="drawer-input" [value]="assetDetails()!.name" />
-                    } @else {
-                        <span>{{assetDetails()!.name}}</span>
-                    }
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Asset Tag</p>
-                    @if (authService.isManager) {
-                        <input class="drawer-input" [value]="assetDetails()!.assetTag" />
-                    } @else {
-                        <span>{{assetDetails()!.assetTag}}</span>
-                    }
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Serial Number</p>
-                    @if (authService.isManager) {
-                        <input class="drawer-input" [value]="assetDetails()!.serialNumber" />
-                    } @else {
-                        @if (!assetDetails()!.serialNumber) {
-                            <span>No Serial Number</span>
-                        } @else {
-                            <span>{{assetDetails()!.serialNumber}}</span>
-                        }
-                    }
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Category</p>
-                    <span class="capitalize">{{assetDetails()!.category}}</span>
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Assigned To</p>
-                    @if (!assetDetails()?.userId) {
-                        <span>Not Assigned</span>
-                    } @else {
-                        <span>{{`${assetDetails()!.userFirstName} ${assetDetails()!.userLastName}`}}</span>
-                    }
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Status</p>
-                    <span class="capitalize">{{assetDetails()!.status}}</span>
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Condition</p>
-                    <span class="capitalize">{{assetDetails()!.condition}}</span>
-                </div>
-
-                @if (assetDetails()?.updatedAt) {
-                    <div class="flex flex-col gap-2">
-                        <p class="text-text-secondary">Last Updated</p>
-                        <span>{{assetDetails()?.updatedAt | date:'M/d/yy, h:mm a'}}</span>
-                    </div>
+                @if (this.page() === 'details') {
+                    <app-asset-detail-form [assetDetails]="assetDetails()!" />
+                } @else if (this.page() === 'history') {
+                    <app-asset-detail-history [assetId]="assetId" />
                 }
-
-                <div class="flex flex-col gap-2">
-                    <p class="text-text-secondary">Created Date</p>
-                    <span>{{assetDetails()?.createdAt | date:'M/d/yy, h:mm a'}}</span>
-                </div>
             </div>
         </div>
     }
-
     @if (loadingDetails()) {
         <div class="flex gap-1 items-center">
             <app-spinning-wheel></app-spinning-wheel>
             <span>Loading...</span>
-        </div>
-    }
-
-    @if (authService.isManager) {
-        <div class="bg-bg-elevated absolute w-full bottom-0 left-0 flex gap-2 p-5">
-            <button class="btn btn-accent self-start w-30" [disabled]="assetDetails()?.isArchived ?? false">Save</button>
-            <button class="btn btn-cancel w-30" (click)="drawer.close()">Cancel</button>
-            @if (authService.isAdmin) {
-                <button (click)="handleArchive()" class="btn btn-danger self-start w-30">Archive</button>
-            }
         </div>
     }
 </div>

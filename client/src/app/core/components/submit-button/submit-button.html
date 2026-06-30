@@ -1,6 +1,6 @@
 <button
-  class="btn btn-accent w-full"
-  type="submit"
+  [classList]="'btn-'+color+' btn w-full'"
+  [type]="type"
   [disabled]="disabled || loading"
 >
   @if (!loading) {

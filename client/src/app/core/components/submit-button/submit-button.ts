@@ -10,4 +10,6 @@ export class SubmitButton {
   @Input() text!: string
   @Input() loading: boolean = false;
   @Input() disabled: boolean = false;
+  @Input() color: string = 'accent';
+  @Input() type: string = 'submit';
 }

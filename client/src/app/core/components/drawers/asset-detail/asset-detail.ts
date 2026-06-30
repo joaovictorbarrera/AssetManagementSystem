@@ -1,44 +1,39 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
-import { AssetService } from '../../../services/api/asset.service';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { AssetDetailDto } from '../../../DTOs/asset/asset-detail.dto';
-import { SpinningWheel } from '../../spinning-wheel/spinning-wheel';
+import { FormsModule } from '@angular/forms';
+import { AssetDetailForm } from './pages/asset-detail-form/asset-detail-form';
+import { SpinningWheel } from "../../spinning-wheel/spinning-wheel";
+import { AssetService } from '../../../services/api/asset.service';
 import { AuthService } from '../../../services/api/auth.service';
-import { DatePipe } from '@angular/common';
-import { Dropdown } from '../../dropdown/dropdown';
-import AssetFields from '../../../DTOs/asset/asset-fields.dto';
 import { DrawerService } from '../../../services/util/drawer.service';
-import { AssetEventsService } from '../../../services/events/asset-events.service';
+import { AssetDetailHistory } from './pages/asset-detail-history/asset-detail-history';
 
 @Component({
   selector: 'app-asset-detail',
-  imports: [SpinningWheel, DatePipe],
+  imports: [FormsModule, AssetDetailForm, SpinningWheel, AssetDetailHistory],
   templateUrl: './asset-detail.html',
   styleUrl: './asset-detail.scss',
 })
 export class AssetDetail implements OnInit {
   @Input() assetId!: string
 
-  assetFields = signal<AssetFields>({categories: [], statuses: [], conditions: []})
+  page = signal('details')
+
   assetDetails = signal<AssetDetailDto | null>(null)
   loadingDetails = signal(true)
-
-  get availableStatuses() {
-    return this.assetDetails()?.status === 'assigned'
-      ? this.assetFields().statuses
-      : this.assetFields().statuses.filter(s => s !== 'assigned');
-  }
 
   constructor(
     private assetService: AssetService,
     public authService: AuthService,
-    private assetEvents: AssetEventsService,
     public drawer: DrawerService
   ) {}
 
   ngOnInit(): void {
-    this.getFields()
     this.getDetail()
   }
+
+  handleOpenDetails() { this.page.set('details') }
+  handleOpenHistory() { this.page.set('history') }
 
   getDetail() {
     this.assetService.getDetail(this.assetId).subscribe({
@@ -49,23 +44,6 @@ export class AssetDetail implements OnInit {
       error: err => {
         window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
       }
-    })
-  }
-
-  getFields() {
-    this.assetService.getFields().subscribe({
-      next: res => this.assetFields.set(res as AssetFields),
-      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
-    })
-  }
-
-  handleArchive() {
-    this.assetService.archive(this.assetId).subscribe({
-      next: () => {
-        this.drawer.close()
-        this.assetEvents.emitAssetsChanged()
-      },
-      error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
     })
   }
 }

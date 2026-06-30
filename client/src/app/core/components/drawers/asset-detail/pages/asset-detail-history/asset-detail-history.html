@@ -1,0 +1,12 @@
+<div class="flex flex-col gap-5">
+    <h2 class="text-xl">Asset History</h2>
+    @for (row of history(); track row.id) {
+        <div class="flex flex-col gap-2 bg-surface-active p-2 rounded border-2 border-accent">
+            <span class="history-item text-lg"><ng-icon name="heroClipboardDocumentCheck" />{{row.action}}</span>
+            <span class="history-item"><ng-icon name="heroUser" />{{row.user.emailAddress}}</span>
+            @if (row.oldValue) { <span class="history-item line-through"><ng-icon name="heroXMark" />{{row.oldValue}}</span> }
+            @if (row.newValue) { <span class="history-item"><ng-icon name="heroCheck" />{{row.newValue}}</span> }
+            <span class="history-item"><ng-icon name="heroCalendar" />{{row.createdAt | date:'M/d/yy, h:mm a'}}</span>
+        </div>
+    }
+</div>

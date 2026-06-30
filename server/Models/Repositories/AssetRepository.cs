@@ -252,7 +252,7 @@ namespace AssetManagementSystem.Models.Repositories
             return await _context.AssetHistories
                 .Include(h => h.User)
                 .Where(h => h.AssetId == id)
-                .OrderBy(h => h.CreatedAt)
+                .OrderByDescending(h => h.CreatedAt)
                 .ToListAsync();
         }
     }

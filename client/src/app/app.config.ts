@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { provideIcons } from '@ng-icons/core';
-import { heroChevronLeft, heroChevronRight, heroComputerDesktop, heroInboxArrowDown, heroListBullet, heroMagnifyingGlass, heroPlus, heroServerStack, heroShieldCheck, heroUser } from '@ng-icons/heroicons/outline';
+import { heroCalendar, heroCheck, heroChevronLeft, heroChevronRight, heroClipboardDocumentCheck, heroComputerDesktop, heroInboxArrowDown, heroListBullet, heroMagnifyingGlass, heroPlus, heroServerStack, heroShieldCheck, heroUser, heroXMark } from '@ng-icons/heroicons/outline';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,7 +25,11 @@ export const appConfig: ApplicationConfig = {
       heroShieldCheck,
       heroUser,
       heroChevronLeft,
-      heroChevronRight
+      heroChevronRight,
+      heroClipboardDocumentCheck,
+      heroXMark,
+      heroCheck,
+      heroCalendar
     })
   ]
-};
+}

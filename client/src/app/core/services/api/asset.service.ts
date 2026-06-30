@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment'
 import PaginatedResponse from '../../DTOs/shared/paginated.response'
 import { AssetDto } from '../../DTOs/asset/asset.dto'
 import { AssetDetailDto } from '../../DTOs/asset/asset-detail.dto'
+import AssetHistory from '../../DTOs/asset/asset-history.dto'
 
 @Injectable({
     providedIn: 'root',
@@ -33,9 +34,9 @@ export class AssetService {
         return this.http.get(`${this.apiUrl}/fields`)
     }
 
-    // getHistory(id: string) {
-    //     return this.http.get<AssetHistory[]>(`${this.apiUrl}/${id}/history`)
-    // }
+    getHistory(id: string) {
+        return this.http.get<AssetHistory[]>(`${this.apiUrl}/${id}/history`)
+    }
 
     create(request: any) {
         return this.http.post(this.apiUrl, request)
