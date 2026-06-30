@@ -1,4 +1,7 @@
 <div class="bg-navbar h-15 flex px-5 items-center">
+    <a routerLink="/dashboard" routerLinkActive="active">
+        <nav class="text-3xl">Asset Management System</nav>
+    </a>
     <div class="ml-auto flex gap-4 items-center">
         <div class="flex flex-col text-right text-sm">
             <strong>{{ authService.currentUser()?.firstName}} {{ authService.currentUser()?.lastName }}</strong>
