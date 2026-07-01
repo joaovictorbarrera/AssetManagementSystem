@@ -85,6 +85,7 @@ namespace AssetManagementSystem.Models.Repositories
         public async Task<CheckoutRequest?> GetById(Guid id)
         {
             return await _context.CheckoutRequests
+                .Include(r => r.RequestedByUser)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
