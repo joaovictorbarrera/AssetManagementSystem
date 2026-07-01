@@ -5,9 +5,14 @@
                 <ng-icon name="heroPlus" size="20" />
                 <span class="pb-px">New User</span>
             </button>
+
             <h1 class="text-3xl absolute left-1/2 transform -translate-x-1/2 flex gap-2 items-center justify-center">
                 <ng-icon name="heroUser" />Users
             </h1>
+
+            <button (click)="getUsers()" class="text-accent ml-auto text-3xl cursor-pointer">
+                <ng-icon name="heroArrowPath"></ng-icon>
+            </button>
         </div>
     </app-page-header>
     <div class="flex gap-5 justify-center p-5 items-end">

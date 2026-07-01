@@ -1,8 +1,14 @@
 <app-page-wrapper>
     <app-page-header>
-        <h1 class="text-3xl flex w-full text-center gap-2 items-end justify-center">
-            <ng-icon name="heroComputerDesktop" />Asset Dashboard
-        </h1>
+        <div class="flex items-center w-full relative">
+            <h1 class="text-3xl absolute left-1/2 transform -translate-x-1/2 flex items-end justify-center gap-2">
+                <ng-icon name="heroComputerDesktop" />
+                Asset Dashboard
+            </h1>
+            <button (click)="getAssets()" class="text-accent ml-auto text-3xl cursor-pointer">
+                <ng-icon name="heroArrowPath"></ng-icon>
+            </button>
+        </div>
     </app-page-header>
     <div class="flex gap-5 justify-center p-5 items-end flex-wrap">
         <app-dropdown class="w-50" [enableAll]="true" [label]="`Status`" [list]="['Assigned', 'Maintenance']" (dropdownChanged)="handleStatusChange($event)" />
