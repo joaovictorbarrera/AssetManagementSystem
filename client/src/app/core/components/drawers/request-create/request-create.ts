@@ -42,7 +42,9 @@ export class RequestCreate implements OnInit {
 
   getFields() {
     this.assetService.getFields().subscribe({
-      next: fields => {this.assetCategoryList = toLabelValuePairs(fields.categories, Labels.assetCategories)},
+      next: fields => {
+        this.assetCategoryList = toLabelValuePairs(fields.categories, Labels.assetCategories)
+      },
       error: err => window.alert(`${err.status} error: ` + err.error.title ? err.error.title : "Unknown Error")
     })
   }

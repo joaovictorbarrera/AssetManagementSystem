@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
-import LabelValuePair from '../../DTOs/shared/label-value-pair';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core'
+import LabelValuePair from '../../DTOs/shared/label-value-pair'
 
 @Component({
   selector: 'app-dropdown',
@@ -7,26 +7,24 @@ import LabelValuePair from '../../DTOs/shared/label-value-pair';
   templateUrl: './dropdown.html',
   styleUrl: './dropdown.scss',
 })
-export class Dropdown implements OnInit {
-  private static openDropdown?: Dropdown;
+export class Dropdown implements OnChanges {
+  private static openDropdown?: Dropdown
 
-  @Input() title!: string;
-  @Input() list!: LabelValuePair[];
-  @Input() initialSelection?: string;
-  @Input() enableAll = false;
+  @Input() title!: string
+  @Input() list!: LabelValuePair[]
+  @Input() initialSelection?: string
+  @Input() enableAll = false
 
-  @Output() dropdownChanged = new EventEmitter<string>();
+  @Output() dropdownChanged = new EventEmitter<string>()
 
-  open = false;
+  open = false
 
-  currentValue = '';
-  currentLabel = '';
+  currentValue = ''
+  currentLabel = ''
 
-  private lastValue = '';
+  private lastValue = ''
 
-  constructor(private element: ElementRef<HTMLElement>) {}
-
-  ngOnInit(): void {
+  ngOnChanges(): void {
     if (this.initialSelection) {
       this.currentValue = this.initialSelection
       this.currentLabel = this.list.find(x => x.value === this.initialSelection)?.label ?? ''
@@ -40,14 +38,14 @@ export class Dropdown implements OnInit {
 
   toggle() {
     if (this.open) {
-      this.close();
-      return;
+      this.close()
+      return
     }
 
-    Dropdown.openDropdown?.close();
+    Dropdown.openDropdown?.close()
 
-    Dropdown.openDropdown = this;
-    this.open = true;
+    Dropdown.openDropdown = this
+    this.open = true
   }
 
   select(value: string) {
@@ -57,11 +55,11 @@ export class Dropdown implements OnInit {
     }
 
     this.lastValue = this.currentValue
-    this.currentValue = value;
+    this.currentValue = value
     this.currentLabel = value === 'all' ? 'All' : this.list.find(x => x.value === value)?.label ?? ''
-    this.open = false;
+    this.open = false
 
-    this.dropdownChanged.emit(value === 'all' ? '' : value);
+    this.dropdownChanged.emit(value === 'all' ? '' : value)
   }
 
   revert() {
@@ -71,10 +69,10 @@ export class Dropdown implements OnInit {
 
   @HostListener('document:click')
   close() {
-    this.open = false;
+    this.open = false
 
     if (Dropdown.openDropdown === this) {
-      Dropdown.openDropdown = undefined;
+      Dropdown.openDropdown = undefined
     }
   }
 }

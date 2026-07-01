@@ -42,7 +42,7 @@
             </div>
 
             <div class="flex flex-col gap-2">
-                <span>Category</span>
+                <span>Category *</span>
                 <app-dropdown
                     [initialSelection]="category()"
                     [list]="assetCategoriesList"
@@ -51,7 +51,7 @@
             </div>
 
             <div class="flex flex-col gap-2">
-                <span>Condition</span>
+                <span>Condition *</span>
                 <app-dropdown
                     [initialSelection]="condition()"
                     [list]="assetConditionsList"
@@ -66,6 +66,7 @@
             class="mt-auto w-30"
             [text]="'Create'"
             [loading]="this.loading()"
+            [disabled]="!assetTag || !assetName || !category() || !condition()"
         />
         <button class="btn btn-cancel w-30" (click)="drawer.close()">
             Cancel

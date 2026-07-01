@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, effect, OnInit, signal, untracked } from '@angular/core';
 import { PageWrapper } from "../../core/components/page-components/page-wrapper/page-wrapper";
 import { PageHeader } from '../../core/components/page-components/page-header/page-header';
 import { AssetService } from '../../core/services/api/asset.service';
@@ -50,7 +50,21 @@ export class Inventory implements OnInit {
     private assetEvents: AssetEventsService,
     private destroyRef: DestroyRef,
     private drawer: DrawerService
-  ) {}
+  ) {
+
+    effect(() => {
+      this.searchText();
+      this.status();
+      this.category();
+      this.condition();
+      this.includeArchived();
+
+      untracked(() => {
+        this.pageNumber.set(1);
+        this.getAssets();
+      })
+    })
+  }
 
   ngOnInit(): void {
     this.getFields()
@@ -63,27 +77,22 @@ export class Inventory implements OnInit {
   handleIncludeArchived(event: Event) {
     const target = event?.target as HTMLInputElement | null
     this.includeArchived.set(target?.checked ?? false)
-    this.getAssets(true)
   }
 
   handleSearch(searchText: string) {
     this.searchText.set(searchText)
-    this.getAssets(true)
   }
 
   handleStatusChange(status: string) {
     this.status.set(status)
-    this.getAssets(true)
   }
 
   handleCategoryChange(category: string) {
     this.category.set(category)
-    this.getAssets(true)
   }
 
   handleConditionChange(condition: string) {
     this.condition.set(condition)
-    this.getAssets(true)
   }
 
   handlePaginationChange(pagination: { pageNumber: number; pageSize: number }) {
@@ -104,9 +113,8 @@ export class Inventory implements OnInit {
     })
   }
 
-  getAssets(backToPageOne: boolean = false) {
+  getAssets() {
     if (this.loadingAssets()) return
-    if (backToPageOne) this.pageNumber.set(1)
 
     this.loadingAssets.set(true)
     this.assetService.getAssets({

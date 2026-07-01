@@ -36,6 +36,7 @@
             class="mt-auto w-30"
             [text]="'Request'"
             [loading]="this.loading()"
+            [disabled]="!reason || !category()"
         />
         <button class="btn btn-cancel w-30" (click)="drawer.close()">
             Cancel

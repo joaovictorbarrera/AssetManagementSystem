@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { AssetDetailDto } from '../../../DTOs/asset/asset-detail.dto';
 import { FormsModule } from '@angular/forms';
-import { AssetDetailForm } from './pages/asset-detail-form/asset-detail-form';
+import { AssetDetailForm } from './tabs/asset-detail-form/asset-detail-form';
 import { SpinningWheel } from "../../spinning-wheel/spinning-wheel";
 import { AssetService } from '../../../services/api/asset.service';
 import { AuthService } from '../../../services/api/auth.service';
 import { DrawerService } from '../../../services/util/drawer.service';
-import { AssetDetailHistory } from './pages/asset-detail-history/asset-detail-history';
+import { AssetDetailHistory } from './tabs/asset-detail-history/asset-detail-history';
 
 @Component({
   selector: 'app-asset-detail',
