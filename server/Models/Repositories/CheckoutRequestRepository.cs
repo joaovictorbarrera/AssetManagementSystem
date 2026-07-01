@@ -200,6 +200,11 @@ namespace AssetManagementSystem.Models.Repositories
             request.ReturnedAt = DateTime.UtcNow;
             request.UpdatedAt = DateTime.UtcNow;
 
+            _context.AddAssetHistory(
+                asset.Id,
+                reviewedByUserId,
+                "Asset marked as Returned");
+
             if (shouldBeAvailable)
             {
                 _context.AddAssetHistory(
