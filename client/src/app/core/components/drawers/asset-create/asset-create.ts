@@ -21,8 +21,8 @@ export class AssetCreate implements OnInit {
   assetName = ''
   assetTag = ''
   serialNumber = ''
-  category = signal("laptop")
-  condition = signal("new")
+  category = signal('')
+  condition = signal('')
 
   loading = signal(false)
   assetFields = signal<AssetFields>({categories: [], statuses: [], conditions: []})

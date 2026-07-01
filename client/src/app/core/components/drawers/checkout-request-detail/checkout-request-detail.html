@@ -35,7 +35,7 @@
                 <span class="capitalize">{{this.requestDetails()?.status}}</span>
             </div>
 
-            @if (requestDetails()?.status === 'approved') {
+            @if (authService.isManager && requestDetails()?.status === 'approved') {
                 <div class="flex flex-col gap-2">
                     <p class="text-text-secondary">Assign an asset:</p>
                     @if (availableAssets().length > 0) {

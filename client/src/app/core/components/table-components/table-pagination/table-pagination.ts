@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, signal } from '@angular/core';
 import Pagination from '../../../DTOs/shared/pagination';
 import { FormsModule } from '@angular/forms';
 import { NgIcon } from '@ng-icons/core';
@@ -15,14 +15,14 @@ export class TablePagination implements OnChanges {
   @Input() name!: string
   @Output() paginationChanged = new EventEmitter<{ pageSize: number; pageNumber: number }>();
 
-  pageNumber = signal(1)
+  pageNumber = 1
   pageSize = 25
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['pagination'] && this.pagination) {
-      this.pageNumber.set(this.pagination.pageNumber || 1)
-      this.pageSize = this.pagination.pageSize || 25
-    }
+  ngOnChanges() {
+    if (!this.pagination) return;
+
+    this.pageNumber = this.pagination.pageNumber;
+    this.pageSize = this.pagination.pageSize;
   }
 
   get showingFrom() {
@@ -31,7 +31,7 @@ export class TablePagination implements OnChanges {
     }
 
     return Math.min(
-      this.pagination.pageSize * (this.pageNumber() - 1) + 1,
+      this.pagination.pageSize * (this.pageNumber - 1) + 1,
       this.pagination.totalCount
     )
   }
@@ -42,25 +42,25 @@ export class TablePagination implements OnChanges {
     }
 
     return Math.min(
-      this.pagination.pageSize * this.pageNumber(),
+      this.pagination.pageSize * this.pageNumber,
       this.pagination.totalCount
     )
   }
 
   handleNextPage() {
-    this.pageNumber.set(this.pageNumber() + 1)
+    this.pageNumber++
     this.emitPaginationChanged()
   }
 
   handlePreviousPage() {
-    this.pageNumber.set(this.pageNumber() - 1)
+    this.pageNumber--
     this.emitPaginationChanged()
   }
 
   emitPaginationChanged(backToPageOne: boolean = false) {
     this.paginationChanged.emit({
       pageSize: this.pageSize,
-      pageNumber: backToPageOne ? 1 : this.pageNumber()
+      pageNumber: backToPageOne ? 1 : this.pageNumber
     })
   }
 }

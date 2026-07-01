@@ -14,12 +14,12 @@
         </div>
     </app-page-header>
     <div class="flex gap-5 justify-center p-5 items-end flex-wrap">
-        <app-dropdown class="w-50" [enableAll]="true" [label]="`Status`" [list]="assetStatusesList" (dropdownChanged)="handleStatusChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [title]="`Status`" [list]="assetStatusesList" (dropdownChanged)="handleStatusChange($event)" />
 
         <app-search-bar (search)="handleSearch($event)" />
 
-        <app-dropdown class="w-50" [enableAll]="true" [label]="`Category`" [list]="assetCategoriesList" (dropdownChanged)="handleCategoryChange($event)" />
-        <app-dropdown class="w-50" [enableAll]="true" [label]="`Condition`" [list]="assetConditionsList" (dropdownChanged)="handleConditionChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [title]="`Category`" [list]="assetCategoriesList" (dropdownChanged)="handleCategoryChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [title]="`Condition`" [list]="assetConditionsList" (dropdownChanged)="handleConditionChange($event)" />
 
         <div class="flex gap-2 text-text-muted text-sm items-center mb-3">
             <input class="checkbox" type="checkbox" (change)="handleIncludeArchived($event)"/>

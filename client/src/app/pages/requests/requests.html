@@ -15,11 +15,11 @@
         </div>
     </app-page-header>
     <div class="flex gap-5 justify-center p-5 items-end flex-wrap">
-        <app-dropdown class="w-50" [enableAll]="true" [label]="`Type`" [list]="requestTypesList" (dropdownChanged)="handleTypeChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [title]="`Type`" [list]="requestTypesList" (dropdownChanged)="handleTypeChange($event)" />
 
-        <app-dropdown class="w-50" [enableAll]="true" [label]="`Status`" [list]="requestStatusesList" (dropdownChanged)="handleStatusChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [title]="`Status`" [list]="requestStatusesList" (dropdownChanged)="handleStatusChange($event)" />
 
-        <app-dropdown class="w-50" [enableAll]="true" [label]="`Asset Category`" [list]="assetCategoriesList" (dropdownChanged)="handleCategoryChange($event)" />
+        <app-dropdown class="w-50" [enableAll]="true" [title]="`Asset Category`" [list]="assetCategoriesList" (dropdownChanged)="handleCategoryChange($event)" />
 
         <div class="flex gap-2 text-text-muted text-sm items-center mb-3">
             <input class="checkbox" type="checkbox" (change)="handleIncludeClosed($event)"/>

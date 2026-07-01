@@ -1,42 +1,80 @@
-import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
 import LabelValuePair from '../../DTOs/shared/label-value-pair';
 
 @Component({
   selector: 'app-dropdown',
-  imports: [FormsModule, TitleCasePipe],
+  imports: [],
   templateUrl: './dropdown.html',
   styleUrl: './dropdown.scss',
 })
-export class Dropdown implements OnChanges {
-  @Input() label!: string
-  @Input() list!: LabelValuePair[]
-  @Input() initialSelection?: string
-  @Input() enableAll = false
-  @Output() dropdownChanged = new EventEmitter<string>()
+export class Dropdown implements OnInit {
+  private static openDropdown?: Dropdown;
 
-  currentValue = ''
-  private initialValue = ''
+  @Input() title!: string;
+  @Input() list!: LabelValuePair[];
+  @Input() initialSelection?: string;
+  @Input() enableAll = false;
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['initialSelection'] && this.initialSelection !== undefined) {
+  @Output() dropdownChanged = new EventEmitter<string>();
+
+  open = false;
+
+  currentValue = '';
+  currentLabel = '';
+
+  private lastValue = '';
+
+  constructor(private element: ElementRef<HTMLElement>) {}
+
+  ngOnInit(): void {
+    if (this.initialSelection) {
       this.currentValue = this.initialSelection
-      this.initialValue = this.initialSelection
-    } else if (changes['enableAll'] && this.enableAll) {
+      this.currentLabel = this.list.find(x => x.value === this.initialSelection)?.label ?? ''
+    }
+
+    if (this.enableAll) {
       this.currentValue = 'all'
-      this.initialValue = 'all'
+      this.currentLabel = 'All'
     }
   }
 
-  onChange(newValue: string) {
-    this.dropdownChanged.emit(newValue)
+  toggle() {
+    if (this.open) {
+      this.close();
+      return;
+    }
+
+    Dropdown.openDropdown?.close();
+
+    Dropdown.openDropdown = this;
+    this.open = true;
+  }
+
+  select(value: string) {
+    if (value === this.currentValue) {
+      this.close()
+      return
+    }
+
+    this.lastValue = this.currentValue
+    this.currentValue = value;
+    this.currentLabel = value === 'all' ? 'All' : this.list.find(x => x.value === value)?.label ?? ''
+    this.open = false;
+
+    this.dropdownChanged.emit(value === 'all' ? '' : value);
   }
 
   revert() {
-    // Needs to update on the next cycle
-    setTimeout(() => {
-      this.currentValue = this.initialValue
-    })
+    this.currentValue = this.lastValue
+    this.currentLabel = this.list.find(x => x.value === this.currentValue)?.label ?? ''
+  }
+
+  @HostListener('document:click')
+  close() {
+    this.open = false;
+
+    if (Dropdown.openDropdown === this) {
+      Dropdown.openDropdown = undefined;
+    }
   }
 }

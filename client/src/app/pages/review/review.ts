@@ -58,17 +58,17 @@ export class Review implements OnInit {
   }
 
   handleStatusChange(status: string) {
-    this.status.set(status === "all" ? "" : status)
+    this.status.set(status)
     this.getRequests(true)
   }
 
   handleTypeChange(type: string) {
-    this.type.set(type === "all" ? "" : type)
+    this.type.set(type)
     this.getRequests(true)
   }
 
   handleCategoryChange(category: string) {
-    this.assetCategory.set(category === "all" ? "" : category)
+    this.assetCategory.set(category)
     this.getRequests(true)
   }
 

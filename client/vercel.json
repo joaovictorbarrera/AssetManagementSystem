@@ -1,6 +1,6 @@
 {
   "buildCommand": "ng build",
-  "outputDirectory": "dist/asset-management-system/browser",
+  "outputDirectory": "dist/asset-checkout-system/browser",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]

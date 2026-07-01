@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "asset-management-system": {
+    "asset-checkout-system": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,10 +68,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "asset-management-system:build:production"
+              "buildTarget": "asset-checkout-system:build:production"
             },
             "development": {
-              "buildTarget": "asset-management-system:build:development"
+              "buildTarget": "asset-checkout-system:build:development"
             }
           },
           "defaultConfiguration": "development"

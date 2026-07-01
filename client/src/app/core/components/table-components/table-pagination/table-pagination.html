@@ -7,14 +7,14 @@
         <div class="flex items-center gap-2">
             <button class="p-3 select-none hover:not-disabled:bg-surface-hover cursor-pointer"
                     (click)="handlePreviousPage()"
-                    [disabled]="this.pageNumber() <= 1"
+                    [disabled]="this.pageNumber <= 1"
             >
                 <ng-icon size="12" name="heroChevronLeft"></ng-icon>
             </button>
-            <span>{{pageNumber()}}</span>
+            <span>{{pageNumber}}</span>
             <button class="p-3 select-none hover:not-disabled:bg-surface-hover cursor-pointer"
                     (click)="handleNextPage()"
-                    [disabled]="this.pageNumber() >= this.pagination.totalPages"
+                    [disabled]="this.pageNumber >= this.pagination.totalPages"
             >
                 <ng-icon size="12" name="heroChevronRight"></ng-icon>
             </button>

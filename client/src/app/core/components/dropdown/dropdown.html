@@ -1,13 +1,55 @@
-<span class="flex flex-col" (click)="$event.stopPropagation()">
-  @if (label) {
-    <span class="text-sm p-1 text-text-muted">{{ label }}</span>
+<span class="flex flex-col relative" (click)="$event.stopPropagation()">
+  @if (title) {
+    <span class="text-sm p-1 text-text-muted">
+      {{ title }}
+    </span>
   }
-  <select [(ngModel)]="currentValue" (ngModelChange)="onChange($event)" class="dropdown">
-    @if (enableAll) {
-      <option value="all">All</option>
-    }
-    @for (pair of list; track pair.value) {
-      <option [value]="pair.value">{{ pair.label| titlecase }}</option>
-    }
-  </select>
+
+  <button
+    type="button"
+    class="dropdown"
+    (click)="toggle()">
+
+    <span>{{ currentLabel }}</span>
+
+    <svg
+      class="w-4 h-4 transition-transform"
+      [class.rotate-180]="open"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor">
+
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 9l6 6 6-6"/>
+    </svg>
+  </button>
+
+  @if (open) {
+    <div class="dropdown-menu">
+
+      @if (enableAll) {
+        <div
+          class="dropdown-option"
+          [class.selected]="currentValue === 'all'"
+          (click)="select('all')">
+          All
+        </div>
+      }
+
+      @for (pair of list; track pair.value) {
+        <div
+          class="dropdown-option"
+          [class.selected]="pair.value === currentValue"
+          (click)="select(pair.value)">
+
+          {{ pair.label }}
+
+        </div>
+      }
+
+    </div>
+  }
 </span>

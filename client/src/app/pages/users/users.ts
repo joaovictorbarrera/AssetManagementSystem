@@ -54,7 +54,7 @@ export class Users implements OnInit {
   }
 
   handleRoleChange(role: string) {
-    this.selectedRole.set(role === 'all' ? '' : role)
+    this.selectedRole.set(role)
     this.getUsers(true)
   }
 
