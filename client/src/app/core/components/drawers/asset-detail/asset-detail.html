@@ -5,10 +5,13 @@
                 {{`${assetDetails()!.name}${assetDetails()!.isArchived ? ' (Archived)' : ''} `}}
             </h2>
             <div class="w-full h-full flex flex-col gap-4">
-                <div class="flex">
-                    <span [class.active]="this.page() === 'details'" (click)="handleOpenDetails()" class="menu">Details</span>
-                    <span [class.active]="this.page() === 'history'" (click)="handleOpenHistory()" class="menu">History</span>
-                </div>
+                <!-- Only Managers can access history tab -->
+                @if (authService.isManager) {
+                    <div class="flex">
+                        <span [class.active]="this.page() === 'details'" (click)="handleOpenDetails()" class="menu">Details</span>
+                        <span [class.active]="this.page() === 'history'" (click)="handleOpenHistory()" class="menu">History</span>
+                    </div>
+                }
                 @if (this.page() === 'details') {
                     <app-asset-detail-form [assetDetails]="assetDetails()!" />
                 } @else if (this.page() === 'history') {
