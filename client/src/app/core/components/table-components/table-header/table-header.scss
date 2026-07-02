@@ -3,3 +3,9 @@ th {
     padding-block: .75rem;
     text-align: left;
 }
+
+:host {
+    position: sticky;
+    z-index: 200;
+    top: 0;
+}
