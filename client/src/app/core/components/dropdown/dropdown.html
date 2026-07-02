@@ -28,7 +28,7 @@
   </button>
 
   @if (open) {
-    <div class="dropdown-menu">
+    <div class="dropdown-menu" [class.dropdown-menu-up]="openUpward()">
 
       @if (enableAll) {
         <div

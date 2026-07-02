@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core'
+import { afterNextRender, Component, ElementRef, EventEmitter, HostListener, inject, Injector, Input, OnChanges, Output, signal } from '@angular/core'
 import LabelValuePair from '../../DTOs/shared/label-value-pair'
 
 @Component({
@@ -18,11 +18,17 @@ export class Dropdown implements OnChanges {
   @Output() dropdownChanged = new EventEmitter<string>()
 
   open = false
+  openUpward = signal(false)
 
   currentValue = ''
   currentLabel = ''
 
   private lastValue = ''
+
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    private injector: Injector
+  ) {}
 
   ngOnChanges(): void {
     if (this.initialSelection) {
@@ -46,6 +52,10 @@ export class Dropdown implements OnChanges {
 
     Dropdown.openDropdown = this
     this.open = true
+
+    // Wait for next render so browser can paint element first
+    // before calculating its height
+    afterNextRender(() => this.updateDirection(), { injector: this.injector })
   }
 
   select(value: string) {
@@ -74,5 +84,24 @@ export class Dropdown implements OnChanges {
     if (Dropdown.openDropdown === this) {
       Dropdown.openDropdown = undefined
     }
+  }
+
+  updateDirection() {
+    const buttonEl = this.elementRef.nativeElement.querySelector('.dropdown') as HTMLElement | null
+    const menuEl = this.elementRef.nativeElement.querySelector('.dropdown-menu') as HTMLElement | null
+
+    if (!buttonEl || !menuEl) {
+      return
+    }
+
+    const buttonRect = buttonEl.getBoundingClientRect()
+    const menuHeight = menuEl.offsetHeight
+
+    // difference between total window height and bottom of menu button
+    // is the amount of space left below. if space below is less than menu height, flip it
+    const spaceBelow = window.innerHeight - buttonRect.bottom
+
+    const offset = 50
+    this.openUpward.set(spaceBelow - offset < menuHeight)
   }
 }
