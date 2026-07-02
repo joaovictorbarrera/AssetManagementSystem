@@ -5,6 +5,10 @@ body {
   box-sizing: border-box;
 }
 
+table .dropdown-menu {
+  z-index: 100;
+}
+
 .btn {
   background-color: var(--surface);
   padding: 0.5rem;
